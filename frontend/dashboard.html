@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>ShieldRider Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<nav class="bg-indigo-600 text-white p-4 flex justify-between">
+
+<h1 class="text-xl font-bold">ShieldRider Dashboard</h1>
+
+<a href="index.html">Home</a>
+
+</nav>
+
+<div class="max-w-4xl mx-auto mt-10">
+
+<div class="bg-white p-6 shadow rounded">
+
+<h2 class="text-xl font-bold">Worker Profile</h2>
+
+<p class="mt-2">Name: Ravi Kumar</p>
+<p>City: Chennai</p>
+<p>Weekly Plan: Medium Risk</p>
+<p>Coverage: ₹700</p>
+
+</div>
+
+<div class="bg-white p-6 shadow rounded mt-8">
+
+<h2 class="text-xl font-bold">Disruption Simulation</h2>
+
+<button onclick="simulate()"
+class="bg-red-500 text-white px-5 py-2 rounded mt-4">
+
+Simulate Disruption Event
+
+</button>
+
+<div id="result" class="mt-6 text-lg"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function simulate(){
+
+fetch("http://127.0.0.1:5000/simulate-event")
+
+.then(res => res.json())
+
+.then(data => {
+
+document.getElementById("result").innerHTML =
+
+"Event: " + data.event +
+"<br>Value: " + data.value +
+"<br>Status: " + data.status +
+"<br><b>Payout: ₹" + data.payout + "</b>";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
