@@ -19,7 +19,10 @@
 
 </nav>
 
+
 <div class="max-w-4xl mx-auto mt-10">
+
+<!-- Worker Profile -->
 
 <div class="bg-white p-6 shadow rounded">
 
@@ -27,10 +30,14 @@
 
 <p class="mt-2">Name: Ravi Kumar</p>
 <p>City: Chennai</p>
-<p>Weekly Plan: Medium Risk</p>
-<p>Coverage: ₹700</p>
+
+<p id="plan"></p>
+<p id="coverage"></p>
 
 </div>
+
+
+<!-- Disruption Simulation -->
 
 <div class="bg-white p-6 shadow rounded mt-8">
 
@@ -49,7 +56,23 @@ Simulate Disruption Event
 
 </div>
 
+
 <script>
+
+/* Load Selected Plan */
+
+window.onload = function(){
+
+let plan = localStorage.getItem("plan") || "Medium Risk";
+let coverage = localStorage.getItem("coverage") || "700";
+
+document.getElementById("plan").innerHTML = "Weekly Plan: " + plan;
+document.getElementById("coverage").innerHTML = "Coverage: ₹" + coverage;
+
+}
+
+
+/* Disruption Simulation */
 
 function simulate(){
 
