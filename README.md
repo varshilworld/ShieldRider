@@ -3,6 +3,11 @@
 ![Status](https://img.shields.io/badge/Status-Prototype-orange)
 ![Hackathon](https://img.shields.io/badge/Hackathon-Submission-green)
 
+## 🚀 Try It Out
+
+👉 **Open the Live Prototype**  
+https://varshilworld.github.io/Shield_Rider/frontend/index.html
+
 ## 🚀 Prototype – AI Powered License
 
 A smart parametric insurance platform designed to protect gig workers such as delivery riders from income loss caused by environmental and social disruptions.
