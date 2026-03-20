@@ -271,20 +271,48 @@ Automatic Payout Sent via UPI
 
 ---
 
-# 7. 🔵 Weekly Premium Model
+7. 🔵 Weekly Premium Model
+💰 Premium Structure
+Risk Level	Weekly Premium	Max Weekly Coverage
+Low Risk Area	₹20	₹500
+Medium Risk Area	₹35	₹700
+High Risk Area	₹50	₹1000
 
-| Risk Level       | Weekly Premium | Maximum Weekly Coverage |
-| ---------------- | -------------- | ----------------------- |
-| Low Risk Area    | ₹20            | ₹500                    |
-| Medium Risk Area | ₹35            | ₹700                    |
-| High Risk Area   | ₹50            | ₹1000                   |
+Risk levels are determined using AI analysis of:
 
-Risk level determined using:
+Historical weather patterns
 
-* Historical weather data
-* Flood-prone zones
-* Pollution levels
-* Frequency of disruptions
+Flood-prone zones
+
+Pollution levels
+
+Frequency of disruptions
+
+🧠 Dynamic Premium Calculation
+
+Premiums are personalized based on worker income, risk level, and selected coverage plan.
+
+Factors:
+
+Risk Factor (0.02 – 0.06) → based on environmental risk
+
+Coverage Factor (1.0 – 1.5) → based on plan (Basic, Standard, Premium)
+
+📊 Formula
+Monthly Premium = Monthly Income × Risk Factor × Coverage Factor  
+Weekly Premium = Monthly Premium ÷ 4
+📌 Example
+
+For ₹20,000 income, Medium Risk (0.04), Standard Plan (1.2):
+
+Monthly Premium = ₹960  
+Weekly Premium = ₹240
+🛡️ Coverage Model
+
+Coverage compensates income loss during disruptions.
+
+Example:
+If a worker earns ₹800/day and cannot work due to a disruption, the system automatically provides compensation based on the selected plan.
 
 ---
 
