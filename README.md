@@ -6,7 +6,7 @@
 ## 🚀 Try It Out
 
 👉 **Open the Live Prototype**  
-https://varshilworld.github.io/Shield_Rider/frontend/index.html
+https://varshilworld.github.io/ShieldRider/frontend/index.html
 
 
 
