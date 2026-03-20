@@ -8,6 +8,8 @@
 👉 **Open the Live Prototype**  
 https://varshilworld.github.io/Shield_Rider/frontend/index.html
 
+
+
 ## 🚀 Prototype – AI Powered License
 
 A smart parametric insurance platform designed to protect gig workers such as delivery riders from income loss caused by environmental and social disruptions.
@@ -21,11 +23,11 @@ A smart parametric insurance platform designed to protect gig workers such as de
 **Prototype Screenshots:**
 ### Prototype Screenshots
 
-<img src="docs/screenshots/Home.png" width="800">
+<img src="docs/screenshots/Home.png" width="600">
 
-<img src="docs/screenshots/Protection_plans.png" width="800">
+<img src="docs/screenshots/Protection_plans.png" width="600">
 
-<img src="docs/screenshots/Dashboard.png" width="800">
+<img src="docs/screenshots/Dashboard.png" width="600">
 
 
 ---
