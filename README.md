@@ -56,6 +56,31 @@ A smart parametric insurance platform designed to protect gig workers such as fo
 20. Conclusion
 21. Contributors
 
+## 📑 Table of Contents
+
+1. [Project Overview](#1--project-overview)
+2. [Our Solution](#2--our-solution)
+3. [Delivery Worker Persona](#3--delivery-worker-persona--example-ravi)
+4. [User Scenarios](#4--user-scenarios)
+5. [Challenges Faced by Gig Workers](#5--challenges-faced-by-gig-workers)
+6. [Application Workflow](#6--application-workflow)
+7. [Weekly Premium Model](#7--weekly-premium-model)
+8. [Parametric Triggers](#8--parametric-triggers)
+9. [Platform Choice – Progressive Web App (PWA)](#9--platform-choice--progressive-web-app-pwa)
+10. [Tech Stack](#10--tech-stack)
+11. [System Architecture](#11--system-architecture)
+12. [Adversarial Defense & Anti-Spoofing Strategy](#12--adversarial-defense--anti-spoofing-strategy)
+13. [Business Viability](#13--business-viability)
+14. [Expected Impact](#14--expected-impact)
+15. [Market Opportunity](#15--market-opportunity)
+16. [Product Roadmap](#16--product-roadmap)
+17. [Getting Started](#17--getting-started)
+18. [Project Structure](#18--project-structure)
+19. [Startup Vision](#19--startup-vision)
+20. [Conclusion](#20--conclusion)
+21. [Contributors](#21--contributors)
+
+
 ---
 
 ## 📌 Project Summary
@@ -333,30 +358,7 @@ If a worker normally earns **₹800 per day** and cannot work due to a disruptio
 
 # 8. 🔵 Parametric Triggers
 
-## Parametric Insurance Concept
-
-```
-Traditional Insurance
-Worker files claim
-        |
-        v
-Manual verification
-        |
-        v
-Approval after days/weeks
-
-ShieldRider Parametric Insurance
-External Data Trigger
-        |
-        v
-System Detects Event
-        |
-        v
-Automatic Claim Generation
-        |
-        v
-Instant UPI Payout
-```
+ShieldRider uses a parametric insurance model where payouts are automatically triggered when predefined environmental thresholds are crossed. This removes the need for workers to manually file claims and allows compensation to be processed quickly.
 
 ### Weather Triggers
 
