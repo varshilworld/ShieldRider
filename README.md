@@ -1,4 +1,7 @@
 # ShieldRider – Gig Worker Income Protection Platform
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Status](https://img.shields.io/badge/Status-Prototype-orange)
+![Hackathon](https://img.shields.io/badge/Hackathon-Submission-green)
 
 ## 🚀 Prototype – AI Powered License
 
@@ -11,6 +14,14 @@ A smart parametric insurance platform designed to protect gig workers such as de
 **Demo Video:** [https://drive.google.com/file/d/1VhG5So33ppznQhQuhWPvAFH4ZdGT8yKV/view?usp=sharing](https://drive.google.com/file/d/1VhG5So33ppznQhQuhWPvAFH4ZdGT8yKV/view?usp=sharing)
 
 **Prototype Screenshots:**
+### Prototype Screenshots
+
+<img src="docs/screenshots/Home.png" width="800">
+
+<img src="docs/screenshots/Protection_plans.png" width="800">
+
+<img src="docs/screenshots/Dashboard.png" width="800">
+
 
 ---
 
