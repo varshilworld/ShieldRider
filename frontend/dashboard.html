@@ -2,30 +2,21 @@
 <html>
 
 <head>
-
 <title>ShieldRider Dashboard</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 
 <body class="bg-gray-100">
 
 <nav class="bg-indigo-600 text-white p-4 flex justify-between">
-
 <h1 class="text-xl font-bold">ShieldRider Dashboard</h1>
-
 <a href="index.html">Home</a>
-
 </nav>
 
-
-<div class="max-w-4xl mx-auto mt-10">
+<div class="max-w-5xl mx-auto mt-10">
 
 <!-- Worker Profile -->
-
 <div class="bg-white p-6 shadow rounded">
-
 <h2 class="text-xl font-bold">Worker Profile</h2>
 
 <p class="mt-2">Name: Ravi Kumar</p>
@@ -33,24 +24,43 @@
 
 <p id="plan"></p>
 <p id="coverage"></p>
-
 </div>
 
 
-<!-- Disruption Simulation -->
-
+<!-- Simulation Controls -->
 <div class="bg-white p-6 shadow rounded mt-8">
 
 <h2 class="text-xl font-bold">Disruption Simulation</h2>
 
-<button onclick="simulate()"
-class="bg-red-500 text-white px-5 py-2 rounded mt-4">
+<p class="text-gray-600 mt-2">
+Choose simulation mode for demo
+</p>
 
-Simulate Disruption Event
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
 
+<button onclick="simulate('real')" class="bg-blue-600 text-white py-2 rounded">
+🌐 Real Weather
 </button>
 
-<div id="result" class="mt-6 text-lg"></div>
+<button onclick="simulate('heat')" class="bg-red-500 text-white py-2 rounded">
+🔥 Heat
+</button>
+
+<button onclick="simulate('rain')" class="bg-indigo-500 text-white py-2 rounded">
+🌧 Rain
+</button>
+
+<button onclick="simulate('pollution')" class="bg-gray-700 text-white py-2 rounded">
+🌫 Pollution
+</button>
+
+</div>
+
+<div id="loading" class="mt-6 text-blue-600 font-semibold hidden">
+Checking conditions...
+</div>
+
+<div id="result" class="mt-6"></div>
 
 </div>
 
@@ -59,8 +69,7 @@ Simulate Disruption Event
 
 <script>
 
-/* Load Selected Plan */
-
+/* Load Plan */
 window.onload = function(){
 
 let plan = localStorage.getItem("plan") || "Medium Risk";
@@ -72,22 +81,38 @@ document.getElementById("coverage").innerHTML = "Coverage: ₹" + coverage;
 }
 
 
-/* Disruption Simulation */
+/* Simulation */
+function simulate(mode){
 
-function simulate(){
+document.getElementById("result").innerHTML = "";
+document.getElementById("loading").classList.remove("hidden");
 
-fetch("http://127.0.0.1:5000/simulate-event")
+fetch(`http://127.0.0.1:5000/simulate-event?mode=${mode}`)
 
 .then(res => res.json())
 
 .then(data => {
 
+document.getElementById("loading").classList.add("hidden");
+
 document.getElementById("result").innerHTML =
 
-"Event: " + data.event +
-"<br>Value: " + data.value +
-"<br>Status: " + data.status +
-"<br><b>Payout: ₹" + data.payout + "</b>";
+`
+<div class="bg-green-100 border border-green-400 p-6 rounded-lg">
+
+<h3 class="text-xl font-bold text-green-800">
+${data.mode || "Simulation"}
+</h3>
+
+<p class="mt-2">Event: ${data.event}</p>
+<p>Measured Value: ${data.value}</p>
+
+<p class="mt-4 text-2xl font-bold text-green-700">
+Payout: ₹${data.payout}
+</p>
+
+</div>
+`;
 
 });
 

@@ -1,58 +1,94 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
 CORS(app)
 
-API_KEY = "3a8847835b137291511aac7dbe1bc628"        
+API_KEY = "3a8847835b137291511aac7dbe1bc628"
 
 
 @app.route("/simulate-event")
-
 def simulate_event():
 
-    city = "Chennai"
+    mode = request.args.get("mode", "real")
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    # -------- REAL WEATHER --------
+    if mode == "real":
 
-    response = requests.get(url)
+        city = "Chennai"
 
-    data = response.json()
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
 
-    temperature = data["main"]["temp"]
-    weather = data["weather"][0]["main"]
+        try:
+            response = requests.get(url)
+            data = response.json()
 
-    event = "Normal Conditions"
-    payout = 0
-    value = ""
+            temperature = data["main"]["temp"]
+            weather = data["weather"][0]["main"]
 
-    if temperature > 40:
+            event = "No Disruption"
+            payout = 0
+            value = f"{temperature}°C"
 
-        event = "Extreme Heat"
-        value = f"{temperature}°C"
-        payout = 300
+            if temperature > 40:
+                event = "Extreme Heat"
+                payout = 300
 
-    elif weather == "Rain":
+            elif weather.lower() == "rain":
+                event = "Heavy Rain"
+                value = "Rain detected"
+                payout = 500
 
-        event = "Heavy Rain"
-        value = "Rain detected"
-        payout = 500
+            return jsonify({
+                "mode": "Real Weather",
+                "event": event,
+                "value": value,
+                "payout": payout
+            })
+
+        except Exception as e:
+            return jsonify({
+                "mode": "Real Weather",
+                "event": "API Failure",
+                "value": "Could not fetch weather",
+                "payout": 0
+            })
+
+
+    # -------- MANUAL MODES --------
+
+    elif mode == "heat":
+        return jsonify({
+            "mode": "Manual Simulation",
+            "event": "Extreme Heat",
+            "value": "44°C",
+            "payout": 300
+        })
+
+    elif mode == "rain":
+        return jsonify({
+            "mode": "Manual Simulation",
+            "event": "Heavy Rain",
+            "value": "Rain detected",
+            "payout": 500
+        })
+
+    elif mode == "pollution":
+        return jsonify({
+            "mode": "Manual Simulation",
+            "event": "Severe Pollution",
+            "value": "AQI 420",
+            "payout": 250
+        })
 
     else:
-
-        event = "No Disruption"
-        value = f"{temperature}°C"
-        payout = 0
-
-    return jsonify({
-
-        "status": "Checked Real Weather Data",
-        "event": event,
-        "value": value,
-        "payout": payout
-
-    })
+        return jsonify({
+            "mode": "Unknown",
+            "event": "Invalid Mode",
+            "value": "-",
+            "payout": 0
+        })
 
 
 if __name__ == "__main__":

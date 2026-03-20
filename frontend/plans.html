@@ -22,13 +22,13 @@ Choose Weekly Protection Plan
 
 <div class="grid grid-cols-3 gap-10 px-20 mt-10">
 
-<div class="bg-white shadow-lg p-6 rounded-lg text-center">
+<div id="low" class="bg-white shadow-lg p-6 rounded-lg text-center">
 
 <h3 class="font-bold text-xl">Low Risk</h3>
 <p class="text-gray-600 mt-3">Coverage ₹500</p>
 <p class="text-indigo-600 text-2xl mt-4">₹20/week</p>
 
-<button onclick="selectPlan('Low Risk','500')"
+<button onclick="selectPlan('Low Risk','500','low')"
 class="bg-indigo-600 text-white px-4 py-2 mt-4 rounded">
 
 Select
@@ -38,13 +38,13 @@ Select
 </div>
 
 
-<div class="bg-white shadow-lg p-6 rounded-lg text-center border-2 border-indigo-600">
+<div id="medium" class="bg-white shadow-lg p-6 rounded-lg text-center">
 
 <h3 class="font-bold text-xl">Medium Risk</h3>
 <p class="text-gray-600 mt-3">Coverage ₹700</p>
 <p class="text-indigo-600 text-2xl mt-4">₹35/week</p>
 
-<button onclick="selectPlan('Medium Risk','700')"
+<button onclick="selectPlan('Medium Risk','700','medium')"
 class="bg-indigo-600 text-white px-4 py-2 mt-4 rounded">
 
 Select
@@ -54,13 +54,13 @@ Select
 </div>
 
 
-<div class="bg-white shadow-lg p-6 rounded-lg text-center">
+<div id="high" class="bg-white shadow-lg p-6 rounded-lg text-center">
 
 <h3 class="font-bold text-xl">High Risk</h3>
 <p class="text-gray-600 mt-3">Coverage ₹1000</p>
 <p class="text-indigo-600 text-2xl mt-4">₹50/week</p>
 
-<button onclick="selectPlan('High Risk','1000')"
+<button onclick="selectPlan('High Risk','1000','high')"
 class="bg-indigo-600 text-white px-4 py-2 mt-4 rounded">
 
 Select
@@ -74,12 +74,22 @@ Select
 
 <script>
 
-function selectPlan(plan, coverage){
+function selectPlan(plan, coverage, id){
 
 localStorage.setItem("plan", plan);
 localStorage.setItem("coverage", coverage);
 
+document.getElementById("low").classList.remove("border-4","border-indigo-600");
+document.getElementById("medium").classList.remove("border-4","border-indigo-600");
+document.getElementById("high").classList.remove("border-4","border-indigo-600");
+
+document.getElementById(id).classList.add("border-4","border-indigo-600");
+
+setTimeout(() => {
+
 window.location.href = "dashboard.html";
+
+}, 800);
 
 }
 
