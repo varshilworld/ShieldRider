@@ -33,28 +33,28 @@ A smart parametric insurance platform designed to protect gig workers such as de
 ---
 
 ## 📑 Table of Contents
-1.Project Overview
-2.Our Solution
-3.Delivery Worker Persona
-4.User Scenarios
-5.Challenges Faced by Gig Workers
-6.Application Workflow
-7.Weekly Premium Model
-8.Parametric Triggers
-9.Platform Choice – Progressive Web App (PWA)
-10.Tech Stack
-11.System Architecture
-12.Business Viability
-13.Adversarial Defense & Anti-Spoofing Strategy
-14.Expected Impact
-15.Market Opportunity
-16.Product Roadmap
-17.Getting Started
-18.Project Structure
-19.Startup Vision
-20.Conclusion
-21.Contributors
 
+1. Project Overview
+2. Our Solution
+3. Delivery Worker Persona
+4. User Scenarios
+5. Challenges Faced by Gig Workers
+6. Application Workflow
+7. Weekly Premium Model
+8. Parametric Triggers
+9. Platform Choice – Progressive Web App (PWA)
+10. Tech Stack
+11. System Architecture
+12. Business Viability
+13. Adversarial Defense & Anti-Spoofing Strategy
+14. Expected Impact
+15. Market Opportunity
+16. Product Roadmap
+17. Getting Started
+18. Project Structure
+19. Startup Vision
+20. Conclusion
+21. Contributors
 
 ---
 
