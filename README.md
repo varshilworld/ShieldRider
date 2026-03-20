@@ -271,48 +271,63 @@ Automatic Payout Sent via UPI
 
 ---
 
-7. 🔵 Weekly Premium Model
-💰 Premium Structure
-Risk Level	Weekly Premium	Max Weekly Coverage
-Low Risk Area	₹20	₹500
-Medium Risk Area	₹35	₹700
-High Risk Area	₹50	₹1000
+## 7. 🔵 Weekly Premium Model
 
-Risk levels are determined using AI analysis of:
+### 💰 Premium Structure
 
-Historical weather patterns
+| Risk Level       | Weekly Premium | Max Weekly Coverage |
+| ---------------- | -------------- | ------------------- |
+| Low Risk Area    | ₹20            | ₹500                |
+| Medium Risk Area | ₹35            | ₹700                |
+| High Risk Area   | ₹50            | ₹1000               |
 
-Flood-prone zones
+Risk levels are determined using **AI analysis of:**
 
-Pollution levels
+* Historical weather patterns
+* Flood-prone zones
+* Pollution levels
+* Frequency of disruptions
 
-Frequency of disruptions
+---
 
-🧠 Dynamic Premium Calculation
+### 🧠 Dynamic Premium Calculation
 
-Premiums are personalized based on worker income, risk level, and selected coverage plan.
+Premiums are **personalized based on worker income, risk level, and selected coverage plan.**
 
-Factors:
+**Factors**
 
-Risk Factor (0.02 – 0.06) → based on environmental risk
+* **Risk Factor (0.02 – 0.06)** → based on environmental risk
+* **Coverage Factor (1.0 – 1.5)** → based on plan *(Basic, Standard, Premium)*
 
-Coverage Factor (1.0 – 1.5) → based on plan (Basic, Standard, Premium)
+---
 
-📊 Formula
-Monthly Premium = Monthly Income × Risk Factor × Coverage Factor  
-Weekly Premium = Monthly Premium ÷ 4
-📌 Example
+### 📊 Formula
 
-For ₹20,000 income, Medium Risk (0.04), Standard Plan (1.2):
+```
+Monthly Premium = Monthly Income × Risk Factor × Coverage Factor
+Weekly Premium  = Monthly Premium ÷ 4
+```
 
-Monthly Premium = ₹960  
-Weekly Premium = ₹240
-🛡️ Coverage Model
+---
 
-Coverage compensates income loss during disruptions.
+### 📌 Example
 
-Example:
-If a worker earns ₹800/day and cannot work due to a disruption, the system automatically provides compensation based on the selected plan.
+For **₹20,000 income**, **Medium Risk (0.04)**, **Standard Plan (1.2)**:
+
+```
+Monthly Premium = ₹960
+Weekly Premium  = ₹240
+```
+
+---
+
+### 🛡️ Coverage Model
+
+Coverage compensates **income loss during disruption events.**
+
+**Example**
+
+If a worker normally earns **₹800 per day** and cannot work due to a disruption, the system automatically provides compensation based on the selected coverage plan.
 
 ---
 
