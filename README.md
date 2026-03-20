@@ -12,7 +12,7 @@ https://varshilworld.github.io/Shield_Rider/frontend/index.html
 
 ## 🚀 Prototype – AI Powered License
 
-A smart parametric insurance platform designed to protect gig workers such as delivery riders from income loss caused by environmental and social disruptions.
+A smart parametric insurance platform designed to protect gig workers such as food delivery riders from income loss caused by environmental and social disruptions.
 
 ---
 
@@ -60,7 +60,7 @@ A smart parametric insurance platform designed to protect gig workers such as de
 
 ## 📌 Project Summary
 
-ShieldRider is an **AI-powered parametric insurance platform** built to protect gig delivery workers from sudden income loss caused by weather disruptions, pollution, strikes, or government restrictions.
+ShieldRider is an **AI-powered parametric insurance platform** built to protect food delivery workers from sudden income loss caused by weather disruptions, pollution, strikes, or government restrictions.
 
 The system continuously monitors environmental and operational data using external APIs. When predefined disruption thresholds are crossed, the platform automatically triggers insurance claims and sends payouts to affected workers.
 
@@ -113,7 +113,7 @@ Gig Worker Reality Today
 
 ## Problem Statement
 
-Gig economy workers such as delivery riders depend heavily on daily orders for income. However, their earnings can drop significantly due to factors beyond their control such as heavy rain, extreme heat, air pollution, strikes, or traffic restrictions.
+Gig economy workers such as food delivery riders depend heavily on daily orders for income. However, their earnings can drop significantly due to factors beyond their control such as heavy rain, extreme heat, air pollution, strikes, or traffic restrictions.
 
 These disruptions directly affect the number of deliveries completed, resulting in unstable income and financial insecurity.
 
@@ -155,7 +155,7 @@ The platform monitors real-time environmental and operational data such as weath
 
 ### Selected Delivery Segment
 
-Food delivery services such as Zomato, Swiggy, and other gig-based delivery platforms.
+Food delivery services such as Zomato, Swiggy, and other gig-based food delivery platforms.
 
 ### Persona Description
 
