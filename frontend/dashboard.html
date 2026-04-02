@@ -1,124 +1,596 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShieldRider Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body class="scroll-smooth bg-gradient-to-br from-white via-sky-50 to-blue-50 text-slate-800 overflow-x-hidden">
+    <!-- Floating background blobs with parallax (soft ambient effect) -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" id="blobContainer">
+      <div class="blob-float absolute top-0 left-1/4 w-screen h-screen bg-cyan-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 animate-blob" data-speed="0.5"></div>
+      <div class="blob-float absolute top-1/3 right-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-8 animate-blob animation-delay-2000" data-speed="0.3"></div>
+      <div class="blob-float absolute bottom-0 left-1/2 w-screen h-screen bg-sky-100 rounded-full mix-blend-multiply filter blur-[110px] opacity-12 animate-blob animation-delay-4000" data-speed="0.7"></div>
+    </div>
 
-<head>
-<title>ShieldRider Dashboard</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
+    <!-- Container -->
+    <div class="flex h-screen">
+      <!-- LEFT SIDEBAR (Floating) -->
+      <aside id="sidebar" class="fixed left-4 top-4 h-[calc(100vh-2rem)] w-64 bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl flex flex-col transition-all duration-300 md:relative md:left-0 md:top-0 md:h-screen md:rounded-none md:border-none md:border-r md:shadow-none md:bg-white/70 z-40 -translate-x-full md:translate-x-0 md:mr-8">
+        <!-- Logo -->
+        <div class="px-6 py-8 border-b border-white/30">
+          <div class="flex items-center gap-3">
+            <div class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-lg">🛡</div>
+            <div>
+              <h1 class="text-base font-black text-slate-900">ShieldRider</h1>
+              <p class="text-xs text-slate-500">Protection Platform</p>
+            </div>
+          </div>
+        </div>
 
-<body class="bg-gray-100">
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
+          <a href="#overview" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
+            <span class="text-lg">📊</span>
+            <span>Dashboard</span>
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
+          </a>
+          <a href="plans.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">📋</span>
+            <span>Plans</span>
+          </a>
+          <a href="claims.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">🧾</span>
+            <span>Claims</span>
+          </a>
+          <a href="transactions.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">💳</span>
+            <span>Transactions</span>
+          </a>
+          <a href="#analytics" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">📈</span>
+            <span>Analytics</span>
+          </a>
+          <a href="#profile" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">👤</span>
+            <span>Profile</span>
+          </a>
+        </nav>
 
-<nav class="bg-indigo-600 text-white p-4 flex justify-between">
-<h1 class="text-xl font-bold">ShieldRider Dashboard</h1>
-<a href="index.html">Home</a>
-</nav>
+        <!-- Logout -->
+        <div class="px-4 py-4 border-t border-white/30">
+          <button id="logoutBtn" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-700">Logout</button>
+        </div>
+      </aside>
 
-<div class="max-w-5xl mx-auto mt-10">
+      <!-- Mobile Sidebar Toggle -->
+      <button id="sidebarToggle" class="fixed bottom-6 right-6 z-30 md:hidden h-12 w-12 rounded-full bg-cyan-500 text-white font-bold shadow-lg hover:shadow-xl transition">☰</button>
 
-<!-- Worker Profile -->
-<div class="bg-white p-6 shadow rounded">
-<h2 class="text-xl font-bold">Worker Profile</h2>
+      <!-- MAIN CONTENT AREA -->
+      <main class="flex-1 overflow-y-auto">
+        <!-- Top Navbar (Sticky, Premium) -->
+        <div class="sticky top-0 z-20 backdrop-blur-xl bg-white/60 border-b border-white/50 shadow-sm">
+          <div class="mx-auto max-w-6xl px-6 md:px-8 py-4 flex items-center justify-between">
+            <div>
+              <h2 id="greetingText" class="text-xl font-bold text-slate-900">Welcome back!</h2>
+              <p class="text-xs text-slate-500">Manage your income protection</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div id="avatarTop" class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-sm"></div>
+            </div>
+          </div>
+        </div>
 
-<p class="mt-2">Name: Ravi Kumar</p>
-<p>City: Chennai</p>
+        <!-- Content (Centered, Spacious) -->
+        <div class="mx-auto max-w-6xl px-6 md:px-8 py-16 pb-32 space-y-20">
+          <!-- OVERVIEW SECTION -->
+          <section id="overview" class="space-y-12">
+            <!-- Hero (Premium Landing Style) -->
+            <div class="reveal-scroll relative rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+              <!-- Glow background element -->
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-100/30 via-transparent to-blue-100/20 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-300/0 via-cyan-300/5 to-blue-300/0 blur-xl"></div>
+              <div class="relative z-10">
+                <p class="inline-block rounded-full bg-gradient-to-r from-cyan-200 to-blue-200 px-4 py-1.5 text-xs font-semibold text-cyan-800">Welcome to ShieldRider</p>
+                <h1 id="heroName" class="mt-6 text-5xl md:text-6xl font-black tracking-tight text-slate-900 letter-spacing bg-gradient-to-r from-cyan-600 via-blue-600 to-slate-900 bg-clip-text text-transparent">Welcome back</h1>
+                <p class="mt-4 max-w-2xl text-lg text-slate-600">Your financial protection dashboard — AI-powered recommendations, real-time analytics, and seamless coverage management.</p>
 
-<p id="plan"></p>
-<p id="coverage"></p>
-</div>
+                <!-- Info chips -->
+                <div class="mt-8 flex flex-wrap gap-3">
+                  <div class="rounded-lg bg-gradient-to-r from-cyan-100 to-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700 border border-cyan-200/50">
+                    <span id="workTypeChip">Work Type: —</span>
+                  </div>
+                  <div class="rounded-lg bg-gradient-to-r from-blue-100 to-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 border border-blue-200/50">
+                    <span id="hoursChip">Weekly Hours: —</span>
+                  </div>
+                </div>
 
+                <!-- Animated gradient underline -->
+                <div class="mt-8 h-1.5 w-32 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-transparent animate-pulse"></div>
+              </div>
+            </div>
 
-<!-- Simulation Controls -->
-<div class="bg-white p-6 shadow rounded mt-8">
+            <!-- Metrics Grid -->
+            <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-4 mt-12">
+              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Monthly Income</p>
+                <p id="incomeValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900 counter" data-target="15000">₹0</p>
+                <div class="mt-3 h-1 w-12 rounded-full bg-cyan-300"></div>
+              </div>
 
-<h2 class="text-xl font-bold">Disruption Simulation</h2>
+              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 100ms">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Risk Score</p>
+                <p id="riskValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900">Low</p>
+                <div class="mt-3 h-1 w-12 rounded-full bg-green-300"></div>
+              </div>
 
-<p class="text-gray-600 mt-2">
-Choose simulation mode for demo
-</p>
+              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 200ms">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Active Coverage</p>
+                <p id="coverageValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900 counter" data-target="125000">₹0</p>
+                <div class="mt-3 h-1 w-12 rounded-full bg-blue-300"></div>
+              </div>
 
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 300ms">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Next Premium</p>
+                <p id="nextPremiumValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900">N/A</p>
+                <div class="mt-3 h-1 w-12 rounded-full bg-orange-300"></div>
+              </div>
+            </div>
+          </section>
 
-<button onclick="simulate('real')" class="bg-blue-600 text-white py-2 rounded">
-🌐 Real Weather
-</button>
+          <!-- INSIGHTS SECTION -->
+          <section id="insights" class="space-y-8 pt-8">
+            <h2 class="text-2xl font-black text-slate-900">Insights</h2>
 
-<button onclick="simulate('heat')" class="bg-red-500 text-white py-2 rounded">
-🔥 Heat
-</button>
+            <!-- AI Recommendation -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 border border-gradient-to-r from-cyan-300/30 to-blue-300/30 relative overflow-hidden transition-all duration-300 hover:-translate-y-1">
+                <!-- Glow effect -->
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-200/20 to-blue-200/10 opacity-0 hover:opacity-60 transition-opacity duration-500"></div>
+              <div class="relative z-10">
+                <div>
+                  <p class="inline-block rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">AI Powered</p>
+                  <h3 id="aiPlanName" class="mt-3 text-2xl font-bold text-slate-900">Protection Recommendation</h3>
+                  <p id="aiRisk" class="mt-2 max-w-xl text-slate-600">Based on your work pattern, we recommend the best plan for you.</p>
+                </div>
+                <div class="hidden md:block text-5xl">✨</div>
+              </div>
+                <button id="viewPlanBtn" class="btn-primary-micro mt-6 py-2 px-6 text-sm font-semibold">View Recommended Plan</button>
+              </div>
+            </div>
 
-<button onclick="simulate('rain')" class="bg-indigo-500 text-white py-2 rounded">
-🌧 Rain
-</button>
+            <!-- Analytics -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1" style="animation-delay: 100ms">
+              <h3 class="text-lg font-bold text-slate-900">Earnings vs Premiums</h3>
+              <div class="mt-6 space-y-4">
+                <div>
+                  <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
+                    <span>Income</span>
+                    <span id="earningsValue" class="counter" data-target="15000">₹0</span>
+                  </div>
+                  <div class="mt-2 h-3 w-full rounded-full bg-slate-200">
+                    <div id="earningsBar" class="h-full rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 transition-all duration-700" style="width: 10%"></div>
+                  </div>
+                </div>
 
-<button onclick="simulate('pollution')" class="bg-gray-700 text-white py-2 rounded">
-🌫 Pollution
-</button>
+                <div>
+                  <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
+                    <span>Premiums</span>
+                    <span id="premiumsValue" class="counter" data-target="2800">₹0</span>
+                  </div>
+                  <div class="mt-2 h-3 w-full rounded-full bg-slate-200">
+                    <div id="premiumsBar" class="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-500 transition-all duration-700" style="width: 5%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-</div>
+          <!-- ACTIONS SECTION -->
+          <section id="plans" class="space-y-10 pt-12">
+            <h2 class="text-2xl font-black text-slate-900">Insurance Plans</h2>
 
-<div id="loading" class="mt-6 text-blue-600 font-semibold hidden">
-Checking conditions...
-</div>
+            <div class="grid gap-8 md:grid-cols-3 pt-4">
+              <!-- Basic Plan -->
+              <div class="reveal-scroll card-glass-premium rounded-3xl p-6 border border-slate-200/60 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-lg font-bold text-slate-900">Basic</h3>
+                  <span class="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">Entry</span>
+                </div>
+                <p class="mt-4 text-4xl font-black text-slate-900">₹499</p>
+                <p class="mt-1 text-sm text-slate-600">Coverage ₹50,000</p>
+                <ul class="mt-4 space-y-2 text-sm text-slate-600">
+                  <li class="flex items-center gap-2">✓ <span>24/7 support</span></li>
+                  <li class="flex items-center gap-2">✓ <span>Basic accident cover</span></li>
+                </ul>
+                <button class="buy-plan btn-micro mt-6 w-full rounded-lg bg-slate-100 px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-200">Buy Plan</button>
+              </div>
 
-<div id="result" class="mt-6"></div>
+              <!-- Pro Plan (Highlighted) -->
+              <div class="reveal-scroll card-glass-premium rounded-3xl p-6 border-2 border-cyan-400 bg-gradient-to-br from-white/95 to-cyan-50/70 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl md:scale-105 z-10" style="animation-delay: 100ms">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-lg font-bold text-slate-900">Pro</h3>
+                  <span class="rounded-full bg-cyan-100 px-2 py-1 text-xs font-semibold text-cyan-700">⭐ Recommended</span>
+                </div>
+                <p class="mt-4 text-4xl font-black text-slate-900">₹999</p>
+                <p class="mt-1 text-sm text-slate-600">Coverage ₹1,25,000</p>
+                <ul class="mt-4 space-y-2 text-sm text-slate-600">
+                  <li class="flex items-center gap-2">✓ <span>Priority claims</span></li>
+                  <li class="flex items-center gap-2">✓ <span>Income replacement</span></li>
+                  <li class="flex items-center gap-2">✓ <span>Fast payouts</span></li>
+                </ul>
+                <button class="buy-plan btn-micro mt-6 w-full rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 font-semibold text-white transition hover:shadow-lg">Buy Plan</button>
+              </div>
 
-</div>
+              <!-- Elite Plan -->
+              <div class="reveal-scroll card-glass-premium rounded-3xl p-6 border border-slate-200/60 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 200ms">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-lg font-bold text-slate-900">Elite</h3>
+                  <span class="rounded-full bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-700">Premium</span>
+                </div>
+                <p class="mt-4 text-4xl font-black text-slate-900">₹1,799</p>
+                <p class="mt-1 text-sm text-slate-600">Coverage ₹2,50,000</p>
+                <ul class="mt-4 space-y-2 text-sm text-slate-600">
+                  <li class="flex items-center gap-2">✓ <span>Top tier support</span></li>
+                  <li class="flex items-center gap-2">✓ <span>Highest coverage</span></li>
+                  <li class="flex items-center gap-2">✓ <span>Instant verification</span></li>
+                </ul>
+                <button class="buy-plan btn-micro mt-6 w-full rounded-lg bg-slate-100 px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-200">Buy Plan</button>
+              </div>
+            </div>
+          </section>
 
-</div>
+          <!-- RAISE A CLAIM SECTION -->
+          <section class="space-y-10 pt-12">
+            <div class="reveal-scroll card-glass-premium rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 via-white/80 to-cyan-50/60 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+              <!-- Glow background -->
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-orange-100/20 via-transparent to-red-100/10 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-orange-300/0 via-orange-300/5 to-red-300/0 blur-xl"></div>
+              
+              <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                  <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Need Support?</h3>
+                  <h2 class="mt-2 text-3xl md:text-4xl font-black text-slate-900">Raise a Claim</h2>
+                  <p class="mt-4 max-w-xl text-slate-600">File a claim for weather disruptions, accidents, or other covered incidents. Get instant support with our AI-powered claim processing.</p>
+                </div>
+                <a href="claims.html" class="btn-micro flex-shrink-0 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-105 inline-block text-center whitespace-nowrap">→ Raise Claim</a>
+              </div>
+            </div>
+          </section>
 
+          <!-- HISTORY SECTION -->
+          <section id="transactions" class="space-y-10 pt-12">
+            <h2 class="text-2xl font-black text-slate-900">Transaction History</h2>
 
-<script>
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-6 overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200">
+                      <th class="pb-3 font-semibold text-slate-600">Date</th>
+                      <th class="pb-3 font-semibold text-slate-600">Type</th>
+                      <th class="pb-3 font-semibold text-slate-600">Amount</th>
+                      <th class="pb-3 font-semibold text-slate-600">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="transactionTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+              <div id="emptyTransactions" class="mt-6 rounded-xl border border-dashed border-slate-300 bg-slate-100/50 p-6 text-center text-slate-500 hidden">
+                <p class="text-sm font-semibold">No transactions yet</p>
+                <p class="text-xs">Buy a plan to start your coverage journey</p>
+              </div>
+            </div>
+          </section>
 
-/* Load Plan */
-window.onload = function(){
+          <!-- PROFILE SECTION -->
+          <section id="profile" class="space-y-10 pt-12 pb-20">
+            <h2 class="text-2xl font-black text-slate-900">Download Summary</h2>
 
-let plan = localStorage.getItem("plan") || "Medium Risk";
-let coverage = localStorage.getItem("coverage") || "700";
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300">
+              <p class="text-slate-600">Get a complete summary of your account and coverage details.</p>
+              <button id="downloadSummaryBtn" class="btn-primary-micro mt-6 py-2 px-6 text-sm font-semibold">Download Summary</button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
 
-document.getElementById("plan").innerHTML = "Weekly Plan: " + plan;
-document.getElementById("coverage").innerHTML = "Coverage: ₹" + coverage;
+    <style>
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+      }
 
-}
+      @keyframes revealScroll {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
 
+      @keyframes shimmer {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
 
-/* Simulation */
-function simulate(mode){
+      @keyframes ripple {
+        0% { transform: scale(0); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
+      }
 
-document.getElementById("result").innerHTML = "";
-document.getElementById("loading").classList.remove("hidden");
+      @keyframes buttonPress {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.96); }
+        100% { transform: scale(1); }
+      }
 
-fetch(`http://127.0.0.1:5000/simulate-event?mode=${mode}`)
+      @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0); }
+        50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
+      }
 
-.then(res => res.json())
+      .animate-blob { animation: blob 7s infinite; }
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
 
-.then(data => {
+      .reveal-scroll {
+        animation: revealScroll 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        opacity: 0;
+      }
 
-document.getElementById("loading").classList.add("hidden");
+      .card-glass {
+        @apply rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-md shadow-md;
+      }
 
-document.getElementById("result").innerHTML =
+      .card-glass-premium {
+        @apply rounded-3xl border border-white/40 bg-white/80 backdrop-blur-xl shadow-lg relative overflow-hidden transition-all duration-300;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+      }
 
-`
-<div class="bg-green-100 border border-green-400 p-6 rounded-lg">
+      .card-glass-premium::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        rounded-3xl;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 50%);
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+        border-radius: inherit;
+      }
 
-<h3 class="text-xl font-bold text-green-800">
-${data.mode || "Simulation"}
-</h3>
+      .card-glass-premium:hover::before {
+        opacity: 0.6;
+      }
 
-<p class="mt-2">Event: ${data.event}</p>
-<p>Measured Value: ${data.value}</p>
+      .card-glass-premium:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+      }
 
-<p class="mt-4 text-2xl font-bold text-green-700">
-Payout: ₹${data.payout}
-</p>
+      .shadow-card {
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      }
 
-</div>
-`;
+      .shadow-card-hover {
+        box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+      }
 
-});
+      .btn-primary {
+        @apply rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-2.5 font-semibold text-white transition duration-300 relative overflow-hidden;
+        box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+      }
 
-}
+      .btn-primary:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
+      }
 
-</script>
+      .btn-primary:active {
+        animation: buttonPress 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      }
 
-</body>
+      .btn-primary::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      .btn-primary-micro {
+        @apply rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-2.5 font-semibold text-white transition duration-300;
+        box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+      }
+
+      .btn-primary-micro:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
+      }
+
+      .btn-micro {
+        @apply transition duration-300;
+      }
+
+      .btn-micro:active {
+        animation: buttonPress 0.2s ease-out;
+      }
+
+      .active-pill {
+        @apply bg-gradient-to-r from-cyan-100 to-blue-100 text-cyan-700;
+        box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+      }
+
+      .active-glow {
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .nav-item.active .active-glow {
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+      }
+
+      .letter-spacing {
+        letter-spacing: 0.02em;
+      }
+
+      /* Sidebar toggle for mobile */
+      #sidebar.active { @apply translate-x-0; }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(34, 211, 238, 0.4);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(34, 211, 238, 0.6);
+      }
+    </style>
+
+    <script>
+      // IntersectionObserver for scroll-triggered animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationDelay = `${index * 80}ms`;
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.reveal-scroll').forEach(el => {
+        observer.observe(el);
+      });
+
+      // Number counter animations
+      function animateCounter(element, target, duration = 800) {
+        let current = 0;
+        const increment = target / (duration / 16);
+        const interval = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(interval);
+          }
+          element.textContent = '₹' + Math.floor(current).toLocaleString('en-IN');
+        }, 16);
+      }
+
+      // Trigger counters when visible
+      document.querySelectorAll('.counter').forEach(el => {
+        const target = parseInt(el.dataset.target) || 0;
+        const triggerObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !el.dataset.animated) {
+              el.dataset.animated = 'true';
+              animateCounter(el, target);
+              triggerObserver.unobserve(el);
+            }
+          });
+        });
+        triggerObserver.observe(el);
+      });
+
+      // Parallax effect for background blobs
+      window.addEventListener('scroll', () => {
+        const blobs = document.querySelectorAll('.blob-float');
+        blobs.forEach((blob, index) => {
+          const speed = parseFloat(blob.dataset.speed) || 0.5;
+          blob.style.transform = `translateY(${window.scrollY * speed}px)`;
+        });
+      });
+
+      // Button ripple effect
+      function createRipple(event) {
+        const button = event.currentTarget;
+        const circle = document.createElement('span');
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
+        const radius = diameter / 2;
+
+        circle.style.width = circle.style.height = diameter + 'px';
+        circle.style.left = event.clientX - button.getBoundingClientRect().left - radius + 'px';
+        circle.style.top = event.clientY - button.getBoundingClientRect().top - radius + 'px';
+        circle.classList.add('ripple');
+        circle.style.position = 'absolute';
+        circle.style.borderRadius = '50%';
+        circle.style.background = 'rgba(255, 255, 255, 0.6)';
+        circle.style.animation = 'ripple 0.6s ease-out';
+        circle.style.pointerEvents = 'none';
+
+        button.appendChild(circle);
+        setTimeout(() => circle.remove(), 600);
+      }
+
+      document.querySelectorAll('.btn-primary-micro, .btn-micro').forEach(btn => {
+        btn.addEventListener('click', createRipple);
+      });
+
+      // Mobile sidebar toggle
+      document.getElementById('sidebarToggle').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('active');
+      });
+
+      // Close sidebar on nav click and update active state
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.getElementById('sidebar').classList.remove('active');
+          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // User personalization from localStorage
+      function initializeUserData() {
+        const user = JSON.parse(localStorage.getItem('shieldrider_current_user') || 'null');
+        if (!user) return;
+
+        const email = user.email.split('@')[0];
+        const initials = email.charAt(0).toUpperCase();
+
+        document.getElementById('heroName').textContent = `${email}`;
+        document.getElementById('greetingText').textContent = `Welcome back, ${email}!`;
+        document.getElementById('avatarTop').textContent = initials;
+        document.getElementById('workTypeChip').textContent = `Work Type: ${user.workType}`;
+        document.getElementById('hoursChip').textContent = `Weekly Hours: ${user.weeklyHours}h`;
+
+        // Calculate metrics based on user data
+        const monthlyIncome = user.weeklyHours * 500; // ₹500 per hour estimate
+        const riskScore = user.weeklyHours > 50 ? 'Medium' : 'Low';
+        const nextPremium = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString();
+
+        document.getElementById('incomeValue').dataset.target = monthlyIncome;
+        document.getElementById('incomeValue').textContent = '₹' + monthlyIncome.toLocaleString('en-IN');
+        document.getElementById('riskValue').textContent = riskScore;
+        document.getElementById('nextPremiumValue').textContent = nextPremium;
+      }
+
+      // Auto-initialize on page load
+      window.addEventListener('load', initializeUserData);
+
+      // Ensure animations trigger on staggered intervals with better timing
+      setTimeout(() => {
+        document.querySelectorAll('.reveal-scroll').forEach((el, index) => {
+          el.style.animationDelay = `${index * 60}ms`;
+        });
+      }, 150);
+    </script>
+  </body>
 </html>

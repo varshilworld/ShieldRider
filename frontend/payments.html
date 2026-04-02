@@ -1,0 +1,732 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShieldRider - Premium Simulation</title>
+  <style>
+    :root{
+      --bg:#08140f;
+      --panel:#10281d;
+      --panel2:#143424;
+      --text:#eefbf4;
+      --muted:#a8cdb9;
+      --accent:#39d98a;
+      --accent2:#e6d44a;
+      --gold:#d8c65f;
+      --ok:#35d39c;
+      --warn:#ffcc66;
+      --bad:#ff5d7a;
+      --line:rgba(180,230,198,.18);
+      --shadow: 0 18px 45px rgba(0, 0, 0, .38);
+      --shadow-strong: 0 22px 60px rgba(0, 0, 0, .46);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color:var(--text);
+      background: linear-gradient(135deg, #07140f 0%, #112116 52%, #262d0f 100%);
+      position: relative;
+      min-height: 100vh;
+      transition: background .45s ease;
+    }
+    body.step-plan{
+      background: linear-gradient(135deg, #07140f 0%, #112116 52%, #262d0f 100%);
+    }
+    body.step-amount{
+      background: linear-gradient(135deg, #091710 0%, #1a2a15 54%, #2f3210 100%);
+    }
+    body.step-payment{
+      background: linear-gradient(135deg, #081710 0%, #17301f 50%, #3a3710 100%);
+    }
+    body::before,
+    body::after{
+      content:"";
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(10px);
+      transition: background .45s ease, opacity .45s ease;
+    }
+    body::before{
+      width: 360px;
+      height: 360px;
+      right: -90px;
+      top: 50px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(120,255,176,.28), rgba(120,255,176,0) 72%);
+      opacity: .9;
+    }
+    body::after{
+      width: 440px;
+      height: 440px;
+      left: -140px;
+      bottom: -80px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,234,113,.22), rgba(255,234,113,0) 74%);
+      opacity: .82;
+    }
+    body.step-amount::before{
+      background: radial-gradient(circle, rgba(123,255,183,.26), rgba(123,255,183,0) 72%);
+    }
+    body.step-amount::after{
+      background: radial-gradient(circle, rgba(255,230,117,.24), rgba(255,230,117,0) 74%);
+    }
+    body.step-payment::before{
+      background: radial-gradient(circle, rgba(126,255,191,.28), rgba(126,255,191,0) 72%);
+    }
+    body.step-payment::after{
+      background: radial-gradient(circle, rgba(255,224,102,.25), rgba(255,224,102,0) 74%);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:26px; position: relative; z-index: 1;}
+    .top{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:20px 22px;
+      background:linear-gradient(135deg, rgba(14,35,26,.82), rgba(20,45,33,.78));
+      display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+      box-shadow: var(--shadow-strong);
+      backdrop-filter: blur(14px);
+      position: relative;
+      overflow: hidden;
+    }
+    .top::after{
+      content:"";
+      position:absolute;
+      inset:-1px -1px auto -1px;
+      height:2px;
+      background: linear-gradient(90deg, rgba(57,217,138,.18), rgba(230,212,74,.58), rgba(216,198,95,.25));
+    }
+    .brand{
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.2px;
+      background: linear-gradient(100deg, #48e299, #e6d44a 58%, #9edd67);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+    }
+    .sub{font-size:13px;color:var(--muted)}
+    .steps{display:flex;gap:8px;flex-wrap:wrap}
+    .step{
+      border:1px solid var(--line);
+      padding:8px 12px;border-radius:999px;color:var(--muted);font-size:12px;
+      background: rgba(26,53,39,.55);
+      font-weight:600;
+    }
+    .step.active{color:var(--text);border-color:rgba(57,217,138,.5);background:rgba(57,217,138,.14)}
+    .progress{
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(95,132,107,.26);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress > div{
+      height: 100%;
+      width: 34%;
+      background: linear-gradient(90deg, rgba(57,217,138,.94), rgba(230,212,74,.9));
+      box-shadow: 0 0 26px rgba(116,225,133,.34);
+      transition: width .25s ease;
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(14,35,26,.9), rgba(18,47,34,.86));
+      padding:20px;
+      margin-top:16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:1px;
+      background: linear-gradient(90deg, rgba(57,217,138,.08), rgba(230,212,74,.4), rgba(216,198,95,.16));
+    }
+    h1{margin:0 0 10px;font-size:31px;line-height:1.14;letter-spacing:.2px}
+    h2{margin:0 0 8px;font-size:21px;line-height:1.22}
+    p{margin:0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .plan{
+      border:1px solid var(--line);
+      border-radius:16px;padding:14px;background:linear-gradient(180deg, rgba(17,45,32,.96), rgba(14,36,27,.95));cursor:pointer;
+      transition:.18s transform,.18s border-color,.18s background-color;
+      box-shadow: 0 8px 20px rgba(0,0,0,.24);
+    }
+    .plan:hover{transform:translateY(-3px);border-color:rgba(57,217,138,.45); background: linear-gradient(180deg, rgba(20,56,38,.98), rgba(17,48,33,.98))}
+    .plan.selected{
+      border-color:rgba(57,217,138,.6);
+      background:linear-gradient(135deg, rgba(57,217,138,.18), rgba(230,212,74,.12));
+      box-shadow: 0 14px 30px rgba(0,0,0,.3);
+    }
+    .pill{
+      font-size:11px;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid rgba(230,212,74,.24);
+      display:inline-block;
+      font-weight:700;
+      letter-spacing:.3px;
+      color:#e6d44a;
+      background: rgba(230,212,74,.12);
+    }
+    .plan h3{margin:8px 0 6px}
+    .meta{font-size:13px;color:var(--muted);line-height:1.45}
+    .row{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+    .field{flex:1;min-width:220px}
+    label{display:block; font-size:13px; font-weight:600; margin-bottom:6px}
+    input,select,button{
+      width:100%;padding:11px 12px;border-radius:11px;border:1px solid var(--line);
+      background:#10281d;color:var(--text)
+    }
+    input:focus, select:focus{
+      outline: none;
+      border-color: rgba(57,217,138,.58);
+      box-shadow: 0 0 0 4px rgba(57,217,138,.18);
+    }
+    button{cursor:pointer;font-weight:700}
+    .primary{
+      background:linear-gradient(135deg, rgba(57,217,138,.95), rgba(230,212,74,.92));
+      border-color:rgba(57,217,138,.45);
+      color: #102118;
+      box-shadow: 0 12px 24px rgba(0,0,0,.28);
+    }
+    .primary:hover{filter: brightness(1.02)}
+    button:active{transform: translateY(1px)}
+    button:disabled{opacity:.55; cursor:not-allowed}
+    .muted{color:var(--muted);font-size:13px}
+    .hidden{display:none}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .amt{font-size:28px;font-weight:800}
+    .methods{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .method{
+      border:1px solid var(--line);border-radius:12px;padding:11px;background:linear-gradient(180deg,#132f22,#10281d);cursor:pointer;text-align:center;
+      transition: all .16s ease;
+    }
+    .method:hover{transform: translateY(-2px)}
+    .method.active{
+      border-color:rgba(57,217,138,.55);
+      background:linear-gradient(135deg, rgba(57,217,138,.2), rgba(230,212,74,.13));
+      box-shadow: 0 10px 22px rgba(0,0,0,.28);
+    }
+    .ok{color:var(--ok);font-weight:700}
+    .owner{
+      margin-top:14px;padding:12px;border:1px dashed rgba(180,230,198,.22);border-radius:12px;
+      background: rgba(15,39,28,.66);
+    }
+    .ownerGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+    .small{font-size:12px}
+    .kpiRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .kpi{
+      flex:1; min-width: 220px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background: linear-gradient(180deg, #143424, #102a1d);
+      box-shadow: 0 8px 20px rgba(0,0,0,.24);
+    }
+    .kpi .label{color:var(--muted); font-size:12px}
+    .kpi .value{font-size:18px; font-weight:800; margin-top:6px}
+    .toastWrap{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      gap: 10px;
+      z-index: 9999;
+    }
+    .toast{
+      width: min(380px, calc(100vw - 36px));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(16,42,30,.96), rgba(12,34,24,.96));
+      box-shadow: var(--shadow);
+      padding: 12px 12px;
+      backdrop-filter: blur(12px);
+      animation: toastIn .18s ease;
+    }
+    .toast .t{font-weight:800}
+    .toast .d{color:var(--muted); font-size:13px; margin-top:4px; line-height:1.35}
+    .toast.ok{border-color: rgba(53,211,156,.35)}
+    .toast.warn{border-color: rgba(255,204,102,.35)}
+    .toast.bad{border-color: rgba(255,93,122,.35)}
+    @keyframes toastIn { from { transform: translateY(6px); opacity: .0 } to { transform: translateY(0); opacity: 1 } }
+    .fadeScreen{animation: fadeIn .22s ease}
+    @keyframes fadeIn { from { opacity: .0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }
+    input[type="range"]{
+      padding: 0;
+      height: 38px;
+      background: transparent;
+    }
+    .rangeMeta{display:flex; justify-content:space-between; gap:10px; color: var(--muted); font-size: 12px; margin-top: 6px}
+    .spinner{
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(122,145,184,.25);
+      border-top-color: rgba(59,164,255,.9);
+      display: inline-block;
+      animation: spin .8s linear infinite;
+      vertical-align: -3px;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    @media (max-width:900px){
+      .grid,.methods,.ownerGrid,.two{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand">ShieldRider</div>
+        <div class="sub">Professional Premium + Payment Simulation (HTML + JavaScript)</div>
+      </div>
+      <div class="steps">
+        <div class="step active" id="step1">1. Plan</div>
+        <div class="step" id="step2">2. Amount</div>
+        <div class="step" id="step3">3. Payment</div>
+      </div>
+      <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+    </div>
+
+    <section class="card" id="screen-plan">
+      <h1>Select Plan Option</h1>
+      <p>Choose Option 1, 2, or 3. Plan details are editable by owner on this page.</p>
+
+      <div class="row">
+        <div class="field">
+          <label>Monthly Income (INR)</label>
+          <input id="income" type="number" value="20000" min="1" />
+          <input id="incomeRange" type="range" min="5000" max="200000" step="500" value="20000" />
+          <div class="rangeMeta"><span>₹5,000</span><span id="incomeHint">₹20,000</span><span>₹2,00,000</span></div>
+        </div>
+        <div class="field">
+          <label>Risk Level</label>
+          <select id="risk">
+            <option value="0.03">Low Risk Area (0.03)</option>
+            <option value="0.04" selected>Medium Risk Area (0.04)</option>
+            <option value="0.05">High Risk Area (0.05)</option>
+          </select>
+          <div class="kpi" style="margin-top:10px">
+            <div class="label">Live premium preview</div>
+            <div class="value" id="liveMonthly">—</div>
+            <div class="muted small" id="liveWeekly" style="margin-top:4px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" id="planGrid"></div>
+
+      <div class="row">
+        <div class="field"><button class="primary" id="btnCalculate">Calculate & Continue</button></div>
+      </div>
+
+      <div class="owner">
+        <div class="row" style="margin-top:0">
+          <div class="field">
+            <label><input id="ownerMode" type="checkbox" style="width:auto;vertical-align:middle" /> Owner Mode (Edit Option 1/2/3)</label>
+            <div class="small muted">This simulates "author can edit options". Data is saved in browser localStorage.</div>
+          </div>
+        </div>
+        <div id="ownerEditor" class="hidden">
+          <div class="ownerGrid" id="ownerGrid"></div>
+          <div class="row">
+            <div class="field"><button id="savePlans">Save Plan Edits</button></div>
+            <div class="field"><button id="resetPlans">Reset Default Plans</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="screen-amount">
+      <h2>Premium Calculated</h2>
+      <div class="two">
+        <div class="card" style="margin:0">
+          <div class="muted">Selected Plan</div>
+          <div id="selPlanName" style="font-size:22px;font-weight:800;margin-top:6px"></div>
+          <div id="selPlanMeta" class="meta" style="margin-top:8px"></div>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="muted">Auto Calculated Amount</div>
+          <div style="margin-top:8px">
+            <div class="muted">Monthly Premium</div>
+            <div id="monthlyAmount" class="amt"></div>
+            <div class="muted" style="margin-top:8px">Weekly Premium</div>
+            <div id="weeklyAmount" class="amt"></div>
+          </div>
+        </div>
+      </div>
+      <div class="kpiRow">
+        <div class="kpi">
+          <div class="label">Risk factor</div>
+          <div class="value" id="kpiRisk">—</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Coverage factor</div>
+          <div class="value" id="kpiCoverage">—</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Monthly income</div>
+          <div class="value" id="kpiIncome">—</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field"><button class="primary" id="toPayment">Proceed to Transaction Method</button></div>
+        <div class="field"><button id="backPlan">Back</button></div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="screen-payment">
+      <h2>Choose Transaction Method</h2>
+      <p>Choose one method and complete simulated payment.</p>
+      <div class="methods" id="methods"></div>
+      <div class="row">
+        <div class="field">
+          <select id="payType">
+            <option value="monthly">Pay Monthly Premium</option>
+            <option value="weekly">Pay Weekly Premium</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field"><button class="primary" id="confirmPay">Confirm Payment (Simulated)</button></div>
+      </div>
+      <div class="row">
+        <div class="field"><button id="backAmount">Back to Amount</button></div>
+        <div class="field"><button id="backToPlanFromPayment">Back to Plan</button></div>
+      </div>
+      <div id="result" class="card hidden" style="margin-top:12px">
+        <div class="ok">Payment Successful (Simulated)</div>
+        <div id="resultText" class="meta" style="margin-top:8px"></div>
+      </div>
+    </section>
+  </div>
+  <div class="toastWrap" id="toastWrap" aria-live="polite" aria-relevant="additions"></div>
+
+  <script type="module">
+    import { calculatePremium } from "../utils/pricingEngine.js";
+
+    const defaultPlans = [
+      { id: 1, title: "Basic", desc: "Starter protection for low-risk workers.", coverage: 1.00, maxCoverage: 500 },
+      { id: 2, title: "Standard", desc: "Balanced plan for medium risk zones.", coverage: 1.20, maxCoverage: 700 },
+      { id: 3, title: "Premium", desc: "Highest protection for high-risk disruption.", coverage: 1.50, maxCoverage: 1000 }
+    ];
+
+    const methods = ["UPI", "Net Banking", "Debit Card", "Credit Card"];
+    const currency = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 });
+    const storeKey = "shieldrider-plans-v1";
+
+    let plans = loadPlans();
+    let selectedPlanId = 1;
+    let selectedMethod = "UPI";
+    let calc = { monthly: 0, weekly: 0 };
+    let paying = false;
+
+    const inrPlain = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
+
+    function loadPlans() {
+      try {
+        const local = JSON.parse(localStorage.getItem(storeKey));
+        if (Array.isArray(local) && local.length === 3) return local;
+      } catch {}
+      return JSON.parse(JSON.stringify(defaultPlans));
+    }
+
+    function savePlansLocal() {
+      localStorage.setItem(storeKey, JSON.stringify(plans));
+    }
+
+    function renderPlans() {
+      const grid = document.getElementById("planGrid");
+      grid.innerHTML = "";
+      plans.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "plan" + (p.id === selectedPlanId ? " selected" : "");
+        div.innerHTML = `
+          <div class="pill">Option ${p.id}</div>
+          <h3>${p.title}</h3>
+          <div class="meta">${p.desc}</div>
+          <div class="meta" style="margin-top:8px">Coverage Factor: <b>${p.coverage.toFixed(2)}</b></div>
+          <div class="meta">Max Weekly Coverage: <b>₹${p.maxCoverage}</b></div>
+        `;
+        div.onclick = () => { selectedPlanId = p.id; renderPlans(); updateLivePreview(); };
+        grid.appendChild(div);
+      });
+    }
+
+    function renderOwnerEditor() {
+      const editor = document.getElementById("ownerGrid");
+      editor.innerHTML = "";
+      plans.forEach((p, idx) => {
+        const box = document.createElement("div");
+        box.className = "card";
+        box.style.margin = "0";
+        box.innerHTML = `
+          <div class="muted" style="margin-bottom:8px">Option ${p.id}</div>
+          <label>Title</label>
+          <input id="t${idx}" value="${p.title}" />
+          <label style="margin-top:8px;display:block">Description</label>
+          <input id="d${idx}" value="${p.desc}" />
+          <label style="margin-top:8px;display:block">Coverage Factor</label>
+          <input id="c${idx}" type="number" step="0.01" value="${p.coverage}" />
+          <label style="margin-top:8px;display:block">Max Weekly Coverage</label>
+          <input id="m${idx}" type="number" value="${p.maxCoverage}" />
+        `;
+        editor.appendChild(box);
+      });
+    }
+
+    function setStep(step) {
+      ["step1","step2","step3"].forEach((id, i) => {
+        document.getElementById(id).classList.toggle("active", i + 1 === step);
+      });
+      document.getElementById("screen-plan").classList.toggle("hidden", step !== 1);
+      document.getElementById("screen-amount").classList.toggle("hidden", step !== 2);
+      document.getElementById("screen-payment").classList.toggle("hidden", step !== 3);
+      document.getElementById("progressBar").style.width = step === 1 ? "34%" : step === 2 ? "67%" : "100%";
+      ["screen-plan","screen-amount","screen-payment"].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (idx + 1 === step) el.classList.add("fadeScreen");
+        setTimeout(() => el.classList.remove("fadeScreen"), 250);
+      });
+      document.body.classList.remove("step-plan", "step-amount", "step-payment");
+      document.body.classList.add(step === 1 ? "step-plan" : step === 2 ? "step-amount" : "step-payment");
+    }
+
+    function toast(type, title, detail) {
+      const wrap = document.getElementById("toastWrap");
+      const el = document.createElement("div");
+      el.className = "toast " + type;
+      el.innerHTML = `<div class="t">${title}</div><div class="d">${detail || ""}</div>`;
+      wrap.appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
+
+    function mapRisk(value) {
+      if (value <= 0.03) return "Low";
+      if (value <= 0.04) return "Medium";
+      return "High";
+    }
+
+    function mapPlanTitleToEnginePlan(title) {
+      const t = title?.toLowerCase() || "";
+      if (t.includes("basic")) return "BASIC";
+      if (t.includes("standard")) return "PRO";
+      if (t.includes("premium")) return "ELITE";
+      return "PRO";
+    }
+
+    function getInputs() {
+      const incomeEl = document.getElementById("income");
+      const income = Number(incomeEl.value || 0);
+      const risk = Number(document.getElementById("risk").value);
+      const plan = plans.find(p => p.id === selectedPlanId);
+      return { income, risk, plan };
+    }
+
+    function updateIncomeHint(value) {
+      document.getElementById("incomeHint").textContent = "₹" + inrPlain.format(value || 0);
+    }
+
+    function updateLivePreview() {
+      const { income, risk, plan } = getInputs();
+      const liveMonthly = document.getElementById("liveMonthly");
+      const liveWeekly = document.getElementById("liveWeekly");
+
+      if (!plan || income <= 0) {
+        liveMonthly.textContent = "—";
+        liveWeekly.textContent = "";
+        return;
+      }
+      const user = {
+        income,
+        plan: mapPlanTitleToEnginePlan(plan.title),
+        riskZone: mapRisk(risk),
+        behavior: "normal",
+        stability: "normal"
+      };
+      const environment = { factor: 1.0 };
+      const result = calculatePremium(user, environment);
+      const monthly = result.premium;
+      const weekly = monthly / 4;
+      liveMonthly.textContent = currency.format(monthly) + " / month";
+      liveWeekly.textContent = currency.format(weekly) + " / week";
+    }
+
+    function calculate() {
+      const income = Number(document.getElementById("income").value || 0);
+      if (income <= 0) {
+        toast("warn", "Missing income", "Please enter a valid monthly income to continue.");
+        return false;
+      }
+      const risk = Number(document.getElementById("risk").value);
+      const plan = plans.find(p => p.id === selectedPlanId);
+      if (!plan) {
+        toast("warn", "Plan missing", "Please select a plan first.");
+        return false;
+      }
+
+      const user = {
+        income,
+        plan: mapPlanTitleToEnginePlan(plan.title),
+        riskZone: mapRisk(risk),
+        behavior: "normal",
+        stability: "normal"
+      };
+
+      const environment = { factor: 1.0 };
+      const result = calculatePremium(user, environment);
+      const monthly = result.premium;
+      const weekly = monthly / 4;
+
+      calc = { monthly, weekly, income, risk, plan, user, environment, premiumResult: result };
+      return true;
+    }
+
+    function bind() {
+      const income = document.getElementById("income");
+      const incomeRange = document.getElementById("incomeRange");
+      const risk = document.getElementById("risk");
+
+      const syncIncome = (v) => {
+        const value = Math.max(1, Number(v || 0));
+        income.value = value;
+        incomeRange.value = String(Math.min(Math.max(value, Number(incomeRange.min)), Number(incomeRange.max)));
+        updateIncomeHint(value);
+        updateLivePreview();
+      };
+
+      income.addEventListener("input", () => syncIncome(income.value));
+      incomeRange.addEventListener("input", () => syncIncome(incomeRange.value));
+      risk.addEventListener("change", () => updateLivePreview());
+
+      document.getElementById("btnCalculate").onclick = () => {
+        if (!calculate()) return;
+        document.getElementById("selPlanName").textContent = `Option ${calc.plan.id} - ${calc.plan.title}`;
+        document.getElementById("selPlanMeta").textContent = `Coverage Factor ${calc.plan.coverage.toFixed(2)} | Risk Factor ${calc.risk.toFixed(2)} | Income ₹${calc.income}`;
+        document.getElementById("monthlyAmount").textContent = currency.format(calc.monthly);
+        document.getElementById("weeklyAmount").textContent = currency.format(calc.weekly);
+        document.getElementById("kpiRisk").textContent = calc.risk.toFixed(2);
+        document.getElementById("kpiCoverage").textContent = calc.plan.coverage.toFixed(2);
+        document.getElementById("kpiIncome").textContent = "₹" + inrPlain.format(calc.income);
+        toast("ok", "Premium calculated", "Review the monthly/weekly amounts and continue to payment.");
+        setStep(2);
+      };
+
+      document.getElementById("toPayment").onclick = () => setStep(3);
+      document.getElementById("backPlan").onclick = () => setStep(1);
+      document.getElementById("backAmount").onclick = () => setStep(2);
+      document.getElementById("backToPlanFromPayment").onclick = () => setStep(1);
+
+      document.getElementById("ownerMode").onchange = (e) => {
+        document.getElementById("ownerEditor").classList.toggle("hidden", !e.target.checked);
+      };
+
+      document.getElementById("savePlans").onclick = () => {
+        const next = plans.map((p, idx) => ({
+          ...p,
+          title: document.getElementById(`t${idx}`).value.trim() || p.title,
+          desc: document.getElementById(`d${idx}`).value.trim() || p.desc,
+          coverage: Math.max(0.1, Number(document.getElementById(`c${idx}`).value || p.coverage)),
+          maxCoverage: Math.max(100, Number(document.getElementById(`m${idx}`).value || p.maxCoverage))
+        }));
+        plans = next;
+        savePlansLocal();
+        renderPlans();
+        toast("ok", "Plans saved", "Your plan edits were saved locally in this browser.");
+        updateLivePreview();
+      };
+
+      document.getElementById("resetPlans").onclick = () => {
+        plans = JSON.parse(JSON.stringify(defaultPlans));
+        savePlansLocal();
+        renderPlans();
+        renderOwnerEditor();
+        toast("warn", "Plans reset", "Default plans restored.");
+        updateLivePreview();
+      };
+
+      const methodWrap = document.getElementById("methods");
+      methods.forEach((m, idx) => {
+        const el = document.createElement("div");
+        el.className = "method" + (idx === 0 ? " active" : "");
+        el.textContent = m;
+        el.onclick = () => {
+          selectedMethod = m;
+          [...methodWrap.children].forEach(c => c.classList.remove("active"));
+          el.classList.add("active");
+        };
+        methodWrap.appendChild(el);
+      });
+
+      document.getElementById("confirmPay").onclick = async () => {
+        if (paying) return;
+        if (!calc || !calc.plan) {
+          toast("warn", "Calculate first", "Please calculate premium before confirming payment.");
+          setStep(1);
+          return;
+        }
+        const payType = document.getElementById("payType").value;
+        const amt = payType === "weekly" ? calc.weekly : calc.monthly;
+        const txn = "SIM-" + Math.random().toString(36).slice(2, 10).toUpperCase();
+        const btn = document.getElementById("confirmPay");
+        paying = true;
+        btn.disabled = true;
+        const original = btn.textContent;
+        btn.innerHTML = `<span class="spinner"></span>Processing...`;
+        toast("warn", "Processing payment", "This is a simulation. Please wait...");
+
+        await new Promise(r => setTimeout(r, 1200));
+        paying = false;
+        btn.disabled = false;
+        btn.textContent = original;
+        document.getElementById("result").classList.remove("hidden");
+        document.getElementById("resultText").innerHTML =
+          `Plan: <b>Option ${calc.plan.id} - ${calc.plan.title}</b><br>` +
+          `Method: <b>${selectedMethod}</b><br>` +
+          `Amount: <b>${currency.format(amt)}</b><br>` +
+          `Transaction ID: <b>${txn}</b>`;
+
+        const userData = JSON.parse(localStorage.getItem("shieldrider_current_user") || "{}");
+        if (!userData.transactions || !Array.isArray(userData.transactions)) userData.transactions = [];
+        userData.transactions.push({
+          type: "Premium",
+          amount: Math.round(amt),
+          date: new Date().toLocaleString(),
+          plan: calc.plan.title,
+          coverage: Math.round(calc.plan.maxCoverage * calc.plan.coverage),
+          riskZone: mapRisk(calc.risk),
+          status: "Paid",
+          transactionId: txn
+        });
+        userData.plan = mapPlanTitleToEnginePlan(calc.plan.title);
+        userData.income = calc.income;
+        userData.riskZone = mapRisk(calc.risk);
+        userData.behavior = "normal";
+        userData.stability = "normal";
+        localStorage.setItem("shieldrider_current_user", JSON.stringify(userData));
+
+        toast("ok", "Payment successful", `Transaction ID ${txn}`);
+      };
+
+      syncIncome(income.value);
+    }
+
+    renderPlans();
+    renderOwnerEditor();
+    bind();
+    setStep(1);
+    updateLivePreview();
+  </script>
+</body>
+</html>

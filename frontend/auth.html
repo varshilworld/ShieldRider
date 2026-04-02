@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShieldRider Auth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+    <div class="auth-shell min-h-screen flex flex-col">
+      <a id="backHome" href="index.html" class="absolute left-4 top-4 z-20 rounded-full border border-slate-600 bg-slate-900/70 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800 hover:text-white transition">← Back to Home</a>
+      <div class="bg-animated absolute inset-0 -z-10"></div>
+      <div class="auth-container relative mx-auto flex w-full flex-1 flex-col lg:flex-row h-screen">
+        <aside class="left-panel h-1/2 w-full lg:h-full lg:w-1/2 p-8 lg:p-14 flex flex-col justify-center gap-8">
+          <div class="brand-logo text-lg font-semibold tracking-wide text-cyan-300">ShieldRider <span class="text-amber-300">🛡</span></div>
+          <p class="text-sm text-slate-300">Income Protection for Gig Workers</p>
+          <h1 class="text-4xl leading-tight font-black lg:text-6xl">Protect your income in seconds</h1>
+          <p class="max-w-xl text-slate-300 text-lg lg:text-xl">AI-powered insurance built for delivery riders, gig workers and on-the-go earners. Premium protection designed for real-world pace.</p>
+          <div class="trust-items grid gap-2 text-sm text-slate-300">
+            <span>✔ Trusted by 1000+ riders</span>
+            <span>✔ Instant payouts in minutes</span>
+            <span>✔ No paperwork required</span>
+            <span>✔ Weekly flexible plans</span>
+          </div>
+          <div class="shapes-wrap relative">
+            <span class="shape-circle"></span>
+            <span class="shape-square"></span>
+            <span class="shape-glow"></span>
+          </div>
+        </aside>
+
+        <main class="right-panel h-1/2 w-full lg:h-full lg:w-1/2 p-6 lg:p-14 flex items-center justify-center">
+          <section id="glassCard" class="glass-card floating-card w-full max-w-md rounded-3xl border border-white/15 bg-white/8 p-6 shadow-[0_28px_70px_rgba(20,20,30,0.48)] backdrop-blur-xl transition-all duration-500">
+            <div class="tab-group mb-6 inline-flex w-full overflow-hidden rounded-xl border border-zinc-700 bg-slate-900/65">
+              <button id="tabLogin" class="tab-btn flex-1 px-4 py-3 text-sm font-semibold transition">Login</button>
+              <button id="tabSignup" class="tab-btn flex-1 px-4 py-3 text-sm font-semibold transition">Sign Up</button>
+            </div>
+            <div id="formWrapper" class="transition-opacity duration-400">
+              <form id="loginForm" class="auth-form flex flex-col gap-4" novalidate>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="loginEmail">Email</label>
+                  <input id="loginEmail" type="email" class="input-field" required placeholder="you@example.com" />
+                  <p id="loginEmailHelp" class="field-error hidden">Enter a valid email address</p>
+                </div>
+                <div class="relative">
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="loginPassword">Password</label>
+                  <input id="loginPassword" type="password" class="input-field" required placeholder="8+ characters" minlength="8" />
+                  <button type="button" class="show-hide-btn" data-target="loginPassword">Show</button>
+                  <p id="loginPasswordHelp" class="field-error hidden">Password must be at least 8 characters</p>
+                </div>
+                <button id="loginSubmit" type="submit" class="submit-btn btn-primary mt-1 disabled:cursor-not-allowed" disabled>
+                  <span class="btn-text">Login</span>
+                  <span class="loading-dot hidden" aria-hidden="true"></span>
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-1">No account? <span id="smallToggleSignup" class="link-action">Sign up</span></p>
+                <p id="loginStatus" class="status-message"></p>
+              </form>
+
+              <form id="signupForm" class="auth-form hidden flex-col gap-4" novalidate>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="signupEmail">Email</label>
+                  <input id="signupEmail" type="email" class="input-field" required placeholder="you@example.com" />
+                  <p id="signupEmailHelp" class="field-error hidden">Enter a valid email address</p>
+                </div>
+                <div class="relative">
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="signupPassword">Password</label>
+                  <input id="signupPassword" type="password" class="input-field" required placeholder="8+ characters" minlength="8" />
+                  <button type="button" class="show-hide-btn" data-target="signupPassword">Show</button>
+                  <p id="signupPasswordHelp" class="field-error hidden">Password must be at least 8 characters</p>
+                  <div id="passwordStrength" class="pw-strength mt-1 text-sm"></div>
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="city">City</label>
+                  <select id="city" class="input-field" required>
+                    <option value="">Select your city</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bengaluru">Bengaluru</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Ahmedabad">Ahmedabad</option>
+                  </select>
+                  <p id="cityHelp" class="field-error hidden">Please select a city</p>
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="workType">Work Type</label>
+                  <select id="workType" class="input-field" required>
+                    <option value="">Choose type</option>
+                    <option value="Delivery">Food Delivery Rider</option>
+                  </select>
+                  <p id="workTypeHelp" class="field-error hidden">Please choose your work type</p>
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-200" for="weeklyHours">Weekly Work Hours <span id="weeklyValue" class="font-semibold text-cyan-300">40</span>h</label>
+                  <input id="weeklyHours" type="range" min="10" max="80" value="40" class="slider" />
+                  <p id="weeklyHelp" class="field-error hidden">Adjust to your weekly rhythm</p>
+                </div>
+                <button id="signupSubmit" type="submit" class="submit-btn btn-primary mt-1 disabled:cursor-not-allowed" disabled>
+                  <span class="btn-text">Sign Up</span>
+                  <span class="loading-dot hidden" aria-hidden="true"></span>
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-1">Already registered? <span id="smallToggleLogin" class="link-action">Login</span></p>
+                <div class="signup-context mt-3 rounded-lg border border-slate-700 bg-slate-900/70 p-3 text-xs text-slate-300">
+                  <p class="font-semibold text-slate-100">By signing up, you get:</p>
+                  <ul class="mt-1 list-disc space-y-0.5 pl-5">
+                    <li>AI-based premium pricing</li>
+                    <li>Automatic payout eligibility</li>
+                    <li>Weekly policy control</li>
+                  </ul>
+                </div>
+                <p id="signupStatus" class="status-message"></p>
+              </form>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- ✅ Firebase Integration (ONLY ADDITION) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDyKZKmuteyNBKRFlcjRv1MBlRUDc5TWls",
+        authDomain: "devtrails-guidewire-hackathon.firebaseapp.com",
+        projectId: "devtrails-guidewire-hackathon",
+        storageBucket: "devtrails-guidewire-hackathon.firebasestorage.app",
+        messagingSenderId: "43647169445",
+        appId: "1:43647169445:web:96ff4b3a12eba9fcdfae4c"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      window.auth = auth;
+    </script>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
