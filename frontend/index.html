@@ -1,146 +1,780 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-
-<title>ShieldRider</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-</head>
-
-<body class="bg-gray-50">
-
-
-<!-- NAVBAR -->
-
-<nav class="bg-indigo-600 text-white p-4 flex justify-between">
-
-<h1 class="text-xl font-bold">ShieldRider</h1>
-
-<div class="space-x-6">
-<a href="plans.html">Plans</a>
-<a href="dashboard.html">Dashboard</a>
-</div>
-
-</nav>
-
-
-
-<!-- HERO SECTION -->
-
-<section class="bg-gradient-to-r from-indigo-600 to-blue-500 text-white text-center py-24 px-10">
-
-<h1 class="text-5xl font-bold">
-Income Protection for Food Delivery Workers
-</h1>
-
-<p class="mt-6 text-xl">
-AI-powered parametric insurance protecting riders from weather disruptions.
-</p>
-
-<a href="plans.html"
-class="mt-10 inline-block bg-white text-indigo-600 font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-gray-100">
-
-Get Protection
-
-</a>
-
-<p class="mt-4 text-indigo-100">
-Affordable weekly micro-insurance for delivery riders
-</p>
-
-</section>
-
-
-
-<!-- FEATURES -->
-
-<section class="grid grid-cols-3 gap-10 px-20 py-20">
-
-<div class="bg-white shadow-lg p-8 rounded-lg text-center">
-
-<div class="text-indigo-600 text-4xl mb-4">
-🌧
-</div>
-
-<h2 class="font-bold text-lg">Weather Monitoring</h2>
-
-<p class="text-gray-600 mt-2">
-Detect rain, pollution and extreme heat disruptions automatically.
-</p>
-
-</div>
-
-
-
-<div class="bg-white shadow-lg p-8 rounded-lg text-center">
-
-<div class="text-indigo-600 text-4xl mb-4">
-⚡
-</div>
-
-<h2 class="font-bold text-lg">Automatic Payouts</h2>
-
-<p class="text-gray-600 mt-2">
-Parametric triggers release payouts instantly without claim paperwork.
-</p>
-
-</div>
-
-
-
-<div class="bg-white shadow-lg p-8 rounded-lg text-center">
-
-<div class="text-indigo-600 text-4xl mb-4">
-🛡
-</div>
-
-<h2 class="font-bold text-lg">Weekly Protection Plans</h2>
-
-<p class="text-gray-600 mt-2">
-Affordable micro-insurance designed for gig economy workers.
-</p>
-
-</div>
-
-</section>
-
-
-
-<!-- CALL TO ACTION -->
-
-<section class="bg-indigo-600 text-white text-center py-16">
-
-<h2 class="text-3xl font-bold">
-Protect Your Income Today
-</h2>
-
-<p class="mt-4 text-indigo-200">
-Choose a weekly protection plan and stay financially secure.
-</p>
-
-<a href="plans.html"
-class="mt-6 inline-block bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold">
-
-View Plans
-
-</a>
-
-</section>
-
-
-
-<!-- FOOTER -->
-
-<footer class="bg-gray-900 text-gray-400 text-center py-6">
-
-<p>
-© 2026 ShieldRider — AI Powered Insurance for Gig Workers
-</p>
-
-</footer>
-
-
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShieldRider | Income-Loss Insurance for Delivery Riders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --brand-1: #1b35a4;
+        --brand-2: #5746d6;
+        --brand-3: #5f7de3;
+        --brand-4: #46a6ff;
+      }
+
+      .gradient-bg {
+        background: linear-gradient(140deg, rgba(27, 53, 164, 0.92), rgba(87, 70, 214, 0.88) 45%, rgba(70, 166, 255, 0.78));
+      }
+
+      .parallax { transform: translateY(calc(var(--scroll-y, 0) * 0.2)); }
+      .floating { animation: float 6s ease-in-out infinite; }
+      .floating-slow { animation: float 8s ease-in-out infinite; }
+      .floating-slower { animation: float 10s ease-in-out infinite; }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+      }
+
+      .pricing-card {
+        animation: float 8s ease-in-out infinite;
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+      }
+
+      .pricing-card:hover { transform: translateY(-3px) rotate(1deg) scale(1.01); }
+
+      .pricing-card::after {
+        content: '';
+        position: absolute;
+        inset: -10px;
+        border-radius: inherit;
+        background: radial-gradient(circle at 50% 0%, rgba(72, 180, 255, 0.24), transparent 65%);
+        filter: blur(18px);
+        opacity: 0.5;
+        z-index: -1;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(32px) scale(0.96);
+        transition-property: opacity, transform;
+        transition-duration: 0.9s;
+        transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .hero-title {
+        position: relative;
+      }
+
+      .hero-title::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 220%;
+        height: 180%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle at 50% 40%, rgba(56, 189, 248, 0.30), rgba(59, 130, 246, 0));
+        filter: blur(24px);
+        z-index: -1;
+        opacity: 0.6;
+        animation: pulse-glow 3.2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-glow {
+        0%, 100% { opacity: 0.56; transform: translate(-50%, -50%) scale(0.98); }
+        50% { opacity: 0.78; transform: translate(-50%, -50%) scale(1.02); }
+      }
+
+      .navbar-solid {
+        background: rgba(12, 24, 61, 0.93) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(163, 184, 255, 0.2);
+      }
+
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: 0;
+        background: linear-gradient(90deg, #2dd4bf, #6366f1, #8b5cf6);
+        z-index: 60;
+        transition: width 0.25s ease;
+      }
+
+      .nav-link-active { color: #f8fafc; font-weight: 700; }
+
+      .action-button { position: relative; overflow: hidden; } 
+      .action-button::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        transition: box-shadow 0.25s ease;
+      }
+      .action-button:active::after { box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25), 0 0 30px rgba(56, 189, 248, 0.35); }
+
+      .depth-section { will-change: transform, opacity; transform: scale(1); opacity: 1; transition: transform 0.4s ease, opacity 0.4s ease; }
+      .comparison-card { perspective: 1000px; transform-style: preserve-3d; }
+      .comparison-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 25px 45px rgba(84, 102, 218, 0.40); }
+      .comparison-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.0); transition: box-shadow 0.35s ease; }
+      .comparison-card:hover::after { box-shadow: 0 0 40px rgba(96, 165, 250, 0.35); }
+
+      .low-risk { box-shadow: 0 0 26px rgba(34, 197, 94, 0.36); border-color: rgba(34, 197, 94, 0.5); }
+      .medium-risk { box-shadow: 0 0 26px rgba(234, 179, 8, 0.36); border-color: rgba(234, 179, 8, 0.5); }
+      .high-risk { box-shadow: 0 0 26px rgba(239, 68, 68, 0.36); border-color: rgba(239, 68, 68, 0.5); }
+
+    </style>
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased leading-relaxed">
+    <div id="progressBar" class="progress-bar"></div>
+    <header id="navbar" class="fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out">
+      <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+        <a href="#" class="relative z-20 inline-flex items-center text-xl font-semibold tracking-tight text-white">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 text-white shadow-lg">🛡</span>
+          <span class="ml-3">ShieldRider</span>
+        </a>
+        <div class="hidden items-center gap-8 text-sm font-medium text-slate-100 md:flex">
+          <a href="#hero" class="nav-link transition hover:text-white">Home</a>
+          <a href="#how" class="nav-link transition hover:text-white">How It Works</a>
+          <div class="relative group">
+            <button id="plansDropdownToggle" class="nav-link inline-flex items-center gap-1 transition hover:text-white focus:outline-none">
+              Plans
+              <span aria-hidden="true">▾</span>
+            </button>
+            <div id="plansDropdown" class="absolute left-0 top-full mt-2 hidden w-52 rounded-xl border border-white/15 bg-slate-900/95 p-2 shadow-lg backdrop-blur-xl">
+              <a href="#pricing" class="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:text-white">Weekly Plans</a>
+              <a href="#pricing" class="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:text-white">Pricing Model</a>
+              <a href="#pricing" class="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 hover:text-white">Risk Calculation</a>
+            </div>
+          </div>
+          <a href="dashboard.html" class="nav-link transition hover:text-white">Dashboard</a>
+          <a href="auth.html" class="nav-link rounded-lg border border-white/25 px-4 py-2 transition hover:bg-white/10">Login</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="scroll-smooth">
+      <!-- HERO -->
+      <section id="hero" class="relative min-h-screen overflow-hidden bg-[#090f2e] pb-16 pt-24 sm:pt-32">
+        <div class="absolute inset-0 gradient-bg blur-[1.2px] opacity-90 parallax" style="--scroll-y: 0"></div>
+        <div class="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl items-center px-5 py-16 sm:px-8">
+          <div class="w-full xl:max-w-3xl">
+            <p class="mb-3 inline-flex rounded-full bg-white/10 px-4 py-1 text-sm font-semibold text-sky-200">Weekly income protection for riders</p>
+            <h1 class="hero-title mt-4 text-4xl font-bold leading-tight text-transparent bg-clip-text sm:text-5xl md:text-6xl" style="background: linear-gradient(90deg, #c4d9ff, #ffffff, #92caff);">
+              Protect Your Delivery Income Instantly
+            </h1>
+            <p class="mt-6 max-w-xl text-lg text-slate-100 sm:text-xl">
+              AI-powered parametric insurance that pays you when rain, extreme heat, or pollution hits your zone—no forms, no delays, 100% automated.
+            </p>
+            <div class="mt-8 flex flex-wrap items-center gap-4">
+              <a href="auth.html" class="action-button inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-sky-500/40 transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95">
+                Get Protected
+              </a>
+              <a href="#how" class="action-button inline-flex items-center justify-center rounded-xl border border-white/25 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/10 active:scale-95">
+                See How It Works
+              </a>
+            </div>
+          </div>
+          <div class="relative ml-auto hidden w-1/2 xl:flex">
+            <div id="pricing-card" class="pricing-card floating relative h-[360px] w-full rounded-[40px] border border-white/15 bg-white/5 p-6 backdrop-blur-xl">
+              <div class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-purple-400/40 blur-3xl"></div>
+              <h3 class="mb-2 text-sm font-bold uppercase tracking-wider text-sky-200">Weekly premium estimate</h3>
+              <div class="rounded-2xl bg-blue-950/70 p-5 text-white shadow-lg">
+                <div class="mb-3 text-5xl font-bold"><span id="animated-from">₹40</span> <span class="text-sm font-medium text-slate-300">→ <span id="animated-to">₹239</span></span></div>
+                <div class="text-sm text-slate-300">Based on your city, work hours, and risk profile.</div>
+              </div>
+              <ul class="mt-4 space-y-2 text-sm text-slate-300">
+                <li>• Coverage up to ₹20,000/week</li>
+                <li>• Auto payout with sensor-based triggers</li>
+                <li>• Flexible weekly renewals</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRUST LAYER -->
+      <section id="trust" class="depth-section bg-slate-900/30 py-10 sm:py-14">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-6 shadow-lg shadow-indigo-900/25">
+            <div>
+              <p class="text-sm font-semibold uppercase tracking-wider text-sky-200">Trusted by</p>
+              <h3 class="text-2xl font-bold text-white sm:text-3xl">500+ riders onboarded</h3>
+              <p class="mt-1 text-sm text-slate-300">Reliable payouts across major delivery ecosystems in India.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="h-9 w-20 rounded-lg bg-slate-800/80 text-xs font-bold text-slate-100 flex items-center justify-center">Swiggy</div>
+              <div class="h-9 w-20 rounded-lg bg-slate-800/80 text-xs font-bold text-slate-100 flex items-center justify-center">Zomato</div>
+              <div class="h-9 w-20 rounded-lg bg-slate-800/80 text-xs font-bold text-slate-100 flex items-center justify-center">Blinkit</div>
+            </div>
+          </div>
+          <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center shadow-sm">
+              <p class="text-2xl font-bold text-white">₹18L+</p>
+              <p class="text-xs text-slate-300">Paid to riders last month</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center shadow-sm">
+              <p class="text-2xl font-bold text-white">4.8/5</p>
+              <p class="text-xs text-slate-300">Rider satisfaction score</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 text-center shadow-sm">
+              <p class="text-2xl font-bold text-white">1.4k</p>
+              <p class="text-xs text-slate-300">320+ auto claims processed</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIVE ACTIVITY STRIP -->
+      <section id="live-activity" class="bg-[#060f30] py-3">
+        <div class="mx-auto flex max-w-7xl items-center justify-start overflow-hidden px-5 sm:px-8">
+          <div id="activityTicker" class="whitespace-nowrap text-sm font-medium text-cyan-100">
+            Ravi from Chennai just received ₹500 payout • Priya from Bengaluru just received ₹300 payout • Amit from Delhi just received ₹250 payout
+          </div>
+        </div>
+      </section>
+
+      <!-- PROBLEM SECTION -->
+      <section id="problem" class="py-20 sm:py-24">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="text-center">
+            <p class="mb-3 inline-flex rounded-full bg-indigo-100 px-4 py-1 text-sm font-semibold text-indigo-700">The gap riders face</p>
+            <h2 class="mb-4 text-3xl font-bold text-white sm:text-4xl">When disruption hits, earnings drop instantly</h2>
+            <p class="mx-auto max-w-2xl text-slate-300">
+              Delivery workers in Mumbai, Bangalore, and Delhi lose up to one-third of weekly earnings, especially during sudden rainstorms, heat waves and pollution alerts. ShieldRider turns that risk into a safety net.
+            </p>
+          </div>
+
+          <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-blue-900/20 transition hover:scale-[1.02] hover:border-sky-300/35">
+              <p class="text-lg font-semibold text-cyan-200">30% Average Loss</p>
+              <p class="mt-2 text-sm text-slate-200">Riders miss almost one-third income when it rains heavily during peak shifts.</p>
+            </div>
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-indigo-900/20 transition hover:scale-[1.02] hover:border-purple-300/35">
+              <p class="text-lg font-semibold text-purple-200">2x Claim Speed</p>
+              <p class="mt-2 text-sm text-slate-200">Automated parametric trigger claims, assessed and paid in minutes.</p>
+            </div>
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-cyan-900/20 transition hover:scale-[1.02] hover:border-sky-300/35">
+              <p class="text-lg font-semibold text-sky-200">Weekly Flexibility</p>
+              <p class="mt-2 text-sm text-slate-200">Renew or pause any week. No long-term lock-ins.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how" class="py-20 sm:py-24 bg-slate-900/40">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="text-center text-white">
+            <p class="mb-3 inline-flex rounded-full bg-indigo-100 px-4 py-1 text-sm font-semibold text-indigo-700">Our workflow</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">3 steps to covered income peace of mind</h2>
+          </div>
+
+          <div class="mt-10 grid gap-6 sm:grid-cols-3">
+            <article class="reveal overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/20 via-blue-800/20 to-purple-600/20 p-6 shadow-lg shadow-indigo-900/30 transition hover:-translate-y-1 hover:shadow-2xl">
+              <div class="mb-4 h-12 w-12 rounded-xl bg-indigo-500/25 p-2 text-white">
+                <span aria-hidden="true" class="text-2xl">📝</span>
+              </div>
+              <h3 class="text-xl font-semibold">Choose your weekly plan</h3>
+              <p class="mt-2 text-sm text-slate-200">Share city, hours and preferred tier. AI builds your personalized price.</p>
+            </article>
+            <article class="reveal overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-sky-500/20 via-blue-700/20 to-indigo-600/20 p-6 shadow-lg shadow-blue-900/30 transition hover:-translate-y-1 hover:shadow-2xl">
+              <div class="mb-4 h-12 w-12 rounded-xl bg-sky-500/25 p-2 text-white">
+                <span aria-hidden="true" class="text-2xl">🤖</span>
+              </div>
+              <h3 class="text-xl font-semibold">AI monitors disruptions</h3>
+              <p class="mt-2 text-sm text-slate-200">Continuous weather, heat and AQI sync with delivery hotspots.</p>
+            </article>
+            <article class="reveal overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/20 via-indigo-700/20 to-sky-600/20 p-6 shadow-lg shadow-purple-900/30 transition hover:-translate-y-1 hover:shadow-2xl">
+              <div class="mb-4 h-12 w-12 rounded-xl bg-violet-500/25 p-2 text-white">
+                <span aria-hidden="true" class="text-2xl">⚡</span>
+              </div>
+              <h3 class="text-xl font-semibold">Automatic payout</h3>
+              <p class="mt-2 text-sm text-slate-200">Trigger threshold reached? Claim approved automatically, amount sent to wallet.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- REAL SCENARIOS -->
+      <section id="scenarios" class="py-20 sm:py-24">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="text-center">
+            <p class="mb-3 inline-flex rounded-full bg-sky-100 px-4 py-1 text-sm font-semibold text-sky-700">Live protection examples</p>
+            <h2 class="text-3xl font-bold text-white sm:text-4xl">Real disruptions, instant withdrawals</h2>
+          </div>
+
+          <div class="mt-10 grid gap-6 sm:grid-cols-3">
+            <article class="reveal rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-500/10 via-blue-700/15 to-sky-600/10 p-6 shadow-xl shadow-cyan-900/20 transition duration-500 hover:-translate-y-1 hover:shadow-2xl">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white">Heavy Rain</h3>
+                <span class="rounded-lg bg-blue-500/20 px-3 py-1 text-sm text-cyan-100">Payout ready</span>
+              </div>
+              <p class="mt-2 text-sm text-slate-200">Monsoon downpour alert in Mumbai leads to auto-claim trigger.</p>
+              <p class="mt-5 text-3xl font-bold text-white">₹500</p>
+            </article>
+            <article class="reveal rounded-2xl border border-white/10 bg-gradient-to-br from-orange-500/10 via-red-700/15 to-pink-600/10 p-6 shadow-xl shadow-orange-900/20 transition duration-500 hover:-translate-y-1 hover:shadow-2xl">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white">Extreme Heat</h3>
+                <span class="rounded-lg bg-orange-500/20 px-3 py-1 text-sm text-orange-100">Payout ready</span>
+              </div>
+              <p class="mt-2 text-sm text-slate-200">40°C+ alert in Bengaluru triggers earnings protection.</p>
+              <p class="mt-5 text-3xl font-bold text-white">₹300</p>
+            </article>
+            <article class="reveal rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/10 via-purple-700/15 to-indigo-600/10 p-6 shadow-xl shadow-violet-900/20 transition duration-500 hover:-translate-y-1 hover:shadow-2xl">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-white">Toxic AQI</h3>
+                <span class="rounded-lg bg-violet-500/20 px-3 py-1 text-sm text-violet-100">Payout ready</span>
+              </div>
+              <p class="mt-2 text-sm text-slate-200">Delhi AQI spike triggers auto-trigger for delivery downtime.</p>
+              <p class="mt-5 text-3xl font-bold text-white">₹250</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- BENEFITS SECTION -->
+      <section id="benefits" class="py-20 sm:py-24 bg-slate-900/40">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="text-center text-white">
+            <p class="mb-3 inline-flex rounded-full bg-indigo-100 px-4 py-1 text-sm font-semibold text-indigo-700">Why riders trust us</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">Designed for delivery workers, not insurers</h2>
+          </div>
+
+          <div class="mt-10 grid gap-6 sm:grid-cols-3">
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-slate-900/20 transition hover:-translate-y-1 hover:shadow-xl">
+              <div class="mb-4 h-12 w-12 rounded-xl bg-sky-500/20 text-sky-200 flex items-center justify-center">📄</div>
+              <h3 class="text-lg font-semibold text-white">No paperwork</h3>
+              <p class="mt-2 text-sm text-slate-300">Policy creation in 30 seconds, no documents needed.</p>
+            </div>
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-slate-900/20 transition hover:-translate-y-1 hover:shadow-xl">
+              <div class="mb-4 h-12 w-12 rounded-xl bg-indigo-500/20 text-indigo-200 flex items-center justify-center">⚡</div>
+              <h3 class="text-lg font-semibold text-white">Instant payouts</h3>
+              <p class="mt-2 text-sm text-slate-300">Disruption claims are approved and credited within minutes.</p>
+            </div>
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-slate-900/20 transition hover:-translate-y-1 hover:shadow-xl">
+              <div class="mb-4 h-12 w-12 rounded-xl bg-purple-500/20 text-purple-200 flex items-center justify-center">🔁</div>
+              <h3 class="text-lg font-semibold text-white">Weekly flexibility</h3>
+              <p class="mt-2 text-sm text-slate-300">Subscribe for one week, pause anytime, always stay in control.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DYNAMIC PRICING PREVIEW -->
+      <section id="pricing" class="py-20 sm:py-24">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 to-indigo-950 p-8 shadow-2xl shadow-indigo-950/40 backdrop-blur-2xl">
+            <div class="grid gap-8 lg:grid-cols-2 lg:items-center">
+              <div>
+                <p class="mb-3 inline-flex rounded-full bg-sky-100 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-sky-700">AI pricing engine</p>
+                <h2 class="text-3xl font-bold text-white sm:text-4xl">Your weekly premium updates in real-time</h2>
+                <p class="mt-4 max-w-xl text-slate-300">Select location, delivery app, and expected hours to see the AI-derived premium before checking out.</p>
+              </div>
+
+              <div id="interactivePricing" class="rounded-2xl bg-white/5 p-6 shadow-lg shadow-blue-900/20">
+                <div class="mb-4 flex items-center justify-between">
+                  <span class="text-sm font-semibold uppercase tracking-wide text-sky-200">Sample calculation</span>
+                  <span class="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-100">Weekly</span>
+                </div>
+                <div class="mb-6">
+                  <label for="hoursSlider" class="text-sm font-medium text-slate-300">Work Hours per Week: <span id="hourValue" class="font-bold text-white">40</span></label>
+                  <input id="hoursSlider" type="range" min="10" max="70" value="40" class="mt-3 h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-700 accent-indigo-400" />
+                </div>
+                <div class="rounded-xl border border-white/10 bg-slate-900/70 p-4">
+                  <div class="text-xs text-slate-400">Base price</div>
+                  <div class="mt-1 text-lg font-semibold text-white">₹199</div>
+                </div>
+                <div class="mt-4 rounded-xl border border-white/10 bg-slate-900/70 p-4">
+                  <div class="text-xs text-slate-400">Risk factor (AI)</div>
+                  <div class="mt-1 text-lg font-semibold text-white">₹<span id="riskComponent">40</span></div>
+                </div>
+                <div id="premiumBox" class="mt-4 rounded-xl border border-indigo-400/30 bg-indigo-600/20 p-4">
+                  <div class="text-xs text-slate-300">Your weekly premium</div>
+                  <div class="mt-1 text-3xl font-bold text-white">₹<span id="premiumValue">239</span></div>
+                </div>
+                <div class="mt-3 text-xs font-medium" id="riskLabel">Risk: Medium</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="testimonials" class="py-20 sm:py-24 bg-slate-900/40">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8 text-center">
+          <p class="mb-3 inline-flex rounded-full bg-indigo-100 px-4 py-1 text-sm font-semibold text-indigo-700">Trusted by riders</p>
+          <h2 class="text-3xl font-bold text-white sm:text-4xl">What delivery partners are saying</h2>
+
+          <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-indigo-900/20 transition hover:-translate-y-1 hover:shadow-xl">
+              <p class="text-sm text-slate-200">“In the last monsoon, I got paid within 8 minutes after the rain sensor triggered. No forms, no waiting — just money in wallet. This is real peace of mind.”</p>
+              <div class="mt-4 text-left">
+                <p class="font-semibold text-white">Rahul, Swiggy rider, Pune</p>
+                <p class="text-xs text-slate-400">Delivery hours: 45/week</p>
+              </div>
+            </div>
+
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-indigo-900/20 transition hover:-translate-y-1 hover:shadow-xl">
+              <p class="text-sm text-slate-200">“I used to lose ₹1200 on hot days. ShieldRider’s automated payouts covered my lost orders within the same day.”</p>
+              <div class="mt-4 text-left">
+                <p class="font-semibold text-white">Priya, Zomato rider, Bangalore</p>
+                <p class="text-xs text-slate-400">Delivery hours: 35/week</p>
+              </div>
+            </div>
+
+            <div class="reveal rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-indigo-900/20 transition hover:-translate-y-1 hover:shadow-xl">
+              <p class="text-sm text-slate-200">“Once the pollution alert hit, my payouts reflected instantly. It feels like a subscription I actually can trust.”</p>
+              <div class="mt-4 text-left">
+                <p class="font-semibold text-white">Karan, Blinkit rider, Delhi</p>
+                <p class="text-xs text-slate-400">Delivery hours: 40/week</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPARISON SECTION -->
+      <section id="comparison" class="py-20 sm:py-24 bg-slate-900/20">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="text-center text-white">
+            <p class="mb-2 text-sm font-semibold uppercase tracking-wider text-sky-200">Compare plans</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">ShieldRider vs Traditional Insurance</h2>
+            <p class="mx-auto mt-2 max-w-2xl text-slate-300">Experience the difference with instant claims and weekly flexibility designed for modern delivery riders.</p>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="comparison-card rounded-2xl border border-white/10 bg-white/5 p-6 text-white shadow-lg shadow-indigo-900/20 transition hover:-translate-y-1 hover:shadow-xl hover:scale-[1.01]">
+              <h3 class="mb-3 text-lg font-semibold text-sky-300">Feature</h3>
+              <ul class="space-y-2 text-sm text-slate-200">
+                <li>Instant payouts</li>
+                <li>Weekly subscription</li>
+                <li>No paperwork</li>
+                <li>Auto triggers</li>
+                <li>AI risk pricing</li>
+              </ul>
+            </div>
+            <div class="comparison-card rounded-2xl border border-white/10 bg-white/5 p-6 text-white shadow-lg shadow-indigo-900/20 transition hover:-translate-y-1 hover:shadow-xl hover:scale-[1.01]">
+              <h3 class="mb-3 text-lg font-semibold text-green-300">ShieldRider</h3>
+              <ul class="space-y-2 text-sm text-slate-200">
+                <li>✅ Instant</li>
+                <li>✅ Weekly</li>
+                <li>✅ No paperwork</li>
+                <li>✅ Auto-driven</li>
+                <li>✅ AI-based</li>
+              </ul>
+            </div>
+            <div class="comparison-card rounded-2xl border border-white/10 bg-white/5 p-6 text-white shadow-lg shadow-indigo-900/20 transition hover:-translate-y-1 hover:shadow-xl hover:scale-[1.01]">
+              <h3 class="mb-3 text-lg font-semibold text-amber-300">Traditional</h3>
+              <ul class="space-y-2 text-sm text-slate-200">
+                <li>❌ Delay</li>
+                <li>❌ Annual</li>
+                <li>❌ Forms</li>
+                <li>❌ Manual claims</li>
+                <li>❌ Fixed flat rate</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS SECTION -->
+      <section id="stats" class="py-20 sm:py-24">
+        <div class="mx-auto max-w-7xl px-5 sm:px-8">
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="reveal rounded-2xl bg-gradient-to-br from-indigo-500/20 to-sky-500/20 p-6 text-center shadow-lg shadow-indigo-900/20">
+              <p class="text-4xl font-bold text-white">₹10,000+</p>
+              <p class="mt-2 text-sm text-slate-300">Weekly income protected</p>
+            </div>
+            <div class="reveal rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-6 text-center shadow-lg shadow-blue-900/20">
+              <p class="text-4xl font-bold text-white">500+</p>
+              <p class="mt-2 text-sm text-slate-300">Active riders covered</p>
+            </div>
+            <div class="reveal rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 p-6 text-center shadow-lg shadow-cyan-900/20">
+              <p class="text-4xl font-bold text-white">99%</p>
+              <p class="mt-2 text-sm text-slate-300">Auto claim approval rate</p>
+            </div>
+            <div class="reveal rounded-2xl bg-gradient-to-br from-violet-500/20 to-sky-500/20 p-6 text-center shadow-lg shadow-violet-900/20">
+              <p class="text-4xl font-bold text-white">45+</p>
+              <p class="mt-2 text-sm text-slate-300">Cities supported in India</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STICKY CTA -->
+      <div id="stickyCta" class="fixed bottom-6 right-6 z-50 flex transform rounded-full border border-white/25 bg-gradient-to-r from-sky-500 to-indigo-500 p-2 shadow-xl transition-all duration-300">
+        <a href="auth.html" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg active:scale-95">
+          Get Protected Now
+        </a>
+      </div>
+
+      <!-- FAQ SECTION -->
+      <section id="faq" class="py-20 sm:py-24 bg-slate-900/30">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <div class="mb-8 text-center">
+            <p class="mb-2 text-sm font-semibold uppercase tracking-wider text-sky-200">Frequently Asked Questions</p>
+            <h2 class="text-3xl font-bold text-white sm:text-4xl">Insurance clarity that builds trust</h2>
+          </div>
+          <div class="space-y-3">
+            <div class="faq-item rounded-xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:shadow-lg hover:scale-[1.01]">
+              <button class="faq-toggle flex w-full items-center justify-between text-left text-base font-semibold text-white" aria-expanded="false">How do payouts work?<span class="ml-2">+</span></button>
+              <div class="faq-content mt-3 hidden text-slate-300">If your zone breach thresholds are met (rain, heat, pollution), we auto-create and approve claims, progressively crediting your wallet instantly.</div>
+            </div>
+            <div class="faq-item rounded-xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:shadow-lg hover:scale-[1.01]">
+              <button class="faq-toggle flex w-full items-center justify-between text-left text-base font-semibold text-white" aria-expanded="false">Is this real insurance?<span class="ml-2">+</span></button>
+              <div class="faq-content mt-3 hidden text-slate-300">Yes. ShieldRider offers parametric income-loss policies designed for gig riders with underwriting, automated claims, and regulator-grade risk controls.</div>
+            </div>
+            <div class="faq-item rounded-xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:shadow-lg hover:scale-[1.01]">
+              <button class="faq-toggle flex w-full items-center justify-between text-left text-base font-semibold text-white" aria-expanded="false">When do I get paid?<span class="ml-2">+</span></button>
+              <div class="faq-content mt-3 hidden text-slate-300">Payouts are processed automatically when trigger conditions are met, typically within minutes after disruption is detected.</div>
+            </div>
+            <div class="faq-item rounded-xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:shadow-lg hover:scale-[1.01]">
+              <button class="faq-toggle flex w-full items-center justify-between text-left text-base font-semibold text-white" aria-expanded="false">Can I cancel anytime?<span class="ml-2">+</span></button>
+              <div class="faq-content mt-3 hidden text-slate-300">Yes, weekly subscription means you can pause or cancel before your next billing cycle with no hidden fees.</div>
+            </div>
+            <div class="faq-item rounded-xl border border-white/10 bg-white/5 p-4 shadow-sm transition hover:shadow-lg hover:scale-[1.01]">
+              <button class="faq-toggle flex w-full items-center justify-between text-left text-base font-semibold text-white" aria-expanded="false">What triggers payouts?<span class="ml-2">+</span></button>
+              <div class="faq-content mt-3 hidden text-slate-300">Monsoon rain, heatwave warnings, AQI spikes, and mapped city-zone alerts drive the parametric payout rules.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL CTA -->
+      <section id="final" class="py-20 sm:py-24 bg-gradient-to-b from-[#0a1380] via-[#0f1d84] to-[#0f2a67]">
+        <div class="mx-auto max-w-5xl px-5 sm:px-8 text-center">
+          <h2 class="text-4xl font-bold text-white sm:text-5xl">Stop losing income. Start protecting it today.</h2>
+          <p class="mt-4 text-lg text-slate-200">Join thousands of riders who are already covered with weekly AI-based payouts for weather and disruption risk.</p>
+          <a href="auth.html" class="action-button mt-8 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-400 to-indigo-400 px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg shadow-sky-500/40 transition hover:-translate-y-0.5 hover:opacity-95 active:scale-95">
+            Start Protecting Now
+          </a>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="border-t border-white/10 bg-slate-900/70 py-8">
+        <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 sm:flex-row sm:px-8">
+          <p class="text-sm text-slate-400">© 2026 ShieldRider. Income disruption insurance for delivery workers. Weekly subscription model only.</p>
+          <div class="flex items-center gap-6 text-sm text-slate-300">
+            <a href="#" class="hover:text-white">Privacy</a>
+            <a href="#" class="hover:text-white">Terms</a>
+            <a href="#" class="hover:text-white">Support</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      const navbar = document.querySelector('#navbar');
+      const progressBar = document.querySelector('#progressBar');
+      const hero = document.querySelector('#hero');
+      const heroTitle = document.querySelector('.hero-title');
+      const navLinks = document.querySelectorAll('a[href^="#"]');
+      const sections = document.querySelectorAll('section[id]');
+      sections.forEach(section => section.classList.add('depth-section'));
+
+      function updateScrollEffects() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = `${progress}%`;
+
+        if (scrollTop > 48) {
+          navbar.classList.add('navbar-solid');
+        } else {
+          navbar.classList.remove('navbar-solid');
+        }
+
+        hero.querySelector('.parallax')?.style.setProperty('--scroll-y', `${scrollTop * 0.2}px`);
+        heroTitle.style.transform = `translateY(${Math.min(scrollTop * 0.12, 28)}px)`;
+
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const link = document.querySelector(`a[href="#${section.id}"]`);
+          const sectionMid = rect.top + rect.height * 0.5;
+          const screenMid = window.innerHeight * 0.5;
+          const distance = Math.min(1, Math.abs((sectionMid - screenMid) / screenMid));
+          const scale = 1 - distance * 0.04;
+          const alpha = 1 - distance * 0.2;
+
+          section.style.transform = `scale(${scale})`;
+          section.style.opacity = alpha;
+
+          if (link && rect.top <= window.innerHeight * 0.35 && rect.bottom >= window.innerHeight * 0.25) {
+            navLinks.forEach(node => node.classList.remove('nav-link-active'));
+            link.classList.add('nav-link-active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', updateScrollEffects);
+      updateScrollEffects();
+
+      const reveals = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const delay = Number(entry.target.dataset.delay || 0);
+            setTimeout(() => entry.target.classList.add('visible'), delay * 250);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.17 });
+      reveals.forEach(el => revealObserver.observe(el));
+
+      navLinks.forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }
+        });
+      });
+
+      const plansToggle = document.querySelector('#plansDropdownToggle');
+      const plansDropdown = document.querySelector('#plansDropdown');
+      if (plansToggle && plansDropdown) {
+        plansToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          plansDropdown.classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => plansDropdown.classList.add('hidden'));
+        plansDropdown.addEventListener('click', (e) => e.stopPropagation());
+      }
+
+      const animatedFrom = document.querySelector('#animated-from');
+      const animatedTo = document.querySelector('#animated-to');
+      const finalValue = 239;
+      const startValue = 40;
+      const duration = 1200;
+      let startTime = null;
+
+      function animateCounter(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const current = Math.floor(startValue + (finalValue - startValue) * progress);
+        if (animatedFrom) animatedFrom.textContent = `₹${current}`;
+        if (animatedTo) animatedTo.textContent = `₹${current}`;
+        if (progress < 1) requestAnimationFrame(animateCounter);
+      }
+      requestAnimationFrame(animateCounter);
+
+      const hoursSlider = document.querySelector('#hoursSlider');
+      const hourValue = document.querySelector('#hourValue');
+      const riskComponent = document.querySelector('#riskComponent');
+      const premiumValue = document.querySelector('#premiumValue');
+      const premiumBox = document.querySelector('#premiumBox');
+      const riskLabel = document.querySelector('#riskLabel');
+
+      function animateValue(element, start, end, duration) {
+        const startTime = performance.now();
+        const step = (timestamp) => {
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          element.textContent = Math.round(start + (end - start) * progress);
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+
+      function calculatePremium(hours) {
+        const basePrice = 199;
+        const riskFactor = Math.min(1, Math.max(0, (hours - 10) / 60));
+        const riskPrice = Math.round(riskFactor * 180);
+        const weeklyPremium = basePrice + riskPrice;
+
+        let level = 'Low';
+        premiumBox.classList.remove('low-risk', 'medium-risk', 'high-risk');
+        if (riskFactor < 0.35) {
+          level = 'Low';
+          premiumBox.classList.add('low-risk');
+        } else if (riskFactor < 0.75) {
+          level = 'Medium';
+          premiumBox.classList.add('medium-risk');
+        } else {
+          level = 'High';
+          premiumBox.classList.add('high-risk');
+        }
+
+        if (hourValue) hourValue.textContent = hours;
+        if (riskComponent) riskComponent.textContent = riskPrice;
+        if (riskLabel) riskLabel.textContent = `Risk: ${level}`;
+
+        const from = Number(premiumValue.textContent || 199);
+        animateValue(premiumValue, from, weeklyPremium, 250);
+      }
+
+      if (hoursSlider) {
+        hoursSlider.addEventListener('input', (event) => calculatePremium(Number(event.target.value)));
+        calculatePremium(Number(hoursSlider.value));
+      }
+
+      const ticker = document.querySelector('#activityTicker');
+      const activityMessages = [
+        'Ravi from Chennai just received ₹500 payout',
+        'Priya from Bengaluru just received ₹300 payout',
+        'Amit from Delhi just received ₹250 payout',
+        'Saanvi from Pune just received ₹450 payout',
+        'Rohit from Hyderabad just received ₹380 payout'
+      ];
+      let tickerIndex = 0;
+      setInterval(() => {
+        if (!ticker) return;
+        tickerIndex = (tickerIndex + 1) % activityMessages.length;
+        ticker.textContent = activityMessages[tickerIndex];
+      }, 3000);
+
+      document.querySelectorAll('a, button').forEach(element => {
+        element.addEventListener('mousedown', () => element.classList.add('active'));
+        element.addEventListener('mouseup', () => element.classList.remove('active'));
+        element.addEventListener('mouseleave', () => element.classList.remove('active'));
+      });
+
+      document.querySelectorAll('.action-button').forEach(button => {
+        button.style.position = 'relative';
+        button.addEventListener('click', function (e) {
+          const ripple = document.createElement('span');
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          const x = e.clientX - rect.left - size / 2;
+          const y = e.clientY - rect.top - size / 2;
+          ripple.style.position = 'absolute';
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+          ripple.style.width = `${size}px`;
+          ripple.style.height = `${size}px`;
+          ripple.style.background = 'rgba(255,255,255,0.2)';
+          ripple.style.borderRadius = '50%';
+          ripple.style.transform = 'scale(0)';
+          ripple.style.pointerEvents = 'none';
+          ripple.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+          this.appendChild(ripple);
+          requestAnimationFrame(() => {
+            ripple.style.transform = 'scale(1.9)';
+            ripple.style.opacity = '0';
+          });
+          setTimeout(() => ripple.remove(), 520);
+        });
+      });
+
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const content = toggle.nextElementSibling;
+          const isOpen = !content.classList.contains('hidden');
+          faqToggles.forEach(btn => {
+            btn.setAttribute('aria-expanded', 'false');
+            const c = btn.nextElementSibling;
+            if (c) c.classList.add('hidden');
+            btn.querySelector('span').textContent = '+';
+          });
+          if (!isOpen) {
+            content.classList.remove('hidden');
+            toggle.setAttribute('aria-expanded', 'true');
+            toggle.querySelector('span').textContent = '−';
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
