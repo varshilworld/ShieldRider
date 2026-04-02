@@ -883,13 +883,15 @@
         currentUser.plan = planName;
         localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
 
-        // Create transaction
+        // Create transaction (schema-compliant)
         const transaction = {
-          date: new Date().toLocaleDateString(),
-          type: 'premium',
-          plan: planName,
+          date: Date.now(),
+          type: 'Premium',
           amount: calculatePremium(currentUser).premium || 0,
-          status: 'Paid'
+          plan: planName,
+          coverage: currentUser.activePlan || planName,
+          event: null,
+          status: 'Paid',
         };
 
         currentUser.transactions = currentUser.transactions || [];
