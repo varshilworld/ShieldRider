@@ -214,12 +214,45 @@ async function processLogin(e) {
   setLoadingState(true, 'login');
 
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Fetch user profile from Firestore
+    const profileDoc = await getDoc(doc(db, 'profiles', uid));
+    let profileData = null;
+    if (profileDoc.exists()) {
+      profileData = profileDoc.data();
+    }
+
+    // Set localStorage for the app
+    const existingUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+    const userData = {
+      ...existingUser,
+      uid,
+      email,
+      profileCompleted: profileData ? true : false,
+      profile: profileData ? {
+        name: profileData.city || '', // Note: signup saves city, but we use as name placeholder
+        workType: profileData.workType || '',
+        weeklyIncome: 0, // Will be set in registration
+        weeklyHours: profileData.weeklyHours || 40,
+        location: profileData.city || '',
+        riskLevel: 'Medium' // Default
+      } : existingUser.profile || null
+    };
+    localStorage.setItem('shieldrider_current_user', JSON.stringify(userData));
+
     applySuccess();
     showStatus('login', 'Login successful! Redirecting...');
 
     setTimeout(() => {
-      window.location.href = 'dashboard.html';
+      const allowGuestMode = true;
+      // Optional registration support: if guests allowed, send to dashboard
+      if (userData.profileCompleted || allowGuestMode) {
+        window.location.href = 'dashboard.html';
+      } else {
+        window.location.href = 'registration.html';
+      }
     }, 1200);
   } catch (error) {
     setLoadingState(false, 'login');
@@ -259,11 +292,22 @@ async function processSignup(e) {
       activePlan: null,
     });
 
+    // Set localStorage for the app (merge with existing object)
+    const existingUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+    const userData = {
+      ...existingUser,
+      uid,
+      email,
+      profileCompleted: false, // Profile not completed yet
+      profile: existingUser.profile || null
+    };
+    localStorage.setItem('shieldrider_current_user', JSON.stringify(userData));
+
     applySuccess();
     showStatus('signup', 'Account created! Redirecting...');
 
     setTimeout(() => {
-      window.location.href = 'dashboard.html';
+      window.location.href = 'registration.html'; // New users go to registration
     }, 1200);
   } catch (error) {
     setLoadingState(false, 'signup');
@@ -353,8 +397,8 @@ function setupGlobalNavigation() {
   document.querySelectorAll('.nav-item').forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
-      // Allow external page navigation (claims.html, transactions.html)
-      if (href && (href.includes('claims.html') || href.includes('transactions.html') || href.includes('dashboard.html'))) {
+      // Allow external page navigation (claims.html, transactions.html, registration.html)
+      if (href && (href.includes('claims.html') || href.includes('transactions.html') || href.includes('dashboard.html') || href.includes('registration.html'))) {
         e.preventDefault();
         window.location.href = href;
       }
@@ -373,19 +417,21 @@ async function initDashboard() {
         return;
       }
 
-      const uid = user.uid;
-      const email = user.email;
-      const initial = email.charAt(0).toUpperCase();
-
-      // Fetch user profile from Firestore
-      const profileDoc = await getDoc(doc(db, 'profiles', uid));
-      if (!profileDoc.exists()) {
-        console.error('Profile not found');
+      // Check if profile is completed (optional now)
+      const allowGuestMode = true;
+      const localUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+      if (!localUser.profileCompleted && !allowGuestMode) {
+        window.location.href = 'registration.html';
         resolve();
         return;
       }
 
-      const profile = profileDoc.data();
+      const uid = user.uid;
+      const email = user.email;
+      const initial = email.charAt(0).toUpperCase();
+
+      // Use profile from localStorage
+      const profile = localUser.profile;
 
   // Update UI with user info
   if (document.getElementById('avatarTop')) {
@@ -400,18 +446,18 @@ async function initDashboard() {
 
   // Display work type and hours chips
   if (document.getElementById('workTypeChip')) {
-    document.getElementById('workTypeChip').textContent = `Work Type: ${profile.workType}`;
+    document.getElementById('workTypeChip').textContent = `Work Type: ${profile.workType || 'N/A'}`;
   }
   if (document.getElementById('hoursChip')) {
-    document.getElementById('hoursChip').textContent = `Weekly Hours: ${profile.weeklyHours}h`;
+    document.getElementById('hoursChip').textContent = `Weekly Hours: ${profile.weeklyHours || 0}h`;
   }
 
   // Calculate metrics
   const weeklyHours = profile.weeklyHours || 40;
-  const dailyRate = 400;
-  const monthlyIncome = Math.round((weeklyHours / 7) * dailyRate * 30);
+  const weeklyIncome = profile.weeklyIncome || (weeklyHours * 500); // Fallback calculation
+  const monthlyIncome = Math.round((weeklyIncome / 7) * 30); // Approximate monthly
 
-  const riskLevel = weeklyHours > 50 ? 'High' : weeklyHours > 35 ? 'Medium' : 'Low';
+  const riskLevel = profile.riskLevel || (weeklyHours > 50 ? 'High' : weeklyHours > 35 ? 'Medium' : 'Low');
   const activeCoverage = profile.activePlan ?
     (profile.activePlan === 'Basic' ? 50000 : profile.activePlan === 'Pro' ? 125000 : 250000) : 0;
 
@@ -611,28 +657,405 @@ async function logoutDashboard() {
   }
 }
 
+// Transaction persistence helper (localStorage + Firestore)
+async function persistTransaction(uid, transaction) {
+  if (!transaction || !transaction.type) return;
+
+  const now = Date.now();
+  const canonicalTx = {
+    type: transaction.type,
+    date: now,
+    dateFormatted: new Date(now).toLocaleString(),
+    amount: Number(transaction.amount) || 0,
+    plan: transaction.plan || null,
+    coverage: transaction.coverage ?? null,
+    event: transaction.event || null,
+    status: transaction.status || (transaction.type === 'Payout' ? 'Credited' : 'Billed'),
+    uid: uid || 'anonymous',
+  };
+
+  const firestoreUid = uid && uid !== 'anonymous' ? uid : null;
+  // Persist to Firestore when user is authenticated
+  try {
+    if (firestoreUid) {
+      await addDoc(collection(db, 'transactions'), canonicalTx);
+    }
+  } catch (error) {
+    console.error('[ShieldRider] Firestore transaction log failed', error);
+  }
+
+  // Persist locally for immediate UI update and broader offline support
+  const localUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+  localUser.transactions = Array.isArray(localUser.transactions) ? localUser.transactions : [];
+  localUser.transactions.push(canonicalTx);
+  localStorage.setItem('shieldrider_current_user', JSON.stringify(localUser));
+  localStorage.setItem('shieldrider_transactions_updated_at', new Date().toISOString());
+}
+
+async function persistClaim(uid, claim) {
+  if (!claim || !claim.id) return;
+
+  const canonicalClaim = {
+    id: claim.id,
+    userId: claim.userId || uid || 'anonymous',
+    date: claim.createdAt || new Date().toLocaleDateString(),
+    dateMs: claim.createdAtMs || Date.now(),
+    reason: claim.event || claim.reason || 'unknown',
+    severity: claim.severity || 'unknown',
+    status: claim.status || 'Pending',
+    payout: Number(claim.payoutAmount || claim.payout || 0),
+    description: claim.description || '',
+    fraudScore: claim.fraudScore ?? 0,
+    isFraud: claim.isFraud ?? false,
+    riskFactor: claim.riskFactor || 'Medium',
+    behavior: claim.behavior || 'normal',
+    income: Number(claim.income || 0),
+    uid: uid || 'anonymous',
+  };
+
+  const firestoreUid = uid && uid !== 'anonymous' ? uid : null;
+  try {
+    if (firestoreUid) {
+      await addDoc(collection(db, 'claims'), { ...canonicalClaim, uid: firestoreUid });
+    }
+  } catch (error) {
+    console.error('[ShieldRider] Firestore claim log failed', error);
+  }
+
+  const localUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+  localUser.claims = Array.isArray(localUser.claims) ? localUser.claims : [];
+  localUser.claims.push(canonicalClaim);
+  localStorage.setItem('shieldrider_current_user', JSON.stringify(localUser));
+  localStorage.setItem('shieldrider_claims_updated_at', new Date().toISOString());
+}
+
+const simulationState = {
+  timerId: null,
+  active: true,
+  forcedEvent: null, // 'rain' | 'heatwave' | 'pollution'
+};
+
+function startSimulation() {
+  if (simulationState.active && simulationState.timerId) return;
+  simulationState.active = true;
+  if (simulationState.timerId) clearInterval(simulationState.timerId);
+  simulationState.timerId = setInterval(runAutoInsuranceLoop, 30000);
+  document.getElementById('startSimulationBtn')?.classList.add('opacity-70');
+  document.getElementById('pauseSimulationBtn')?.classList.remove('opacity-70');
+}
+
+function pauseSimulation() {
+  simulationState.active = false;
+  if (simulationState.timerId) {
+    clearInterval(simulationState.timerId);
+    simulationState.timerId = null;
+  }
+  document.getElementById('pauseSimulationBtn')?.classList.add('opacity-70');
+  document.getElementById('startSimulationBtn')?.classList.remove('opacity-70');
+}
+
+function setClaimLifecycle(stage) {
+  const lifecycleEl = document.getElementById('claimLifecycleStatus');
+  if (!lifecycleEl) return;
+  lifecycleEl.textContent = `Claim Lifecycle: ${stage}`;
+}
+
+function logAutomatedTrigger(message) {
+  const logEl = document.getElementById('automatedTriggerLog');
+  if (!logEl) return;
+  const item = document.createElement('div');
+  item.className = 'text-xs text-slate-700 border-b border-slate-200 py-1';
+  item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+  if (logEl.querySelector('p')) logEl.innerHTML = '';
+  logEl.prepend(item);
+  const children = logEl.children;
+  if (children.length > 6) logEl.removeChild(children[children.length - 1]);
+}
+
+function computeMlPremiumAdjustment(user, result) {
+  const behavior = (user.behavior || 'normal').toLowerCase();
+  const stability = (user.stability || 'normal').toLowerCase();
+  let adjustmentFactor = 1.0;
+
+  // ML-inspired scoring:
+  // - low risk behavior / stability gives discount
+  // - environmental risk increases premium
+  if (behavior === 'safe') adjustmentFactor -= 0.04;
+  if (behavior === 'risky') adjustmentFactor += 0.1;
+  if (stability === 'stable') adjustmentFactor -= 0.03;
+  if (stability === 'unstable') adjustmentFactor += 0.06;
+
+  const envFactor = Number(result.environment?.factor || 1.0);
+  adjustmentFactor += (envFactor - 1) * 0.12;
+
+  // Add zone-based remedy
+  if ((user.riskZone || 'Medium') === 'High') adjustmentFactor += 0.08;
+  else if ((user.riskZone || 'Medium') === 'Low') adjustmentFactor -= 0.03;
+
+  const predictivePremium = Number(result.premium) * adjustmentFactor;
+  return {
+    adjustmentFactor: Number(adjustmentFactor.toFixed(3)),
+    predictivePremium: Number(predictivePremium.toFixed(2)),
+  };
+}
+
+function evaluateAutomatedTriggers(user, result) {
+  const triggers = [];
+
+  // Flood risk trigger
+  if (result.weather?.rain > 70) {
+    triggers.push('Flood risk (rain) trigger');
+    result.environment.factor = Number((result.environment.factor + 0.12).toFixed(2));
+  }
+
+  // Heatwave trigger
+  if (result.weather?.temp > 42) {
+    triggers.push('Heatwave trigger');
+    result.environment.factor = Number((result.environment.factor + 0.15).toFixed(2));
+  }
+
+  // Pollution trigger
+  if (result.weather?.aqi > 220) {
+    triggers.push('AQI pollution trigger');
+    result.environment.factor = Number((result.environment.factor + 0.10).toFixed(2));
+  }
+
+  // Traffic disruption (mock random)
+  if (Math.random() < 0.02) {
+    triggers.push('Traffic disruption trigger');
+    result.environment.factor = Number((result.environment.factor + 0.05).toFixed(2));
+  }
+
+  // Extreme weather feed
+  if (result.weather?.wind > 70 && result.weather?.rain > 60) {
+    triggers.push('Extreme weather feed trigger');
+    result.environment.factor = Number((result.environment.factor + 0.18).toFixed(2));
+  }
+
+  triggers.forEach((msg) => logAutomatedTrigger(msg));
+  if (triggers.length) {
+    setClaimLifecycle('Claim Detected');
+    setTimeout(() => setClaimLifecycle('Claim Verified'), 500);
+    setTimeout(() => setClaimLifecycle('Claim Approved'), 900);
+    setTimeout(() => setClaimLifecycle('Payout Executed'), 1200);
+  }
+
+  return triggers;
+}
+
+function updateAiStatusBadges() {
+  document.getElementById('aiEngineBadge')?.classList.add('bg-emerald-200', 'text-emerald-900');
+  document.getElementById('predictiveWeatherBadge')?.classList.add('bg-sky-200', 'text-sky-900');
+  document.getElementById('triggerSystemBadge')?.classList.add('bg-amber-200', 'text-amber-900');
+}
+
+
+function setupSimulationControls() {
+  document.getElementById('startSimulationBtn')?.addEventListener('click', startSimulation);
+  document.getElementById('pauseSimulationBtn')?.addEventListener('click', pauseSimulation);
+
+  document.getElementById('triggerRainBtn')?.addEventListener('click', () => {
+    simulationState.forcedEvent = 'rain';
+    runAutoInsuranceLoop();
+  });
+  document.getElementById('triggerHeatwaveBtn')?.addEventListener('click', () => {
+    simulationState.forcedEvent = 'heatwave';
+    runAutoInsuranceLoop();
+  });
+  document.getElementById('triggerPollutionBtn')?.addEventListener('click', () => {
+    simulationState.forcedEvent = 'pollution';
+    runAutoInsuranceLoop();
+  });
+}
+
+function getPremiumTransactions() {
+  const user = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+  const txns = Array.isArray(user.transactions) ? user.transactions : [];
+  return txns
+    .filter((t) => t.type === 'Premium')
+    .sort((a, b) => b.date - a.date)
+    .slice(0, 6)
+    .reverse();
+}
+
+function renderPremiumTrend() {
+  const chart = document.getElementById('premiumTrendChart');
+  if (!chart || !chart.getContext) return;
+
+  const ctx = chart.getContext('2d');
+  const premiums = getPremiumTransactions();
+  const width = chart.width;
+  const height = chart.height;
+
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(0, 0, width, height);
+
+  if (premiums.length === 0) {
+    ctx.fillStyle = '#334155';
+    ctx.font = '14px sans-serif';
+    ctx.fillText('No premium data yet', 14, 22);
+    return;
+  }
+
+  const values = premiums.map((p) => Number(p.amount) || 0);
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const padding = 20;
+  const xStep = (width - padding * 2) / Math.max(values.length - 1, 1);
+
+  ctx.strokeStyle = '#0ea5e9';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  values.forEach((val, index) => {
+    const x = padding + index * xStep;
+    const y = height - padding - ((val - min) / (max - min + 0.001)) * (height - padding * 2);
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  ctx.fillStyle = '#0284c7';
+  values.forEach((val, index) => {
+    const x = padding + index * xStep;
+    const y = height - padding - ((val - min) / (max - min + 0.001)) * (height - padding * 2);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.fillStyle = '#475569';
+  ctx.font = '12px sans-serif';
+  values.forEach((val, index) => {
+    const x = padding + index * xStep;
+    const y = height - padding + 16;
+    ctx.fillText(`₹${Number(val).toFixed(0)}`, x - 14, y);
+  });
+}
+
+function renderEventTimeline() {
+  const user = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+  const txns = Array.isArray(user.transactions) ? user.transactions : [];
+  const events = txns
+    .filter((t) => t.type === 'Payout')
+    .sort((a, b) => b.date - a.date)
+    .slice(0, 5);
+
+  const eventTimeline = document.getElementById('eventTimeline');
+  const numEventsEl = document.getElementById('numEvents');
+  if (numEventsEl) numEventsEl.textContent = `${events.length} events`;
+  if (!eventTimeline) return;
+
+  if (events.length === 0) {
+    eventTimeline.innerHTML = '<li class="text-slate-500">No payout events yet.</li>';
+    return;
+  }
+
+  eventTimeline.innerHTML = events
+    .map((event) => {
+      const ts = event.dateFormatted || (event.date ? new Date(event.date).toLocaleString() : '--');
+      const type = event.event || 'Payout';
+      const severity = event.severity || 'unknown';
+      return `<li class="rounded-lg border border-slate-200 bg-slate-50 p-2">
+          <div class="flex justify-between text-xs font-semibold text-slate-700"><span>${type}</span><span>₹${Number(event.amount || 0).toLocaleString()}</span></div>
+          <div class="text-xs text-slate-500">${severity} | ${ts}</div>
+        </li>`;
+    })
+    .join('');
+}
+
+function renderAIInsights(result, pricingResult, user) {
+  const insightList = document.getElementById('aiInsightsList');
+  if (!insightList) return;
+
+  const insights = [];
+  const env = result.environment || {};
+  const comp = pricingResult.components || {};
+
+  if (env.factor >= 1.5) insights.push('Your premium increased due to high environmental risk.');
+  else if (env.factor >= 1.2) insights.push('Moderate environmental risk detected.');
+  else insights.push('Low environment risk, good conditions.');
+
+  if ((user.riskZone || 'Medium') === 'High') insights.push('You are in a high-risk zone; expect higher premiums.');
+  else if ((user.riskZone || 'Medium') === 'Medium') insights.push('Medium risk zone; keep monitoring conditions.');
+  else insights.push('Low risk zone, well protected.');
+
+  if ((user.behavior || 'normal').toLowerCase() === 'safe') insights.push('Safe behavior is reducing your premium.');
+  if ((user.behavior || 'normal').toLowerCase() === 'risky') insights.push('Risky behavior added to premium. Consider safer habits.');
+
+  if (comp.riskZoneMultiplier > 1.2) insights.push('Risk zone multiplier is elevated in your current profile.');
+  if (comp.environmentalFactor > 1.1) insights.push('Weather factor is adding to the premium calculation.');
+
+  insightList.innerHTML = insights.map((s) => `<li>${s}</li>`).join('');
+}
+
+function renderProfileImpact(pricingResult, user) {
+  const profileImpact = document.getElementById('profileImpact');
+  if (!profileImpact) return;
+
+  const comp = pricingResult.components || {};
+  profileImpact.innerHTML = `
+    <li>Income: ₹${Number(comp.income || user.income || 0).toLocaleString()}</li>
+    <li>Plan base rate: ${(Number(comp.baseRate || 0) * 100).toFixed(2)}%</li>
+    <li>Risk zone multiplier: ${Number(comp.riskZoneMultiplier || 0).toFixed(2)}x</li>
+    <li>Environmental factor: ${Number(comp.environmentalFactor || 0).toFixed(2)}x</li>
+    <li>Behavior score: ${Number(comp.behaviorScore || 0).toFixed(2)}x</li>
+    <li>Stability factor: ${Number(comp.stabilityFactor || 0).toFixed(2)}x</li>
+  `;
+}
+
+function updateAllWidgets(result, pricingResult, user) {
+  renderPremiumTrend();
+  renderEventTimeline();
+  renderAIInsights(result, pricingResult, user);
+  renderProfileImpact(pricingResult, user);
+}
+
 // Auto-run insurance cycle on supported pages
-function runAutoInsuranceLoop() {
+async function runAutoInsuranceLoop() {
+  if (!simulationState.active) return;
+
   const user = JSON.parse(localStorage.getItem('shieldrider_current_user'));
   if (!user) return;
-
-  // only run this on pages using the ShieldRider UI values
-  if (!document.getElementById('currentPremium') && !document.getElementById('riskLevelDisplay')) return;
 
   // ensure plan is normalized for engine (BASIC, PRO, ELITE)
   const planName = (user.plan || '').toString().toUpperCase();
   if (planName === 'PREMIUM') {
     user.plan = 'ELITE';
-  } else if (['BASIC','PRO','ELITE'].includes(planName)) {
+  } else if (['BASIC', 'PRO', 'ELITE'].includes(planName)) {
     user.plan = planName;
   } else {
     user.plan = 'PRO';
   }
 
-  const result = runInsuranceCycle(user);
+  let result = runInsuranceCycle(user);
+
+  if (simulationState.forcedEvent) {
+    const forced = simulationState.forcedEvent;
+    result.event = { type: forced, severity: 'severe', duration: 1.5 };
+    result.payout = calculatePayout(result.event, user);
+    simulationState.forcedEvent = null;
+    logAutomatedTrigger(`Manual trigger: ${forced}`);
+  }
+
+  // Automated mock API triggers
+  const triggeredSources = evaluateAutomatedTriggers(user, result);
+  if (triggeredSources.length === 0) {
+    logAutomatedTrigger('No automated triggers this cycle');
+  }
+
+  const pricingResult = calculatePremium(user, result.environment);
 
   const premiumEl = document.getElementById('currentPremium');
   if (premiumEl) premiumEl.textContent = `₹${result.premium.toLocaleString()}`;
+
+  const mlAdjust = computeMlPremiumAdjustment(user, result);
+  const predictivePremiumEl = document.getElementById('predictivePremiumValue');
+  if (predictivePremiumEl) predictivePremiumEl.textContent = `₹${mlAdjust.predictivePremium.toLocaleString()}`;
+
+  const mlFactorEl = document.getElementById('mlRiskFactor');
+  if (mlFactorEl) mlFactorEl.textContent = `ML risk adjustment: ${Number(mlAdjust.adjustmentFactor).toFixed(3)}x`;
 
   const planNameEl = document.getElementById('currentPlanName');
   if (planNameEl) planNameEl.textContent = user.plan || 'PRO';
@@ -646,23 +1069,144 @@ function runAutoInsuranceLoop() {
   const riskLevelEl = document.getElementById('riskLevelDisplay');
   if (riskLevelEl) riskLevelEl.textContent = result.environment?.level ?? user.riskZone;
 
-  if (result.payout > 0 && result.event) {
-    const transaction = {
-      type: 'Payout',
-      amount: result.payout,
-      date: new Date().toLocaleString(),
-      event: result.event.type,
-      status: 'Credited'
-    };
-    user.transactions = Array.isArray(user.transactions) ? user.transactions : [];
-    user.transactions.push(transaction);
-    localStorage.setItem('shieldrider_current_user', JSON.stringify(user));
-    alert(`🔔 Auto payout triggered: ₹${transaction.amount} for ${transaction.event} event.`);
+  // Live status panel updates
+  const lastUpdatedEl = document.getElementById('liveLastUpdated');
+  const envFactorEl = document.getElementById('liveEnvFactor');
+  const premiumChangeEl = document.getElementById('livePremiumChange');
+  const riskBadgeEl = document.getElementById('riskBadge');
+  const whyPremiumListEl = document.getElementById('whyPremiumList');
+  const eventAlertEl = document.getElementById('eventAlert');
+  const liveEventInfoEl = document.getElementById('liveEventInfo');
+
+  const liveNow = Date.now();
+  const nowLabel = new Date(liveNow).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  if (lastUpdatedEl) lastUpdatedEl.textContent = `Last updated: ${nowLabel}`;
+  if (envFactorEl) envFactorEl.textContent = `Environmental factor: ${Number(result.environment?.factor || 0).toFixed(2)}`;
+
+  const premiumMetaBaseline = user.lastPremiumMeta || { value: 0, timestamp: 0 };
+  const lastPremiumVal = Number(premiumMetaBaseline.value) || 0;
+  const premiumChangePct = lastPremiumVal > 0 ? ((result.premium - lastPremiumVal) / lastPremiumVal) * 100 : 0;
+  const premiumChangeLabel = lastPremiumVal === 0 ? 'N/A' : `${premiumChangePct >= 0 ? '+' : ''}${premiumChangePct.toFixed(1)}%`;
+  if (premiumChangeEl) premiumChangeEl.textContent = `Premium change: ${premiumChangeLabel}`;
+
+  if (riskBadgeEl) {
+    const level = result.environment?.level || 'Safe';
+    riskBadgeEl.textContent = level;
+    riskBadgeEl.className = 'rounded-full px-3 py-1 text-xs font-semibold';
+    if (level === 'Safe') riskBadgeEl.classList.add('bg-green-100', 'text-green-800');
+    else if (level === 'Normal') riskBadgeEl.classList.add('bg-yellow-100', 'text-yellow-800');
+    else if (level === 'Hazardous') riskBadgeEl.classList.add('bg-red-100', 'text-red-800');
+    else riskBadgeEl.classList.add('bg-slate-100', 'text-slate-700');
   }
+
+  if (whyPremiumListEl) {
+    const components = pricingResult.components || {};
+    const map = {
+      income: Number(components.income || 0).toLocaleString(),
+      baseRate: (Number(components.baseRate || 0) * 100).toFixed(2) + '%',
+      riskZoneMultiplier: Number(components.riskZoneMultiplier || 0).toFixed(2),
+      environmentalFactor: Number(components.environmentalFactor || 0).toFixed(2),
+      behaviorScore: Number(components.behaviorScore || 0).toFixed(2),
+      stabilityFactor: Number(components.stabilityFactor || 0).toFixed(2),
+    };
+    whyPremiumListEl.innerHTML = `
+      <li>Environment Risk: ${map.environmentalFactor}</li>
+      <li>Zone Risk: ${map.riskZoneMultiplier}</li>
+      <li>Driving Behavior: ${map.behaviorScore}</li>
+      <li>Stability Factor: ${map.stabilityFactor}</li>
+      <li>Base Rate: ${map.baseRate}</li>
+      <li>Income: ₹${map.income}</li>
+    `;
+  }
+
+  if (result.event) {
+    const eventLabel = `${result.event.type} (${result.event.severity})`;
+    if (eventAlertEl) {
+      eventAlertEl.classList.remove('hidden');
+      eventAlertEl.textContent = `⚠️ ${result.event.severity.charAt(0).toUpperCase() + result.event.severity.slice(1)} ${result.event.type} Detected → Payout Triggered: ₹${Number(result.payout || 0).toLocaleString()}`;
+    }
+    if (liveEventInfoEl) liveEventInfoEl.textContent = `Last event: ${eventLabel}`;
+  } else {
+    if (eventAlertEl) {
+      eventAlertEl.classList.add('hidden');
+      eventAlertEl.textContent = '';
+    }
+    if (liveEventInfoEl) liveEventInfoEl.textContent = 'No event currently.';
+  }
+
+  // Controlled premium logging:
+  // - log when meaningful change (>= 10%)
+  // - or when 6 hours elapsed
+  const now = Date.now();
+  const lastPremiumValue = Number(user.lastPremiumMeta?.value || 0) || 0;
+  const lastPremiumTime = Number(user.lastPremiumMeta?.timestamp || 0) || 0;
+  const premiumChange = lastPremiumValue > 0 ? Math.abs(result.premium - lastPremiumValue) / lastPremiumValue : 1;
+  const timeElapsed = now - lastPremiumTime;
+  const THRESHOLD_CHANGE = 0.1; // 10%
+  const THRESHOLD_TIME = 6 * 60 * 60 * 1000; // 6 hours
+
+  if (lastPremiumTime === 0 || premiumChange >= THRESHOLD_CHANGE || timeElapsed >= THRESHOLD_TIME) {
+    await persistTransaction(state.currentUser?.uid || user.uid || null, {
+      type: 'Premium',
+      amount: result.premium,
+      plan: user.plan,
+      coverage: user.activePlan || null,
+      event: null,
+      status: 'Billed',
+    });
+
+    user.lastPremiumMeta = {
+      value: result.premium,
+      timestamp: now,
+    };
+    localStorage.setItem('shieldrider_current_user', JSON.stringify(user));
+  }
+
+  if (result.payout > 0 && result.event) {
+    const eventKey = `${result.event.type}|${result.event.severity}|${result.event.duration}`;
+    const lastPayoutKey = user.lastPayoutKey || '';
+    const lastPayoutTS = Number(user.lastPayoutTimestamp) || 0;
+    const PAYOUT_LOCK_TIME = 60 * 60 * 1000; // 1 hour
+
+    if (eventKey !== lastPayoutKey || now - lastPayoutTS >= PAYOUT_LOCK_TIME) {
+      const payoutTx = {
+        type: 'Payout',
+        amount: result.payout,
+        plan: user.plan,
+        coverage: user.activePlan || null,
+        event: result.event.type,
+        status: 'Credited',
+      };
+
+      await persistTransaction(state.currentUser?.uid || user.uid || null, payoutTx);
+      user.lastPayoutKey = eventKey;
+      user.lastPayoutTimestamp = now;
+      localStorage.setItem('shieldrider_current_user', JSON.stringify(user));
+      alert(`🔔 Auto payout triggered: ₹${payoutTx.amount} for ${payoutTx.event} event.`);
+    }
+  }
+
+  if (result.claim) {
+    await persistClaim(state.currentUser?.uid || user.uid || null, result.claim);
+    logAutomatedTrigger(`Claim ${result.claim.id} ${result.claim.status} for ₹${result.claim.payoutAmount}`);
+    if (result.claim.status === 'Rejected') {
+      setClaimLifecycle('Claim Rejected - Manual Review Needed');
+    } else {
+      setClaimLifecycle('Claim Processed');
+    }
+  }
+
+  updateAllWidgets(result, pricingResult, user);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  const isDashboardPage = !!document.getElementById('overview'); // Dashboard has 'overview' section
+
   init();
-  runAutoInsuranceLoop();
-  setInterval(runAutoInsuranceLoop, 30000);
+
+  if (isDashboardPage) {
+    setupSimulationControls();
+    runAutoInsuranceLoop();
+    startSimulation();
+  }
 });

@@ -54,7 +54,7 @@
             <span class="text-lg">📈</span>
             <span>Analytics</span>
           </a>
-          <a href="#profile" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+          <a href="registration.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
             <span class="text-lg">👤</span>
             <span>Profile</span>
           </a>
@@ -138,6 +138,87 @@
                 <p id="nextPremiumValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900">N/A</p>
                 <div class="mt-3 h-1 w-12 rounded-full bg-orange-300"></div>
               </div>
+            </div>
+          </section>
+
+          <!-- AI Risk + Trigger Badges -->
+          <section class="mb-4 space-y-3">
+            <div class="flex flex-wrap gap-2">
+              <span id="aiEngineBadge" class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">AI Risk Engine Active</span>
+              <span id="predictiveWeatherBadge" class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-800">Predictive Weather Model</span>
+              <span id="triggerSystemBadge" class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Automated Risk Trigger System Active</span>
+            </div>
+            <div id="automatedTriggerLog" class="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700 max-h-32 overflow-y-auto">
+              <p class="text-slate-500">No triggers yet.</p>
+            </div>
+          </section>
+
+          <!-- Live Insurance Telemetry -->
+          <section id="liveTelemetry" class="space-y-4">
+            <div class="reveal-scroll rounded-3xl border border-white/40 bg-gradient-to-br from-white/95 to-cyan-50/80 p-6 shadow-xl backdrop-blur-xl">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-900">Live Insurance Status</h3>
+                <span id="riskBadge" class="rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-800">Safe</span>
+              </div>
+              <p id="liveLastUpdated" class="mt-2 text-sm text-slate-600">Last updated: --</p>
+              <p id="liveEnvFactor" class="text-sm text-slate-600">Environmental factor: --</p>
+              <p id="livePremiumChange" class="text-sm text-slate-600">Premium change: --</p>
+              <p id="predictivePremiumValue" class="text-sm text-slate-600">Predictive premium: --</p>
+              <p id="mlRiskFactor" class="text-sm text-slate-600">ML risk adjustment: --</p>
+
+              <div class="mt-4 bg-slate-100 rounded-xl p-3">
+                <h4 class="text-sm font-semibold text-slate-700">Why premium changed</h4>
+                <ul id="whyPremiumList" class="mt-2 text-sm text-slate-600 list-disc list-inside">
+                  <li>Environment Risk: --</li>
+                  <li>Zone Risk: --</li>
+                  <li>Driving Behavior: --</li>
+                  <li>Stability Factor: --</li>
+                </ul>
+              </div>
+
+              <div id="eventAlert" class="mt-3 hidden rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800"></div>
+              <p id="claimLifecycleStatus" class="mt-2 text-sm font-semibold text-slate-600">Claim Lifecycle: None</p>
+              <p id="liveEventInfo" class="text-sm text-slate-600">No event currently.</p>
+            </div>
+          </section>
+
+          <!-- Trend and events -->
+          <section id="trendAndEvents" class="space-y-4 mt-6">
+            <div class="grid gap-4 lg:grid-cols-2">
+              <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
+                <h3 class="text-lg font-bold text-slate-900 mb-2">Premium Trend (last 6)</h3>
+                <canvas id="premiumTrendChart" width="500" height="240" class="w-full h-60"></canvas>
+              </div>
+
+              <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-lg font-bold text-slate-900">Recent Events</h3>
+                  <span id="numEvents" class="text-xs font-semibold text-slate-500">0 events</span>
+                </div>
+                <ul id="eventTimeline" class="space-y-2 text-sm text-slate-700 max-h-56 overflow-y-auto"></ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- AI Insights + Simulation -->
+          <section id="aiSimulation" class="space-y-4 mt-6">
+            <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">AI Insights</h3>
+              <ul id="aiInsightsList" class="list-disc list-inside text-sm text-slate-700"></ul>
+            </div>
+            <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">Simulation Controls</h3>
+              <div class="flex flex-wrap gap-2">
+                <button id="startSimulationBtn" class="btn-primary-micro">Start Simulation</button>
+                <button id="pauseSimulationBtn" class="btn-primary-micro">Pause Simulation</button>
+                <button id="triggerRainBtn" class="btn-micro rounded-lg bg-sky-100 px-3 py-2">Trigger Rain</button>
+                <button id="triggerHeatwaveBtn" class="btn-micro rounded-lg bg-orange-100 px-3 py-2">Trigger Heatwave</button>
+                <button id="triggerPollutionBtn" class="btn-micro rounded-lg bg-amber-100 px-3 py-2">Trigger Pollution</button>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
+              <h3 class="text-lg font-bold text-slate-900 mb-2">User Profile Impact</h3>
+              <ul id="profileImpact" class="list-disc list-inside text-sm text-slate-700"></ul>
             </div>
           </section>
 
@@ -341,25 +422,33 @@
       }
 
       .card-glass {
-        @apply rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-md shadow-md;
+        border-radius: 1rem;
+        border: 1px solid rgba(148, 163, 184, 0.38);
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
       }
 
       .card-glass-premium {
-        @apply rounded-3xl border border-white/40 bg-white/80 backdrop-blur-xl shadow-lg relative overflow-hidden transition-all duration-300;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
       }
 
       .card-glass-premium::before {
         content: '';
         position: absolute;
         inset: 0;
-        rounded-3xl;
+        border-radius: 1.5rem;
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 50%);
         opacity: 0;
         transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         pointer-events: none;
-        border-radius: inherit;
       }
 
       .card-glass-premium:hover::before {
@@ -380,7 +469,14 @@
       }
 
       .btn-primary {
-        @apply rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-2.5 font-semibold text-white transition duration-300 relative overflow-hidden;
+        border-radius: 0.75rem;
+        background: linear-gradient(to right, #06b6d4, #3b82f6);
+        padding: 0.625rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
         box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
       }
 
@@ -403,7 +499,12 @@
       }
 
       .btn-primary-micro {
-        @apply rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-2.5 font-semibold text-white transition duration-300;
+        border-radius: 0.75rem;
+        background: linear-gradient(to right, #06b6d4, #3b82f6);
+        padding: 0.625rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
         box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
       }
 
@@ -413,7 +514,7 @@
       }
 
       .btn-micro {
-        @apply transition duration-300;
+        transition: all 0.3s ease;
       }
 
       .btn-micro:active {
@@ -421,7 +522,8 @@
       }
 
       .active-pill {
-        @apply bg-gradient-to-r from-cyan-100 to-blue-100 text-cyan-700;
+        background: linear-gradient(to right, #cffafe, #bfdbfe);
+        color: #0c4a6e;
         box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
       }
 
@@ -438,7 +540,7 @@
       }
 
       /* Sidebar toggle for mobile */
-      #sidebar.active { @apply translate-x-0; }
+      #sidebar.active { transform: translateX(0); }
 
       /* Custom scrollbar */
       ::-webkit-scrollbar {
