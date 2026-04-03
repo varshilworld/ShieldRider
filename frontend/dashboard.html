@@ -33,7 +33,7 @@
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
-          <a href="#overview" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
+          <a href="dashboard.html" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
             <span class="text-lg">📊</span>
             <span>Dashboard</span>
             <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
@@ -50,13 +50,9 @@
             <span class="text-lg">💳</span>
             <span>Transactions</span>
           </a>
-          <a href="#analytics" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
-            <span class="text-lg">📈</span>
-            <span>Analytics</span>
-          </a>
           <a href="registration.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
             <span class="text-lg">👤</span>
-            <span>Profile</span>
+            <span>Register Profile</span>
           </a>
         </nav>
 
@@ -75,8 +71,8 @@
         <div class="sticky top-0 z-20 backdrop-blur-xl bg-white/60 border-b border-white/50 shadow-sm">
           <div class="mx-auto max-w-6xl px-6 md:px-8 py-4 flex items-center justify-between">
             <div>
-              <h2 id="greetingText" class="text-xl font-bold text-slate-900">Welcome back!</h2>
-              <p class="text-xs text-slate-500">Manage your income protection</p>
+              <h2 id="greetingText" class="text-xl font-bold text-slate-900">Dashboard</h2>
+              <p class="text-xs text-slate-500">Your protection overview</p>
             </div>
             <div class="flex items-center gap-4">
               <div id="avatarTop" class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-sm"></div>
@@ -86,293 +82,138 @@
 
         <!-- Content (Centered, Spacious) -->
         <div class="mx-auto max-w-6xl px-6 md:px-8 py-16 pb-32 space-y-20">
-          <!-- OVERVIEW SECTION -->
-          <section id="overview" class="space-y-12">
-            <!-- Hero (Premium Landing Style) -->
-            <div class="reveal-scroll relative rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+          <!-- DASHBOARD SECTIONS -->
+          <section class="space-y-12">
+            <!-- Profile Incomplete Banner -->
+            <div id="profileIncompleteBanner" class="hidden reveal-scroll relative rounded-3xl border border-red-200/50 bg-red-50/80 backdrop-blur-xl p-6 shadow-xl">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-2xl">⚠️</span>
+                  <div>
+                    <h3 class="font-bold text-red-800">Profile Incomplete</h3>
+                    <p class="text-sm text-red-600">Complete your profile to get personalized protection</p>
+                  </div>
+                </div>
+                <a href="registration.html" class="px-4 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition">Complete Profile</a>
+              </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div id="welcomeSection" class="reveal-scroll relative rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
               <!-- Glow background element -->
               <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-100/30 via-transparent to-blue-100/20 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
               <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-300/0 via-cyan-300/5 to-blue-300/0 blur-xl"></div>
               <div class="relative z-10">
-                <p class="inline-block rounded-full bg-gradient-to-r from-cyan-200 to-blue-200 px-4 py-1.5 text-xs font-semibold text-cyan-800">Welcome to ShieldRider</p>
-                <h1 id="heroName" class="mt-6 text-5xl md:text-6xl font-black tracking-tight text-slate-900 letter-spacing bg-gradient-to-r from-cyan-600 via-blue-600 to-slate-900 bg-clip-text text-transparent">Welcome back</h1>
-                <p class="mt-4 max-w-2xl text-lg text-slate-600">Your financial protection dashboard — AI-powered recommendations, real-time analytics, and seamless coverage management.</p>
-
-                <!-- Info chips -->
-                <div class="mt-8 flex flex-wrap gap-3">
-                  <div class="rounded-lg bg-gradient-to-r from-cyan-100 to-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700 border border-cyan-200/50">
-                    <span id="workTypeChip">Work Type: —</span>
+                <p class="inline-block rounded-full bg-gradient-to-r from-cyan-200 to-blue-200 px-4 py-1.5 text-xs font-semibold text-cyan-800">Welcome Back</p>
+                <h1 id="welcomeTitle" class="mt-6 text-5xl md:text-6xl font-black tracking-tight text-slate-900 letter-spacing bg-gradient-to-r from-cyan-600 via-blue-600 to-slate-900 bg-clip-text text-transparent">Welcome, User</h1>
+                <div class="mt-6 flex flex-wrap gap-4">
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-sm font-medium">
+                    <span>💼</span>
+                    <span id="workType">Work Type</span>
                   </div>
-                  <div class="rounded-lg bg-gradient-to-r from-blue-100 to-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 border border-blue-200/50">
-                    <span id="hoursChip">Weekly Hours: —</span>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-sm font-medium">
+                    <span>📍</span>
+                    <span id="location">Location</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-sm font-medium">
+                    <span>⚡</span>
+                    <span id="riskLevel">Risk Level</span>
                   </div>
                 </div>
-
-                <!-- Animated gradient underline -->
-                <div class="mt-8 h-1.5 w-32 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-transparent animate-pulse"></div>
               </div>
             </div>
 
-            <!-- Metrics Grid -->
-            <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-4 mt-12">
-              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Monthly Income</p>
-                <p id="incomeValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900 counter" data-target="15000">₹0</p>
-                <div class="mt-3 h-1 w-12 rounded-full bg-cyan-300"></div>
-              </div>
-
-              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 100ms">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Risk Score</p>
-                <p id="riskValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900">Low</p>
-                <div class="mt-3 h-1 w-12 rounded-full bg-green-300"></div>
-              </div>
-
-              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 200ms">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Active Coverage</p>
-                <p id="coverageValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900 counter" data-target="125000">₹0</p>
-                <div class="mt-3 h-1 w-12 rounded-full bg-blue-300"></div>
-              </div>
-
-              <div class="reveal-scroll card-glass-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 300ms">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Next Premium</p>
-                <p id="nextPremiumValue" class="mt-3 text-3xl md:text-4xl font-black text-slate-900">N/A</p>
-                <div class="mt-3 h-1 w-12 rounded-full bg-orange-300"></div>
-              </div>
-            </div>
-          </section>
-
-          <!-- AI Risk + Trigger Badges -->
-          <section class="mb-4 space-y-3">
-            <div class="flex flex-wrap gap-2">
-              <span id="aiEngineBadge" class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">AI Risk Engine Active</span>
-              <span id="predictiveWeatherBadge" class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-800">Predictive Weather Model</span>
-              <span id="triggerSystemBadge" class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Automated Risk Trigger System Active</span>
-            </div>
-            <div id="automatedTriggerLog" class="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700 max-h-32 overflow-y-auto">
-              <p class="text-slate-500">No triggers yet.</p>
-            </div>
-          </section>
-
-          <!-- Live Insurance Telemetry -->
-          <section id="liveTelemetry" class="space-y-4">
-            <div class="reveal-scroll rounded-3xl border border-white/40 bg-gradient-to-br from-white/95 to-cyan-50/80 p-6 shadow-xl backdrop-blur-xl">
-              <div class="flex items-center justify-between">
-                <h3 class="text-lg font-bold text-slate-900">Live Insurance Status</h3>
-                <span id="riskBadge" class="rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-800">Safe</span>
-              </div>
-              <p id="liveLastUpdated" class="mt-2 text-sm text-slate-600">Last updated: --</p>
-              <p id="liveEnvFactor" class="text-sm text-slate-600">Environmental factor: --</p>
-              <p id="livePremiumChange" class="text-sm text-slate-600">Premium change: --</p>
-              <p id="predictivePremiumValue" class="text-sm text-slate-600">Predictive premium: --</p>
-              <p id="mlRiskFactor" class="text-sm text-slate-600">ML risk adjustment: --</p>
-
-              <div class="mt-4 bg-slate-100 rounded-xl p-3">
-                <h4 class="text-sm font-semibold text-slate-700">Why premium changed</h4>
-                <ul id="whyPremiumList" class="mt-2 text-sm text-slate-600 list-disc list-inside">
-                  <li>Environment Risk: --</li>
-                  <li>Zone Risk: --</li>
-                  <li>Driving Behavior: --</li>
-                  <li>Stability Factor: --</li>
-                </ul>
-              </div>
-
-              <div id="eventAlert" class="mt-3 hidden rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800"></div>
-              <p id="claimLifecycleStatus" class="mt-2 text-sm font-semibold text-slate-600">Claim Lifecycle: None</p>
-              <p id="liveEventInfo" class="text-sm text-slate-600">No event currently.</p>
-            </div>
-          </section>
-
-          <!-- Trend and events -->
-          <section id="trendAndEvents" class="space-y-4 mt-6">
-            <div class="grid gap-4 lg:grid-cols-2">
-              <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
-                <h3 class="text-lg font-bold text-slate-900 mb-2">Premium Trend (last 6)</h3>
-                <canvas id="premiumTrendChart" width="500" height="240" class="w-full h-60"></canvas>
-              </div>
-
-              <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
-                <div class="flex items-center justify-between mb-2">
-                  <h3 class="text-lg font-bold text-slate-900">Recent Events</h3>
-                  <span id="numEvents" class="text-xs font-semibold text-slate-500">0 events</span>
-                </div>
-                <ul id="eventTimeline" class="space-y-2 text-sm text-slate-700 max-h-56 overflow-y-auto"></ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- AI Insights + Simulation -->
-          <section id="aiSimulation" class="space-y-4 mt-6">
-            <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">AI Insights</h3>
-              <ul id="aiInsightsList" class="list-disc list-inside text-sm text-slate-700"></ul>
-            </div>
-            <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">Simulation Controls</h3>
-              <div class="flex flex-wrap gap-2">
-                <button id="startSimulationBtn" class="btn-primary-micro">Start Simulation</button>
-                <button id="pauseSimulationBtn" class="btn-primary-micro">Pause Simulation</button>
-                <button id="triggerRainBtn" class="btn-micro rounded-lg bg-sky-100 px-3 py-2">Trigger Rain</button>
-                <button id="triggerHeatwaveBtn" class="btn-micro rounded-lg bg-orange-100 px-3 py-2">Trigger Heatwave</button>
-                <button id="triggerPollutionBtn" class="btn-micro rounded-lg bg-amber-100 px-3 py-2">Trigger Pollution</button>
-              </div>
-            </div>
-            <div class="rounded-3xl border border-white/40 bg-white/90 p-4 shadow-md">
-              <h3 class="text-lg font-bold text-slate-900 mb-2">User Profile Impact</h3>
-              <ul id="profileImpact" class="list-disc list-inside text-sm text-slate-700"></ul>
-            </div>
-          </section>
-
-          <!-- INSIGHTS SECTION -->
-          <section id="insights" class="space-y-8 pt-8">
-            <h2 class="text-2xl font-black text-slate-900">Insights</h2>
-
-            <!-- AI Recommendation -->
-            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 border border-gradient-to-r from-cyan-300/30 to-blue-300/30 relative overflow-hidden transition-all duration-300 hover:-translate-y-1">
-                <!-- Glow effect -->
-              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-200/20 to-blue-200/10 opacity-0 hover:opacity-60 transition-opacity duration-500"></div>
-              <div class="relative z-10">
+            <!-- Income Card -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-xl">💰</div>
                 <div>
-                  <p class="inline-block rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">AI Powered</p>
-                  <h3 id="aiPlanName" class="mt-3 text-2xl font-bold text-slate-900">Protection Recommendation</h3>
-                  <p id="aiRisk" class="mt-2 max-w-xl text-slate-600">Based on your work pattern, we recommend the best plan for you.</p>
+                  <h3 class="text-2xl font-bold text-slate-900">Income Overview</h3>
+                  <p class="text-slate-600">Your weekly and monthly earnings</p>
                 </div>
-                <div class="hidden md:block text-5xl">✨</div>
               </div>
-                <button id="viewPlanBtn" class="btn-primary-micro mt-6 py-2 px-6 text-sm font-semibold">View Recommended Plan</button>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200/50">
+                  <div class="text-sm font-semibold text-green-700 mb-1">Weekly Income</div>
+                  <div class="text-3xl font-black text-green-800" id="weeklyIncome">₹0</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200/50">
+                  <div class="text-sm font-semibold text-blue-700 mb-1">Monthly Income</div>
+                  <div class="text-3xl font-black text-blue-800" id="monthlyIncome">₹0</div>
+                </div>
               </div>
             </div>
 
-            <!-- Analytics -->
-            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1" style="animation-delay: 100ms">
-              <h3 class="text-lg font-bold text-slate-900">Earnings vs Premiums</h3>
-              <div class="mt-6 space-y-4">
+            <!-- AI Powered Insight -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                  <div class="h-12 w-12 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xl">⚡</div>
+                  <div>
+                    <h3 class="text-2xl font-bold text-slate-900">AI Powered Insight</h3>
+                    <p class="text-slate-600">Personalized recommendations based on your profile</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="px-3 py-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold animate-pulse">AI</div>
+                </div>
+              </div>
+              <div id="aiInsightContent" class="text-center py-8">
+                <!-- Content will be populated by JS -->
+              </div>
+              <div class="mt-6 flex justify-center">
+                <div class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-sm font-semibold border border-purple-200 animate-pulse ai-badge-glow">
+                  🤖 AI Powered • Dynamic Premium
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Plan -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white text-xl">🛡</div>
                 <div>
-                  <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
-                    <span>Income</span>
-                    <span id="earningsValue" class="counter" data-target="15000">₹0</span>
-                  </div>
-                  <div class="mt-2 h-3 w-full rounded-full bg-slate-200">
-                    <div id="earningsBar" class="h-full rounded-full bg-gradient-to-r from-cyan-400 to-cyan-500 transition-all duration-700" style="width: 10%"></div>
-                  </div>
+                  <h3 class="text-2xl font-bold text-slate-900">Active Plan</h3>
+                  <p class="text-slate-600">Your current protection coverage</p>
                 </div>
-
-                <div>
-                  <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
-                    <span>Premiums</span>
-                    <span id="premiumsValue" class="counter" data-target="2800">₹0</span>
-                  </div>
-                  <div class="mt-2 h-3 w-full rounded-full bg-slate-200">
-                    <div id="premiumsBar" class="h-full rounded-full bg-gradient-to-r from-blue-400 to-blue-500 transition-all duration-700" style="width: 5%"></div>
-                  </div>
-                </div>
+              </div>
+              <div id="planContent" class="text-center py-8">
+                <!-- Content will be populated by JS -->
               </div>
             </div>
-          </section>
 
-          <!-- ACTIONS SECTION -->
-          <section id="plans" class="space-y-10 pt-12">
-            <h2 class="text-2xl font-black text-slate-900">Insurance Plans</h2>
-
-            <div class="grid gap-8 md:grid-cols-3 pt-4">
-              <!-- Basic Plan -->
-              <div class="reveal-scroll card-glass-premium rounded-3xl p-6 border border-slate-200/60 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-lg font-bold text-slate-900">Basic</h3>
-                  <span class="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">Entry</span>
+            <!-- Recent Transactions -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                  <div class="h-12 w-12 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-xl">💳</div>
+                  <div>
+                    <h3 class="text-2xl font-bold text-slate-900">Recent Transactions</h3>
+                    <p class="text-slate-600">Your latest payment activity</p>
+                  </div>
                 </div>
-                <p class="mt-4 text-4xl font-black text-slate-900">₹499</p>
-                <p class="mt-1 text-sm text-slate-600">Coverage ₹50,000</p>
-                <ul class="mt-4 space-y-2 text-sm text-slate-600">
-                  <li class="flex items-center gap-2">✓ <span>24/7 support</span></li>
-                  <li class="flex items-center gap-2">✓ <span>Basic accident cover</span></li>
-                </ul>
-                <button class="buy-plan btn-micro mt-6 w-full rounded-lg bg-slate-100 px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-200">Buy Plan</button>
+                <a href="transactions.html" class="text-cyan-600 hover:text-cyan-700 font-semibold">View All →</a>
               </div>
-
-              <!-- Pro Plan (Highlighted) -->
-              <div class="reveal-scroll card-glass-premium rounded-3xl p-6 border-2 border-cyan-400 bg-gradient-to-br from-white/95 to-cyan-50/70 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl md:scale-105 z-10" style="animation-delay: 100ms">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-lg font-bold text-slate-900">Pro</h3>
-                  <span class="rounded-full bg-cyan-100 px-2 py-1 text-xs font-semibold text-cyan-700">⭐ Recommended</span>
-                </div>
-                <p class="mt-4 text-4xl font-black text-slate-900">₹999</p>
-                <p class="mt-1 text-sm text-slate-600">Coverage ₹1,25,000</p>
-                <ul class="mt-4 space-y-2 text-sm text-slate-600">
-                  <li class="flex items-center gap-2">✓ <span>Priority claims</span></li>
-                  <li class="flex items-center gap-2">✓ <span>Income replacement</span></li>
-                  <li class="flex items-center gap-2">✓ <span>Fast payouts</span></li>
-                </ul>
-                <button class="buy-plan btn-micro mt-6 w-full rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 font-semibold text-white transition hover:shadow-lg">Buy Plan</button>
-              </div>
-
-              <!-- Elite Plan -->
-              <div class="reveal-scroll card-glass-premium rounded-3xl p-6 border border-slate-200/60 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover" style="animation-delay: 200ms">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-lg font-bold text-slate-900">Elite</h3>
-                  <span class="rounded-full bg-violet-100 px-2 py-1 text-xs font-semibold text-violet-700">Premium</span>
-                </div>
-                <p class="mt-4 text-4xl font-black text-slate-900">₹1,799</p>
-                <p class="mt-1 text-sm text-slate-600">Coverage ₹2,50,000</p>
-                <ul class="mt-4 space-y-2 text-sm text-slate-600">
-                  <li class="flex items-center gap-2">✓ <span>Top tier support</span></li>
-                  <li class="flex items-center gap-2">✓ <span>Highest coverage</span></li>
-                  <li class="flex items-center gap-2">✓ <span>Instant verification</span></li>
-                </ul>
-                <button class="buy-plan btn-micro mt-6 w-full rounded-lg bg-slate-100 px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-200">Buy Plan</button>
+              <div id="transactionsContent" class="space-y-4">
+                <!-- Content will be populated by JS -->
               </div>
             </div>
-          </section>
 
-          <!-- RAISE A CLAIM SECTION -->
-          <section class="space-y-10 pt-12">
-            <div class="reveal-scroll card-glass-premium rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 via-white/80 to-cyan-50/60 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
-              <!-- Glow background -->
-              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-orange-100/20 via-transparent to-red-100/10 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
-              <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-orange-300/0 via-orange-300/5 to-red-300/0 blur-xl"></div>
-              
-              <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div>
-                  <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Need Support?</h3>
-                  <h2 class="mt-2 text-3xl md:text-4xl font-black text-slate-900">Raise a Claim</h2>
-                  <p class="mt-4 max-w-xl text-slate-600">File a claim for weather disruptions, accidents, or other covered incidents. Get instant support with our AI-powered claim processing.</p>
+            <!-- Recent Claims -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                  <div class="h-12 w-12 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center text-white text-xl">🧾</div>
+                  <div>
+                    <h3 class="text-2xl font-bold text-slate-900">Recent Claims</h3>
+                    <p class="text-slate-600">Your recent claim submissions</p>
+                  </div>
                 </div>
-                <a href="claims.html" class="btn-micro flex-shrink-0 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-105 inline-block text-center whitespace-nowrap">→ Raise Claim</a>
+                <a href="claims.html" class="text-cyan-600 hover:text-cyan-700 font-semibold">View All →</a>
               </div>
-            </div>
-          </section>
-
-          <!-- HISTORY SECTION -->
-          <section id="transactions" class="space-y-10 pt-12">
-            <h2 class="text-2xl font-black text-slate-900">Transaction History</h2>
-
-            <div class="reveal-scroll card-glass-premium rounded-3xl p-6 overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300">
-              <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                  <thead>
-                    <tr class="border-b border-slate-200">
-                      <th class="pb-3 font-semibold text-slate-600">Date</th>
-                      <th class="pb-3 font-semibold text-slate-600">Type</th>
-                      <th class="pb-3 font-semibold text-slate-600">Amount</th>
-                      <th class="pb-3 font-semibold text-slate-600">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="transactionTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
+              <div id="claimsContent" class="space-y-4">
+                <!-- Content will be populated by JS -->
               </div>
-              <div id="emptyTransactions" class="mt-6 rounded-xl border border-dashed border-slate-300 bg-slate-100/50 p-6 text-center text-slate-500 hidden">
-                <p class="text-sm font-semibold">No transactions yet</p>
-                <p class="text-xs">Buy a plan to start your coverage journey</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- PROFILE SECTION -->
-          <section id="profile" class="space-y-10 pt-12 pb-20">
-            <h2 class="text-2xl font-black text-slate-900">Download Summary</h2>
-
-            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300">
-              <p class="text-slate-600">Get a complete summary of your account and coverage details.</p>
-              <button id="downloadSummaryBtn" class="btn-primary-micro mt-6 py-2 px-6 text-sm font-semibold">Download Summary</button>
             </div>
           </section>
         </div>
@@ -559,140 +400,323 @@
       ::-webkit-scrollbar-thumb:hover {
         background: rgba(34, 211, 238, 0.6);
       }
+
+      /* AI Badge Glow Effect */
+      .ai-badge-glow {
+        animation: aiGlow 3s ease-in-out infinite;
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+      }
+
+      @keyframes aiGlow {
+        0%, 100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
+        50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.8), 0 0 30px rgba(168, 85, 247, 0.4); }
+      }
     </style>
 
-    <script>
-      // IntersectionObserver for scroll-triggered animations
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+    <script type="module">
+      // Import Firebase
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDyKZKmuteyNBKRFlcjRv1MBlRUDc5TWls",
+        authDomain: "devtrails-guidewire-hackathon.firebaseapp.com",
+        projectId: "devtrails-guidewire-hackathon",
+        storageBucket: "devtrails-guidewire-hackathon.firebasestorage.app",
+        messagingSenderId: "43647169445",
+        appId: "1:43647169445:web:96ff4b3a12eba9fcdfae4c"
       };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
-            entry.target.style.animationDelay = `${index * 80}ms`;
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-      document.querySelectorAll('.reveal-scroll').forEach(el => {
-        observer.observe(el);
-      });
+      // DOM elements
+      const greetingText = document.getElementById('greetingText');
+      const avatarTop = document.getElementById('avatarTop');
+      const profileIncompleteBanner = document.getElementById('profileIncompleteBanner');
+      const welcomeTitle = document.getElementById('welcomeTitle');
+      const workType = document.getElementById('workType');
+      const location = document.getElementById('location');
+      const riskLevel = document.getElementById('riskLevel');
+      const weeklyIncome = document.getElementById('weeklyIncome');
+      const monthlyIncome = document.getElementById('monthlyIncome');
+      const planContent = document.getElementById('planContent');
+      const transactionsContent = document.getElementById('transactionsContent');
+      const claimsContent = document.getElementById('claimsContent');
+      const aiInsightContent = document.getElementById('aiInsightContent');
 
-      // Number counter animations
-      function animateCounter(element, target, duration = 800) {
-        let current = 0;
-        const increment = target / (duration / 16);
-        const interval = setInterval(() => {
-          current += increment;
-          if (current >= target) {
-            current = target;
-            clearInterval(interval);
-          }
-          element.textContent = '₹' + Math.floor(current).toLocaleString('en-IN');
-        }, 16);
+      // Initialize dashboard
+      function initDashboard() {
+        const user = JSON.parse(localStorage.getItem('shieldrider_current_user'));
+
+        if (!user) {
+          window.location.href = 'auth.html';
+          return;
+        }
+
+        // Update greeting and avatar
+        const email = user.email.split('@')[0];
+        const initial = email.charAt(0).toUpperCase();
+        greetingText.textContent = `Dashboard`;
+        avatarTop.textContent = initial;
+
+        // Render all sections
+        renderProfile(user);
+        renderIncome(user);
+        renderAIInsight(user);
+        renderPlan(user);
+        renderTransactions(user);
+        renderClaims(user);
+
+        // Show profile incomplete banner if needed
+        if (!user.profileCompleted) {
+          profileIncompleteBanner.classList.remove('hidden');
+        }
+
+        setupEventListeners();
+        setupAnimations();
       }
 
-      // Trigger counters when visible
-      document.querySelectorAll('.counter').forEach(el => {
-        const target = parseInt(el.dataset.target) || 0;
-        const triggerObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && !el.dataset.animated) {
-              el.dataset.animated = 'true';
-              animateCounter(el, target);
-              triggerObserver.unobserve(el);
+      // Render profile section
+      function renderProfile(user) {
+        const name = user?.profile?.name || 'User';
+        const userWorkType = user?.profile?.workType || 'Not specified';
+        const userLocation = user?.profile?.location || 'Not specified';
+        const userRiskLevel = user?.profile?.riskLevel || 'Not specified';
+
+        welcomeTitle.textContent = `Welcome, ${name}`;
+        workType.textContent = userWorkType;
+        location.textContent = userLocation;
+        riskLevel.textContent = userRiskLevel;
+      }
+
+      // Render income section
+      function renderIncome(user) {
+        const weekly = user?.profile?.weeklyIncome || 0;
+        const monthly = weekly * 4;
+
+        weeklyIncome.textContent = `₹${weekly.toLocaleString()}`;
+        monthlyIncome.textContent = `₹${monthly.toLocaleString()}`;
+      }
+
+      // Render AI insight section
+      function renderAIInsight(user) {
+        const aiInsightContent = document.getElementById('aiInsightContent');
+
+        // Check if profile data exists
+        if (!user?.profile?.weeklyIncome || !user?.profile?.riskLevel || !user?.profile?.workType) {
+          aiInsightContent.innerHTML = `
+            <div class="text-center">
+              <div class="text-4xl mb-4">🔒</div>
+              <p class="text-slate-600">Complete your profile to unlock AI insights</p>
+            </div>
+          `;
+          return;
+        }
+
+        const weeklyIncome = user.profile.weeklyIncome;
+        const riskLevel = user.profile.riskLevel;
+        const workType = user.profile.workType;
+
+        // Smarter scoring system (AI-like)
+        let score = 0;
+
+        // Income factor
+        if (weeklyIncome > 15000) score += 3;
+        else if (weeklyIncome > 8000) score += 2;
+        else score += 1;
+
+        // Risk factor
+        if (riskLevel === 'High') score += 3;
+        else if (riskLevel === 'Medium') score += 2;
+        else score += 1;
+
+        // Work type factor
+        if (workType === 'Delivery') score += 3;
+        else if (workType === 'Freelancer') score += 2;
+        else score += 1;
+
+        // Final decision
+        let recommendation = '';
+        if (score >= 7) recommendation = 'High Coverage Recommended';
+        else if (score >= 5) recommendation = 'Medium Coverage Recommended';
+        else recommendation = 'Basic Coverage Recommended';
+
+        aiInsightContent.innerHTML = `
+          <div class="text-center">
+            <div class="text-4xl mb-4">🎯</div>
+            <h4 class="text-2xl font-bold text-slate-900 mb-2">${recommendation}</h4>
+            <p class="text-slate-600">
+              Generated using dynamic risk scoring model analyzing income, occupation, and exposure factors
+            </p>
+            <p class="text-sm text-slate-500 mt-2">
+              Confidence Score: ${Math.min(95, score * 12)}%
+            </p>
+          </div>
+        `;
+      }
+
+      // Render plan section
+      function renderPlan(user) {
+        if (user?.plan) {
+          planContent.innerHTML = `
+            <div class="text-center">
+              <div class="text-4xl mb-4">✅</div>
+              <h4 class="text-xl font-bold text-slate-900 mb-2">${user.plan.name || 'Active Plan'}</h4>
+              <p class="text-slate-600">Your protection is active</p>
+            </div>
+          `;
+        } else {
+          planContent.innerHTML = `
+            <div class="text-center">
+              <div class="text-4xl mb-4">📋</div>
+              <h4 class="text-xl font-bold text-slate-900 mb-2">No Active Plan</h4>
+              <p class="text-slate-600 mb-6">Get protected today</p>
+              <a href="plans.html" class="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                Browse Plans
+              </a>
+            </div>
+          `;
+        }
+      }
+
+      // Render transactions section
+      function renderTransactions(user) {
+        const transactions = user?.transactions || [];
+
+        if (transactions.length === 0) {
+          transactionsContent.innerHTML = `
+            <div class="text-center py-8">
+              <div class="text-4xl mb-4">💳</div>
+              <p class="text-slate-600">No transactions yet</p>
+            </div>
+          `;
+          return;
+        }
+
+        const recentTransactions = transactions.slice(-5).reverse();
+        transactionsContent.innerHTML = recentTransactions.map(transaction => `
+          <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-sm font-bold">
+                ${transaction.type === 'Payment' ? '💰' : '💸'}
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">${transaction.type}</div>
+                <div class="text-sm text-slate-500">${transaction.date || 'Recent'}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-slate-900">₹${transaction.amount?.toLocaleString() || '0'}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render claims section
+      function renderClaims(user) {
+        const claims = user?.claims || [];
+
+        if (claims.length === 0) {
+          claimsContent.innerHTML = `
+            <div class="text-center py-8">
+              <div class="text-4xl mb-4">🧾</div>
+              <p class="text-slate-600">No claims yet</p>
+            </div>
+          `;
+          return;
+        }
+
+        const recentClaims = claims.slice(-3).reverse();
+        claimsContent.innerHTML = recentClaims.map(claim => `
+          <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center text-white text-sm font-bold">
+                📄
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">${claim.type || 'Claim'}</div>
+                <div class="text-sm text-slate-500">${claim.date || 'Recent'}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-slate-900">₹${claim.amount?.toLocaleString() || '0'}</div>
+              <div class="text-sm text-slate-500">${claim.status || 'Pending'}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Logout functionality
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', async () => {
+            localStorage.removeItem('shieldrider_current_user');
+            await auth.signOut();
+            window.location.href = 'auth.html';
+          });
+        }
+
+        // Mobile sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+          sidebarToggle.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
+          });
+        }
+
+        // Close sidebar on nav click
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && (href.includes('plans.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('registration.html'))) {
+              e.preventDefault();
+              window.location.href = href;
             }
+            document.getElementById('sidebar').classList.remove('active');
           });
         });
-        triggerObserver.observe(el);
-      });
-
-      // Parallax effect for background blobs
-      window.addEventListener('scroll', () => {
-        const blobs = document.querySelectorAll('.blob-float');
-        blobs.forEach((blob, index) => {
-          const speed = parseFloat(blob.dataset.speed) || 0.5;
-          blob.style.transform = `translateY(${window.scrollY * speed}px)`;
-        });
-      });
-
-      // Button ripple effect
-      function createRipple(event) {
-        const button = event.currentTarget;
-        const circle = document.createElement('span');
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
-
-        circle.style.width = circle.style.height = diameter + 'px';
-        circle.style.left = event.clientX - button.getBoundingClientRect().left - radius + 'px';
-        circle.style.top = event.clientY - button.getBoundingClientRect().top - radius + 'px';
-        circle.classList.add('ripple');
-        circle.style.position = 'absolute';
-        circle.style.borderRadius = '50%';
-        circle.style.background = 'rgba(255, 255, 255, 0.6)';
-        circle.style.animation = 'ripple 0.6s ease-out';
-        circle.style.pointerEvents = 'none';
-
-        button.appendChild(circle);
-        setTimeout(() => circle.remove(), 600);
       }
 
-      document.querySelectorAll('.btn-primary-micro, .btn-micro').forEach(btn => {
-        btn.addEventListener('click', createRipple);
-      });
+      // Setup animations
+      function setupAnimations() {
+        // IntersectionObserver for scroll-triggered animations
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-      // Mobile sidebar toggle
-      document.getElementById('sidebarToggle').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.toggle('active');
-      });
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationDelay = `${index * 80}ms`;
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
 
-      // Close sidebar on nav click and update active state
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.getElementById('sidebar').classList.remove('active');
-          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-          this.classList.add('active');
+        document.querySelectorAll('.reveal-scroll').forEach(el => {
+          observer.observe(el);
         });
-      });
 
-      // User personalization from localStorage
-      function initializeUserData() {
-        const user = JSON.parse(localStorage.getItem('shieldrider_current_user') || 'null');
-        if (!user) return;
-
-        const email = user.email.split('@')[0];
-        const initials = email.charAt(0).toUpperCase();
-
-        document.getElementById('heroName').textContent = `${email}`;
-        document.getElementById('greetingText').textContent = `Welcome back, ${email}!`;
-        document.getElementById('avatarTop').textContent = initials;
-        document.getElementById('workTypeChip').textContent = `Work Type: ${user.workType}`;
-        document.getElementById('hoursChip').textContent = `Weekly Hours: ${user.weeklyHours}h`;
-
-        // Calculate metrics based on user data
-        const monthlyIncome = user.weeklyHours * 500; // ₹500 per hour estimate
-        const riskScore = user.weeklyHours > 50 ? 'Medium' : 'Low';
-        const nextPremium = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString();
-
-        document.getElementById('incomeValue').dataset.target = monthlyIncome;
-        document.getElementById('incomeValue').textContent = '₹' + monthlyIncome.toLocaleString('en-IN');
-        document.getElementById('riskValue').textContent = riskScore;
-        document.getElementById('nextPremiumValue').textContent = nextPremium;
+        // Parallax effect for background blobs
+        window.addEventListener('scroll', () => {
+          const blobs = document.querySelectorAll('.blob-float');
+          blobs.forEach((blob, index) => {
+            const speed = parseFloat(blob.dataset.speed) || 0.5;
+            blob.style.transform = `translateY(${window.scrollY * speed}px)`;
+          });
+        });
       }
 
-      // Auto-initialize on page load
-      window.addEventListener('load', initializeUserData);
-
-      // Ensure animations trigger on staggered intervals with better timing
-      setTimeout(() => {
-        document.querySelectorAll('.reveal-scroll').forEach((el, index) => {
-          el.style.animationDelay = `${index * 60}ms`;
-        });
-      }, 150);
+      // Initialize when DOM is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDashboard);
+      } else {
+        initDashboard();
+      }
     </script>
   </body>
 </html>
