@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShieldRider Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body class="scroll-smooth bg-gradient-to-br from-white via-sky-50 to-blue-50 text-slate-800 overflow-x-hidden">
+    <!-- Floating background blobs with parallax (soft ambient effect) -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" id="blobContainer">
+      <div class="blob-float absolute top-0 left-1/4 w-screen h-screen bg-cyan-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 animate-blob" data-speed="0.5"></div>
+      <div class="blob-float absolute top-1/3 right-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-8 animate-blob animation-delay-2000" data-speed="0.3"></div>
+      <div class="blob-float absolute bottom-0 left-1/2 w-screen h-screen bg-sky-100 rounded-full mix-blend-multiply filter blur-[110px] opacity-12 animate-blob animation-delay-4000" data-speed="0.7"></div>
+    </div>
+
+    <!-- Container -->
+    <div class="flex h-screen">
+      <!-- LEFT SIDEBAR (Floating) -->
+      <aside id="sidebar" class="fixed left-4 top-4 h-[calc(100vh-2rem)] w-64 bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl flex flex-col transition-all duration-300 md:relative md:left-0 md:top-0 md:h-screen md:rounded-none md:border-none md:border-r md:shadow-none md:bg-white/70 z-40 -translate-x-full md:translate-x-0 md:mr-8">
+        <!-- Logo -->
+        <div class="px-6 py-8 border-b border-white/30">
+          <div class="flex items-center gap-3">
+            <div class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-lg">🛡</div>
+            <div>
+              <h1 class="text-base font-black text-slate-900">ShieldRider</h1>
+              <p class="text-xs text-slate-500">Protection Platform</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
+          <a href="dashboard.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">📊</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="plans.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">📋</span>
+            <span>Plans</span>
+          </a>
+          <a href="claims.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">🧾</span>
+            <span>Claims</span>
+          </a>
+          <a href="transactions.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">💳</span>
+            <span>Transactions</span>
+          </a>
+          <a href="registration.html" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
+            <span class="text-lg">👤</span>
+            <span>Profile</span>
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
+          </a>
+        </nav>
+
+        <!-- Logout -->
+        <div class="px-4 py-4 border-t border-white/30">
+          <button id="logoutBtn" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-700">Logout</button>
+        </div>
+      </aside>
+
+      <!-- Mobile Sidebar Toggle -->
+      <button id="sidebarToggle" class="fixed bottom-6 right-6 z-30 md:hidden h-12 w-12 rounded-full bg-cyan-500 text-white font-bold shadow-lg hover:shadow-xl transition">☰</button>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="flex-1 overflow-y-auto">
+        <!-- Top Navbar (Sticky, Premium) -->
+        <div class="sticky top-0 z-20 backdrop-blur-xl bg-white/60 border-b border-white/50 shadow-sm">
+          <div class="mx-auto max-w-6xl px-6 md:px-8 py-4 flex items-center justify-between">
+            <div>
+              <h2 id="greetingText" class="text-xl font-bold text-slate-900">Complete Your Profile</h2>
+              <p class="text-xs text-slate-500">Set up your account for personalized protection</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div id="avatarTop" class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-sm"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content (Centered, Spacious) -->
+        <div class="mx-auto max-w-6xl px-6 md:px-8 py-16 pb-32 space-y-20">
+          <!-- REGISTRATION FORM -->
+          <section class="space-y-12">
+            <!-- Hero -->
+            <div class="reveal-scroll relative rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+              <!-- Glow background element -->
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-100/30 via-transparent to-blue-100/20 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-300/0 via-cyan-300/5 to-blue-300/0 blur-xl"></div>
+              <div class="relative z-10">
+                <p class="inline-block rounded-full bg-gradient-to-r from-cyan-200 to-blue-200 px-4 py-1.5 text-xs font-semibold text-cyan-800">Profile Setup</p>
+                <h1 class="mt-6 text-5xl md:text-6xl font-black tracking-tight text-slate-900 letter-spacing bg-gradient-to-r from-cyan-600 via-blue-600 to-slate-900 bg-clip-text text-transparent">Complete Your Profile</h1>
+                <p class="mt-4 max-w-2xl text-lg text-slate-600">Tell us about yourself to get personalized insurance recommendations and protection tailored to your work pattern.</p>
+              </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <form id="profileForm" class="space-y-8">
+                <!-- Full Name -->
+                <div>
+                  <label for="fullName" class="block text-sm font-semibold text-slate-700 mb-2">Full Name *</label>
+                  <input type="text" id="fullName" name="fullName" required
+                         class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                         placeholder="Enter your full name">
+                </div>
+
+                <!-- Email (readonly) -->
+                <div>
+                  <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
+                  <input type="email" id="email" name="email" readonly
+                         class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/80 backdrop-blur-sm text-slate-600 cursor-not-allowed"
+                         placeholder="your.email@example.com">
+                </div>
+
+                <!-- Work Type -->
+                <div>
+                  <label for="workType" class="block text-sm font-semibold text-slate-700 mb-2">Work Type *</label>
+                  <select id="workType" name="workType" required
+                          class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-all duration-200 shadow-sm hover:shadow-md">
+                    <option value="">Select your work type</option>
+                    <option value="Delivery">Delivery</option>
+                    <option value="Driver">Driver</option>
+                    <option value="Freelancer">Freelancer</option>
+                    <option value="Office">Office</option>
+                  </select>
+                </div>
+
+                <!-- Weekly Income -->
+                <div>
+                  <label for="weeklyIncome" class="block text-sm font-semibold text-slate-700 mb-2">Weekly Income (₹) *</label>
+                  <input type="number" id="weeklyIncome" name="weeklyIncome" required min="0"
+                         class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                         placeholder="Enter your weekly income">
+                </div>
+
+                <!-- Weekly Hours -->
+                <div>
+                  <label for="weeklyHours" class="block text-sm font-semibold text-slate-700 mb-2">Weekly Work Hours *</label>
+                  <input type="number" id="weeklyHours" name="weeklyHours" required min="1" max="168"
+                         class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                         placeholder="Enter hours per week">
+                </div>
+
+                <!-- Location -->
+                <div>
+                  <label for="location" class="block text-sm font-semibold text-slate-700 mb-2">Location *</label>
+                  <input type="text" id="location" name="location" required
+                         class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                         placeholder="Enter your city or location">
+                </div>
+
+                <!-- Risk Level -->
+                <div>
+                  <label for="riskLevel" class="block text-sm font-semibold text-slate-700 mb-2">Risk Level *</label>
+                  <select id="riskLevel" name="riskLevel" required
+                          class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 transition-all duration-200 shadow-sm hover:shadow-md">
+                    <option value="">Select your risk level</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+
+                <!-- Action Button -->
+                <div class="pt-4">
+                  <button type="submit" id="submitBtn"
+                          class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2">
+                    Save & Continue
+                  </button>
+                </div>
+
+                <!-- Success Message -->
+                <div id="successMessage" class="hidden mt-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-center font-semibold">
+                  Profile saved successfully! Redirecting to dashboard...
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <style>
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+      }
+
+      @keyframes revealScroll {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes shimmer {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
+
+      @keyframes ripple {
+        0% { transform: scale(0); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
+      }
+
+      @keyframes buttonPress {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.96); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0); }
+        50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
+      }
+
+      .animate-blob { animation: blob 7s infinite; }
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
+
+      .reveal-scroll {
+        animation: revealScroll 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        opacity: 0;
+      }
+
+      .card-glass {
+        border-radius: 1rem;
+        border: 1px solid rgba(148, 163, 184, 0.38);
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      }
+
+      .card-glass-premium {
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .card-glass-premium::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 1.5rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 50%);
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+      }
+
+      .card-glass-premium:hover::before {
+        opacity: 0.6;
+      }
+
+      .card-glass-premium:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+      }
+
+      .shadow-card {
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      .shadow-card-hover {
+        box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+      }
+
+      .btn-primary {
+        border-radius: 0.75rem;
+        background: linear-gradient(to right, #06b6d4, #3b82f6);
+        padding: 0.625rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
+      }
+
+      .btn-primary:active {
+        animation: buttonPress 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .btn-primary::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      .btn-primary-micro {
+        border-radius: 0.75rem;
+        background: linear-gradient(to right, #06b6d4, #3b82f6);
+        padding: 0.625rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+      }
+
+      .btn-primary-micro:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
+      }
+
+      .btn-micro {
+        transition: all 0.3s ease;
+      }
+
+      .btn-micro:active {
+        animation: buttonPress 0.2s ease-out;
+      }
+
+      .active-pill {
+        background: linear-gradient(to right, #cffafe, #bfdbfe);
+        color: #0c4a6e;
+        box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+      }
+
+      .active-glow {
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .nav-item.active .active-glow {
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+      }
+
+      .letter-spacing {
+        letter-spacing: 0.02em;
+      }
+
+      /* Sidebar toggle for mobile */
+      #sidebar.active { transform: translateX(0); }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(34, 211, 238, 0.4);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(34, 211, 238, 0.6);
+      }
+    </style>
+
+    <script type="module">
+      // Import Firebase
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDyKZKmuteyNBKRFlcjRv1MBlRUDc5TWls",
+        authDomain: "devtrails-guidewire-hackathon.firebaseapp.com",
+        projectId: "devtrails-guidewire-hackathon",
+        storageBucket: "devtrails-guidewire-hackathon.firebasestorage.app",
+        messagingSenderId: "43647169445",
+        appId: "1:43647169445:web:96ff4b3a12eba9fcdfae4c"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // State management
+      let currentUser = null;
+      let isEditMode = false;
+
+      // DOM elements
+      const form = document.getElementById('profileForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const successMessage = document.getElementById('successMessage');
+      const greetingText = document.getElementById('greetingText');
+      const avatarTop = document.getElementById('avatarTop');
+
+      // Form fields
+      const fullNameInput = document.getElementById('fullName');
+      const emailInput = document.getElementById('email');
+      const workTypeInput = document.getElementById('workType');
+      const weeklyIncomeInput = document.getElementById('weeklyIncome');
+      const weeklyHoursInput = document.getElementById('weeklyHours');
+      const locationInput = document.getElementById('location');
+      const riskLevelInput = document.getElementById('riskLevel');
+
+      // Initialize page
+      function init() {
+        loadUserData();
+        setupEventListeners();
+        setupAnimations();
+      }
+
+      // Load user data from localStorage
+      function loadUserData() {
+        currentUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || 'null');
+
+        if (!currentUser) {
+          // No user found, redirect to auth
+          window.location.href = 'auth.html';
+          return;
+        }
+
+        // Set email (readonly)
+        emailInput.value = currentUser.email;
+
+        // Update greeting and avatar
+        const email = currentUser.email.split('@')[0];
+        const initial = email.charAt(0).toUpperCase();
+        greetingText.textContent = `Welcome, ${email}`;
+        avatarTop.textContent = initial;
+
+        // Debug: loaded user from storage
+        console.log('Loaded user:', currentUser);
+        console.log('Profile completed:', currentUser.profileCompleted);
+
+        // Ensure structure and fallback
+        if (currentUser.profileCompleted && !currentUser.profile) {
+          currentUser.profileCompleted = false;
+        }
+
+        // If user has existing profile, restore values
+        if (currentUser.profile) {
+          prefillForm();
+        }
+
+        // Determine mode
+        if (currentUser.profileCompleted) {
+          setReadOnlyMode(true);
+          submitBtn.textContent = 'Edit Profile';
+          submitBtn.type = 'button';
+          isEditMode = false;
+        } else {
+          // new profile or incomplete profile
+          submitBtn.textContent = 'Save & Continue';
+          submitBtn.type = 'submit';
+          isEditMode = false;
+
+          // if profile exists and partial data is present, keep fields but editable
+          if (currentUser.profile) {
+            setReadOnlyMode(false);
+          }
+        }
+      }
+
+      // Pre-fill form with existing profile data
+      function prefillForm() {
+        if (currentUser.profile) {
+          fullNameInput.value = currentUser.profile.name || '';
+          workTypeInput.value = currentUser.profile.workType || '';
+          weeklyIncomeInput.value = currentUser.profile.weeklyIncome || '';
+          weeklyHoursInput.value = currentUser.profile.weeklyHours || '';
+          locationInput.value = currentUser.profile.location || '';
+          riskLevelInput.value = currentUser.profile.riskLevel || '';
+        }
+      }
+
+      // Set form to read-only or editable mode
+      function setReadOnlyMode(readOnly) {
+        const inputs = [fullNameInput, workTypeInput, weeklyIncomeInput, weeklyHoursInput, locationInput, riskLevelInput];
+        inputs.forEach(input => {
+          input.disabled = readOnly;
+          input.classList.toggle('cursor-not-allowed', readOnly);
+          input.classList.toggle('bg-slate-50/80', readOnly);
+          input.classList.toggle('text-slate-600', readOnly);
+          input.classList.toggle('bg-white/80', !readOnly);
+          input.classList.toggle('text-slate-900', !readOnly);
+        });
+
+        if (readOnly) {
+          submitBtn.textContent = 'Edit Profile';
+          submitBtn.type = 'button';
+        }
+      }
+
+      // Validate form
+      function validateForm() {
+        const requiredFields = [fullNameInput, workTypeInput, weeklyIncomeInput, weeklyHoursInput, locationInput, riskLevelInput];
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            field.classList.add('border-red-400', 'focus:ring-red-400');
+            isValid = false;
+          } else {
+            field.classList.remove('border-red-400', 'focus:ring-red-400');
+          }
+        });
+
+        // Additional validation for numbers
+        if (weeklyIncomeInput.value && parseFloat(weeklyIncomeInput.value) <= 0) {
+          weeklyIncomeInput.classList.add('border-red-400', 'focus:ring-red-400');
+          isValid = false;
+        }
+
+        if (weeklyHoursInput.value && (parseFloat(weeklyHoursInput.value) <= 0 || parseFloat(weeklyHoursInput.value) > 168)) {
+          weeklyHoursInput.classList.add('border-red-400', 'focus:ring-red-400');
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // Handle form submission
+      function handleSubmit(e) {
+        e.preventDefault();
+
+        if (!validateForm()) {
+          return;
+        }
+
+        if (isEditMode) {
+          // Update existing profile
+          updateProfile();
+        } else {
+          // Save new profile
+          saveProfile();
+        }
+      }
+
+      // Save new profile
+      function saveProfile() {
+        const profileData = {
+          name: fullNameInput.value.trim(),
+          workType: workTypeInput.value,
+          weeklyIncome: parseFloat(weeklyIncomeInput.value),
+          weeklyHours: parseFloat(weeklyHoursInput.value),
+          location: locationInput.value.trim(),
+          riskLevel: riskLevelInput.value
+        };
+
+        currentUser.profile = profileData;
+        currentUser.profileCompleted = true;
+
+        console.log('Saving profile:', currentUser);
+        localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
+
+        // Update Firestore (non-blocking)
+        onAuthStateChanged(auth, async (firebaseUser) => {
+          if (firebaseUser) {
+            try {
+              await setDoc(doc(db, 'profiles', firebaseUser.uid), {
+                email: currentUser.email,
+                city: profileData.location, // Map location to city
+                workType: profileData.workType,
+                weeklyHours: profileData.weeklyHours,
+                name: profileData.name,
+                weeklyIncome: profileData.weeklyIncome,
+                riskLevel: profileData.riskLevel,
+                createdAt: new Date(),
+                activePlan: null,
+              }, { merge: true });
+            } catch (error) {
+              console.error('Error updating Firestore:', error);
+            }
+          }
+        });
+
+        // Show success message and redirect
+        showSuccess();
+        console.log('Saved. Redirecting...');
+        localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
+
+        setTimeout(() => {
+          window.location.replace('dashboard.html');
+        }, 300);
+      }
+
+      // Update existing profile
+      function updateProfile() {
+        const profileData = {
+          name: fullNameInput.value.trim(),
+          workType: workTypeInput.value,
+          weeklyIncome: parseFloat(weeklyIncomeInput.value),
+          weeklyHours: parseFloat(weeklyHoursInput.value),
+          location: locationInput.value.trim(),
+          riskLevel: riskLevelInput.value
+        };
+
+        currentUser.profile = profileData;
+        currentUser.profileCompleted = true;
+
+        console.log('Saving profile:', currentUser);
+        localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
+
+        // Update Firestore
+        onAuthStateChanged(auth, async (firebaseUser) => {
+          if (firebaseUser) {
+            try {
+              await setDoc(doc(db, 'profiles', firebaseUser.uid), {
+                email: currentUser.email,
+                city: profileData.location,
+                workType: profileData.workType,
+                weeklyHours: profileData.weeklyHours,
+                name: profileData.name,
+                weeklyIncome: profileData.weeklyIncome,
+                riskLevel: profileData.riskLevel,
+              }, { merge: true });
+            } catch (error) {
+              console.error('Error updating Firestore:', error);
+            }
+          }
+        });
+
+        // Switch back to read-only mode
+        setReadOnlyMode(true);
+        submitBtn.textContent = 'Edit Profile';
+        submitBtn.type = 'button';
+        isEditMode = false;
+
+        showSuccess();
+        console.log('Saved. Redirecting...');
+        setTimeout(() => {
+          window.location.replace('dashboard.html');
+        }, 300);
+      }
+
+      // Show success message
+      function showSuccess() {
+        successMessage.classList.remove('hidden');
+        setTimeout(() => {
+          successMessage.classList.add('hidden');
+        }, 3000);
+      }
+
+      // Handle button click
+      function handleButtonClick(e) {
+        if (isEditMode) {
+          // Currently editing, save changes
+          if (validateForm()) {
+            updateProfile();
+          }
+        } else {
+          // Switch to edit mode
+          setReadOnlyMode(false);
+          submitBtn.textContent = 'Update Profile';
+          submitBtn.type = 'button'; // Change to button to prevent form submit
+          isEditMode = true;
+        }
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        form.addEventListener('submit', handleSubmit);
+        submitBtn.addEventListener('click', handleButtonClick);
+
+        // Logout functionality
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', async () => {
+            localStorage.removeItem('shieldrider_current_user');
+            await auth.signOut();
+            window.location.href = 'auth.html';
+          });
+        }
+
+        // Mobile sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+          sidebarToggle.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
+          });
+        }
+
+        // Close sidebar on nav click
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && (href.includes('dashboard.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('plans.html'))) {
+              e.preventDefault();
+              window.location.href = href;
+            }
+            document.getElementById('sidebar').classList.remove('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+      }
+
+      // Setup animations
+      function setupAnimations() {
+        // IntersectionObserver for scroll-triggered animations
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationDelay = `${index * 80}ms`;
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-scroll').forEach(el => {
+          observer.observe(el);
+        });
+
+        // Parallax effect for background blobs
+        window.addEventListener('scroll', () => {
+          const blobs = document.querySelectorAll('.blob-float');
+          blobs.forEach((blob, index) => {
+            const speed = parseFloat(blob.dataset.speed) || 0.5;
+            blob.style.transform = `translateY(${window.scrollY * speed}px)`;
+          });
+        });
+      }
+
+      // Initialize when DOM is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    </script>
+  </body>
+</html>

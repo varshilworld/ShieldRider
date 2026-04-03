@@ -214,12 +214,45 @@ async function processLogin(e) {
   setLoadingState(true, 'login');
 
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid;
+
+    // Fetch user profile from Firestore
+    const profileDoc = await getDoc(doc(db, 'profiles', uid));
+    let profileData = null;
+    if (profileDoc.exists()) {
+      profileData = profileDoc.data();
+    }
+
+    // Set localStorage for the app
+    const existingUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+    const userData = {
+      ...existingUser,
+      uid,
+      email,
+      profileCompleted: profileData ? true : false,
+      profile: profileData ? {
+        name: profileData.city || '', // Note: signup saves city, but we use as name placeholder
+        workType: profileData.workType || '',
+        weeklyIncome: 0, // Will be set in registration
+        weeklyHours: profileData.weeklyHours || 40,
+        location: profileData.city || '',
+        riskLevel: 'Medium' // Default
+      } : existingUser.profile || null
+    };
+    localStorage.setItem('shieldrider_current_user', JSON.stringify(userData));
+
     applySuccess();
     showStatus('login', 'Login successful! Redirecting...');
 
     setTimeout(() => {
-      window.location.href = 'dashboard.html';
+      const allowGuestMode = true;
+      // Optional registration support: if guests allowed, send to dashboard
+      if (userData.profileCompleted || allowGuestMode) {
+        window.location.href = 'dashboard.html';
+      } else {
+        window.location.href = 'registration.html';
+      }
     }, 1200);
   } catch (error) {
     setLoadingState(false, 'login');
@@ -259,11 +292,22 @@ async function processSignup(e) {
       activePlan: null,
     });
 
+    // Set localStorage for the app (merge with existing object)
+    const existingUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+    const userData = {
+      ...existingUser,
+      uid,
+      email,
+      profileCompleted: false, // Profile not completed yet
+      profile: existingUser.profile || null
+    };
+    localStorage.setItem('shieldrider_current_user', JSON.stringify(userData));
+
     applySuccess();
     showStatus('signup', 'Account created! Redirecting...');
 
     setTimeout(() => {
-      window.location.href = 'dashboard.html';
+      window.location.href = 'registration.html'; // New users go to registration
     }, 1200);
   } catch (error) {
     setLoadingState(false, 'signup');
@@ -353,8 +397,8 @@ function setupGlobalNavigation() {
   document.querySelectorAll('.nav-item').forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
-      // Allow external page navigation (claims.html, transactions.html)
-      if (href && (href.includes('claims.html') || href.includes('transactions.html') || href.includes('dashboard.html'))) {
+      // Allow external page navigation (claims.html, transactions.html, registration.html)
+      if (href && (href.includes('claims.html') || href.includes('transactions.html') || href.includes('dashboard.html') || href.includes('registration.html'))) {
         e.preventDefault();
         window.location.href = href;
       }
@@ -373,19 +417,21 @@ async function initDashboard() {
         return;
       }
 
-      const uid = user.uid;
-      const email = user.email;
-      const initial = email.charAt(0).toUpperCase();
-
-      // Fetch user profile from Firestore
-      const profileDoc = await getDoc(doc(db, 'profiles', uid));
-      if (!profileDoc.exists()) {
-        console.error('Profile not found');
+      // Check if profile is completed (optional now)
+      const allowGuestMode = true;
+      const localUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+      if (!localUser.profileCompleted && !allowGuestMode) {
+        window.location.href = 'registration.html';
         resolve();
         return;
       }
 
-      const profile = profileDoc.data();
+      const uid = user.uid;
+      const email = user.email;
+      const initial = email.charAt(0).toUpperCase();
+
+      // Use profile from localStorage
+      const profile = localUser.profile;
 
   // Update UI with user info
   if (document.getElementById('avatarTop')) {
@@ -400,18 +446,18 @@ async function initDashboard() {
 
   // Display work type and hours chips
   if (document.getElementById('workTypeChip')) {
-    document.getElementById('workTypeChip').textContent = `Work Type: ${profile.workType}`;
+    document.getElementById('workTypeChip').textContent = `Work Type: ${profile.workType || 'N/A'}`;
   }
   if (document.getElementById('hoursChip')) {
-    document.getElementById('hoursChip').textContent = `Weekly Hours: ${profile.weeklyHours}h`;
+    document.getElementById('hoursChip').textContent = `Weekly Hours: ${profile.weeklyHours || 0}h`;
   }
 
   // Calculate metrics
   const weeklyHours = profile.weeklyHours || 40;
-  const dailyRate = 400;
-  const monthlyIncome = Math.round((weeklyHours / 7) * dailyRate * 30);
+  const weeklyIncome = profile.weeklyIncome || (weeklyHours * 500); // Fallback calculation
+  const monthlyIncome = Math.round((weeklyIncome / 7) * 30); // Approximate monthly
 
-  const riskLevel = weeklyHours > 50 ? 'High' : weeklyHours > 35 ? 'Medium' : 'Low';
+  const riskLevel = profile.riskLevel || (weeklyHours > 50 ? 'High' : weeklyHours > 35 ? 'Medium' : 'Low');
   const activeCoverage = profile.activePlan ?
     (profile.activePlan === 'Basic' ? 50000 : profile.activePlan === 'Pro' ? 125000 : 250000) : 0;
 
