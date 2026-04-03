@@ -444,63 +444,77 @@ async function initDashboard() {
     document.getElementById('greetingText').textContent = `Welcome back, ${email.split('@')[0]}`;
   }
 
+  let monthlyIncome = 0;
+  let riskLevel = 'Unknown';
+  let chipsWorkType = 'N/A';
+  let chipsWeeklyHours = 0;
+
+  if (profile) {
+    // Required source-of-truth mapping
+    monthlyIncome = Number(profile.weeklyIncome || 0) * 4;
+    riskLevel = profile.riskLevel || 'Unknown';
+    chipsWorkType = profile.workType || 'N/A';
+    chipsWeeklyHours = Number(profile.weeklyHours || 0);
+
+    document.getElementById('aiRisk').textContent = `Based on your profile, we recommend updates for ${chipsWorkType}.`;
+  } else {
+    // No profile at all
+    document.getElementById('aiRisk').textContent = 'Complete your profile to see personalized insights';
+  }
+
   // Display work type and hours chips
   if (document.getElementById('workTypeChip')) {
-    document.getElementById('workTypeChip').textContent = `Work Type: ${profile.workType || 'N/A'}`;
+    document.getElementById('workTypeChip').textContent = `Work Type: ${chipsWorkType}`;
   }
   if (document.getElementById('hoursChip')) {
-    document.getElementById('hoursChip').textContent = `Weekly Hours: ${profile.weeklyHours || 0}h`;
+    document.getElementById('hoursChip').textContent = `Weekly Hours: ${chipsWeeklyHours}h`;
   }
 
-  // Calculate metrics
-  const weeklyHours = profile.weeklyHours || 40;
-  const weeklyIncome = profile.weeklyIncome || (weeklyHours * 500); // Fallback calculation
-  const monthlyIncome = Math.round((weeklyIncome / 7) * 30); // Approximate monthly
-
-  const riskLevel = profile.riskLevel || (weeklyHours > 50 ? 'High' : weeklyHours > 35 ? 'Medium' : 'Low');
-  const activeCoverage = profile.activePlan ?
-    (profile.activePlan === 'Basic' ? 50000 : profile.activePlan === 'Pro' ? 125000 : 250000) : 0;
-
+  // Set metric values
   if (document.getElementById('incomeValue')) {
     document.getElementById('incomeValue').textContent = `₹${monthlyIncome.toLocaleString()}`;
   }
   if (document.getElementById('riskValue')) {
     document.getElementById('riskValue').textContent = riskLevel;
   }
+
+  const coverageAmount = (localUser.plan && Number(localUser.plan.coverage)) || 0;
   if (document.getElementById('coverageValue')) {
-    document.getElementById('coverageValue').textContent = activeCoverage > 0 ? `₹${activeCoverage.toLocaleString()}` : '₹0';
+    document.getElementById('coverageValue').textContent = coverageAmount > 0 ? `₹${coverageAmount.toLocaleString()}` : '₹0';
   }
 
-  const nextPremiumDate = new Date();
-  nextPremiumDate.setDate(nextPremiumDate.getDate() + 7);
-  if (document.getElementById('nextPremiumValue')) {
-    document.getElementById('nextPremiumValue').textContent = profile.activePlan ? nextPremiumDate.toLocaleDateString() : 'N/A';
-  }
-
-  let recommendedPlan = 'Accident Shield Pro';
-  if (weeklyHours > 50) recommendedPlan = 'Elite Protection';
-  else if (weeklyHours > 35) recommendedPlan = 'Accident Shield Pro';
-  else recommendedPlan = 'Basic Coverage';
+  const weeklyHours = profile ? Number(profile.weeklyHours || 0) : 0;
+  const recommendedPlan = profile ? (weeklyHours > 50 ? 'Elite Protection' : weeklyHours > 35 ? 'Accident Shield Pro' : 'Basic Coverage') : 'No profile data';
 
   if (document.getElementById('aiPlanName')) {
     document.getElementById('aiPlanName').textContent = recommendedPlan;
   }
+
   if (document.getElementById('aiRisk')) {
-    document.getElementById('aiRisk').textContent = `Based on your ${weeklyHours}h weekly schedule, we recommend ${recommendedPlan}.`;
+    document.getElementById('aiRisk').textContent = profile ?
+      `Based on your ${weeklyHours}h weekly schedule, we recommend ${recommendedPlan}.` :
+      'Complete your profile to see personalized insights';
   }
 
   if (document.getElementById('earningsValue')) {
     document.getElementById('earningsValue').textContent = `₹${monthlyIncome.toLocaleString()}`;
   }
-  const monthlyPremium = profile.activePlan ?
+
+  const monthlyPremium = profile && profile.activePlan ?
     (profile.activePlan === 'Basic' ? 499 : profile.activePlan === 'Pro' ? 999 : 1799) : 0;
   if (document.getElementById('premiumsValue')) {
     document.getElementById('premiumsValue').textContent = `₹${monthlyPremium}`;
   }
 
-  const maxIncome = monthlyIncome * 1.2;
-  const incomePercent = (monthlyIncome / maxIncome) * 100;
-  const premiumPercent = monthlyPremium > 0 ? (monthlyPremium / monthlyIncome) * 100 : 5;
+  const maxIncome = monthlyIncome > 0 ? monthlyIncome * 1.2 : 1;
+  const incomePercent = monthlyIncome > 0 ? (monthlyIncome / maxIncome) * 100 : 0;
+  const premiumPercent = monthlyPremium > 0 && monthlyIncome > 0 ? (monthlyPremium / monthlyIncome) * 100 : 5;
+
+  const nextPremiumDate = new Date();
+  nextPremiumDate.setDate(nextPremiumDate.getDate() + 7);
+  if (document.getElementById('nextPremiumValue')) {
+    document.getElementById('nextPremiumValue').textContent = profile && profile.activePlan ? nextPremiumDate.toLocaleDateString() : 'N/A';
+  }
 
   if (document.getElementById('earningsBar')) {
     document.getElementById('earningsBar').style.width = Math.min(incomePercent, 100) + '%';
