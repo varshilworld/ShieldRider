@@ -3,906 +3,865 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ShieldRider Plans — Insurance for Delivery Workers</title>
+    <title>ShieldRider Plans</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css" />
-    <script defer src="app.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body class="scroll-smooth bg-gradient-to-br from-white via-sky-50 to-blue-50 text-slate-800 overflow-x-hidden">
+    <!-- Floating background blobs with parallax (soft ambient effect) -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" id="blobContainer">
+      <div class="blob-float absolute top-0 left-1/4 w-screen h-screen bg-cyan-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 animate-blob" data-speed="0.5"></div>
+      <div class="blob-float absolute top-1/3 right-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-8 animate-blob animation-delay-2000" data-speed="0.3"></div>
+      <div class="blob-float absolute bottom-0 left-1/2 w-screen h-screen bg-sky-100 rounded-full mix-blend-multiply filter blur-[110px] opacity-12 animate-blob animation-delay-4000" data-speed="0.7"></div>
+    </div>
+
+    <!-- Container -->
+    <div class="flex h-screen">
+      <!-- LEFT SIDEBAR (Floating) -->
+      <aside id="sidebar" class="fixed left-4 top-4 h-[calc(100vh-2rem)] w-64 bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl flex flex-col transition-all duration-300 md:relative md:left-0 md:top-0 md:h-screen md:rounded-none md:border-none md:border-r md:shadow-none md:bg-white/70 z-40 -translate-x-full md:translate-x-0 md:mr-8">
+        <!-- Logo -->
+        <div class="px-6 py-8 border-b border-white/30">
+          <div class="flex items-center gap-3">
+            <div class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-lg">🛡</div>
+            <div>
+              <h1 class="text-base font-black text-slate-900">ShieldRider</h1>
+              <p class="text-xs text-slate-500">Protection Platform</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
+          <a href="dashboard.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">📊</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="plans.html" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
+            <span class="text-lg">📋</span>
+            <span>Plans</span>
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
+          </a>
+          <a href="claims.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">🧾</span>
+            <span>Claims</span>
+          </a>
+          <a href="transactions.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">💳</span>
+            <span>Transactions</span>
+          </a>
+          <a href="registration.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">👤</span>
+            <span>Register Profile</span>
+          </a>
+        </nav>
+
+        <!-- Logout -->
+        <div class="px-4 py-4 border-t border-white/30">
+          <button id="logoutBtn" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-700">Logout</button>
+        </div>
+      </aside>
+
+      <!-- Mobile Sidebar Toggle -->
+      <button id="sidebarToggle" class="fixed bottom-6 right-6 z-30 md:hidden h-12 w-12 rounded-full bg-cyan-500 text-white font-bold shadow-lg hover:shadow-xl transition">☰</button>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="flex-1 overflow-y-auto">
+        <!-- Top Navbar (Sticky, Premium) -->
+        <div class="sticky top-0 z-20 backdrop-blur-xl bg-white/60 border-b border-white/50 shadow-sm">
+          <div class="mx-auto max-w-6xl px-6 md:px-8 py-4 flex items-center justify-between">
+            <div>
+              <h2 id="greetingText" class="text-xl font-bold text-slate-900">Insurance Plans</h2>
+              <p class="text-xs text-slate-500">AI-powered dynamic pricing</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div id="avatarTop" class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-sm"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content (Centered, Spacious) -->
+        <div class="mx-auto max-w-6xl px-6 md:px-8 py-16 pb-32 space-y-20">
+          <!-- PLANS SECTIONS -->
+          <section class="space-y-12">
+            <!-- Hero -->
+            <div class="reveal-scroll relative rounded-3xl border border-white/40 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl p-12 md:p-16 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+              <!-- Glow background element -->
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-100/30 via-transparent to-blue-100/20 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-300/0 via-cyan-300/5 to-blue-300/0 blur-xl"></div>
+              <div class="relative z-10">
+                <p class="inline-block rounded-full bg-gradient-to-r from-cyan-200 to-blue-200 px-4 py-1.5 text-xs font-semibold text-cyan-800">Dynamic Pricing</p>
+                <h1 class="mt-6 text-5xl md:text-6xl font-black tracking-tight text-slate-900 letter-spacing bg-gradient-to-r from-cyan-600 via-blue-600 to-slate-900 bg-clip-text text-transparent">AI-Powered Insurance Plans</h1>
+                <p class="mt-4 max-w-2xl text-lg text-slate-600">Experience real-time pricing that adapts to your income, risk profile, and environmental conditions using advanced AI algorithms.</p>
+              </div>
+            </div>
+
+            <!-- Current Plan -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-xl">📋</div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900">Your Current Plan</h3>
+                  <p class="text-slate-600">Active protection status</p>
+                </div>
+              </div>
+              <div id="currentPlanContent" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Content will be populated by JS -->
+              </div>
+            </div>
+
+            <!-- Live Environment + Risk -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center text-white text-xl">🌤️</div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900">Live Environment & Risk</h3>
+                  <p class="text-slate-600">Real-time environmental factors affecting your coverage</p>
+                </div>
+              </div>
+              <div id="environmentContent" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Content will be populated by JS -->
+              </div>
+            </div>
+
+            <!-- AI Recommended Plan -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white text-xl">🤖</div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900">AI Recommended Plan</h3>
+                  <p class="text-slate-600">Personalized recommendation based on your profile and environment</p>
+                </div>
+              </div>
+              <div id="aiRecommendationContent" class="text-center py-8">
+                <!-- Content will be populated by JS -->
+              </div>
+            </div>
+
+            <!-- Plans Overview -->
+            <div class="reveal-scroll">
+              <h3 class="text-3xl font-bold text-slate-900 mb-8 text-center">Choose Your Plan</h3>
+              <div class="grid md:grid-cols-3 gap-8" id="plansOverview">
+                <!-- Plan cards will be populated by JS -->
+              </div>
+            </div>
+
+            <!-- Detailed Plan Sections -->
+            <div id="detailedPlans" class="space-y-16">
+              <!-- Detailed plan sections will be populated by JS -->
+            </div>
+
+            <!-- Live Event Simulation -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white text-xl">⚡</div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900">Live Event Simulation</h3>
+                  <p class="text-slate-600">Real-time payout calculation for environmental events</p>
+                </div>
+              </div>
+              <div id="eventSimulationContent" class="text-center py-8">
+                <!-- Content will be populated by JS -->
+              </div>
+            </div>
+
+            <!-- Compare Plans Table -->
+            <div class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12 shadow-xl">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl">📊</div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900">Compare Plans</h3>
+                  <p class="text-slate-600">Detailed feature comparison</p>
+                </div>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-200">
+                      <th class="text-left py-3 px-4 font-semibold text-slate-900">Feature</th>
+                      <th class="text-center py-3 px-4 font-semibold text-slate-900">BASIC</th>
+                      <th class="text-center py-3 px-4 font-semibold text-slate-900">PRO</th>
+                      <th class="text-center py-3 px-4 font-semibold text-slate-900">ELITE</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-3 px-4 text-slate-700">Base Rate</td>
+                      <td class="text-center py-3 px-4">2.5%</td>
+                      <td class="text-center py-3 px-4">3.5%</td>
+                      <td class="text-center py-3 px-4">5%</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-3 px-4 text-slate-700">Risk Coverage</td>
+                      <td class="text-center py-3 px-4">Low</td>
+                      <td class="text-center py-3 px-4">Medium</td>
+                      <td class="text-center py-3 px-4">High</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-3 px-4 text-slate-700">Payout Multiplier</td>
+                      <td class="text-center py-3 px-4">1x</td>
+                      <td class="text-center py-3 px-4">1.3x</td>
+                      <td class="text-center py-3 px-4">2x</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-3 px-4 text-slate-700">AI Optimization</td>
+                      <td class="text-center py-3 px-4">✗</td>
+                      <td class="text-center py-3 px-4">✓</td>
+                      <td class="text-center py-3 px-4">✓</td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-4 text-slate-700">24/7 Support</td>
+                      <td class="text-center py-3 px-4">✗</td>
+                      <td class="text-center py-3 px-4">✓</td>
+                      <td class="text-center py-3 px-4">✓</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
     <style>
-      :root {
-        --primary: #22d3ee;
-        --secondary: #60a5fa;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
       }
 
-      body {
-        background: linear-gradient(to bottom right, #ffffff, rgba(240, 249, 255, 0.8), rgba(191, 219, 254, 0.5));
-        scroll-behavior: smooth;
-        overflow-x: hidden;
+      @keyframes revealScroll {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
-      .blob {
-        position: fixed;
-        border-radius: 50%;
-        opacity: 0.03;
-        filter: blur(100px);
-        z-index: -1;
-        pointer-events: none;
+      @keyframes shimmer {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
       }
 
-      .blob-1 {
-        width: 500px;
-        height: 500px;
-        background: radial-gradient(circle, rgba(34, 211, 238, 0.4), transparent 70%);
-        top: -20%;
-        left: -10%;
-        animation: float 20s ease-in-out infinite;
-        filter: blur(120px);
+      @keyframes ripple {
+        0% { transform: scale(0); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
       }
 
-      .blob-2 {
-        width: 600px;
-        height: 600px;
-        background: radial-gradient(circle, rgba(96, 165, 250, 0.3), transparent 70%);
-        bottom: -10%;
-        right: -5%;
-        animation: float 25s ease-in-out infinite reverse;
-        filter: blur(120px);
+      @keyframes buttonPress {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.96); }
+        100% { transform: scale(1); }
       }
 
-      .blob-3 {
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);
-        top: 50%;
-        right: 10%;
-        animation: float 22s ease-in-out infinite;
-        filter: blur(120px);
+      @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0); }
+        50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
       }
 
-      @keyframes float {
-        0%, 100% { transform: translate(0, 0); }
-        25% { transform: translate(30px, -30px); }
-        50% { transform: translate(-20px, 20px); }
-        75% { transform: translate(20px, 30px); }
-      }
+      .animate-blob { animation: blob 7s infinite; }
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
 
-      .scroll-reveal {
+      .reveal-scroll {
+        animation: revealScroll 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         opacity: 0;
-        transform: translateY(40px);
-        transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
       }
 
-      .scroll-reveal.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .glass-card {
-        background: rgba(255, 255, 255, 0.8);
+      .card-glass {
+        border-radius: 1rem;
+        border: 1px solid rgba(148, 163, 184, 0.38);
+        background-color: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        border-radius: 24px;
-        box-shadow: 0 8px 32px rgba(14, 165, 233, 0.08);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
       }
 
-      .glass-card-hover {
-        transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .glass-card-hover:hover {
-        transform: translateY(-8px) scale(1.01);
-        box-shadow: 0 20px 48px rgba(34, 211, 238, 0.2);
-        border-color: rgba(34, 211, 238, 0.4);
-      }
-
-      .glow-border {
+      .card-glass-premium {
+        border-radius: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
         position: relative;
-        border: 2px solid transparent;
-        background-clip: padding-box;
-      }
-
-      .glow-border::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(135deg, #22d3ee, #60a5fa);
-        border-radius: 24px;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: -1;
-        animation: glowPulse 2s ease-in-out infinite;
-      }
-
-      @keyframes glowPulse {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 0.6; }
-      }
-
-      .hero-card {
-        background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(96, 165, 250, 0.1));
-        border: 2px solid rgba(34, 211, 238, 0.3);
-      }
-
-      .plan-card {
-        cursor: pointer;
+        overflow: hidden;
         transition: all 0.3s ease;
       }
 
-      .plan-card:hover {
-        transform: translateY(-4px);
-      }
-
-      .plan-section {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .plan-section::before {
+      .card-glass-premium::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
+        border-radius: 1.5rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 50%);
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         pointer-events: none;
       }
 
-      .counter {
-        font-size: 2.25rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #22d3ee, #60a5fa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+      .card-glass-premium:hover::before {
+        opacity: 0.6;
       }
 
-      .compare-table {
-        width: 100%;
-        border-collapse: collapse;
+      .card-glass-premium:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8);
       }
 
-      .compare-table th,
-      .compare-table td {
-        padding: 16px;
-        text-align: left;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      .shadow-card {
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
       }
 
-      .compare-table th {
-        background: rgba(34, 211, 238, 0.05);
-        font-weight: 700;
-        color: #1e293b;
+      .shadow-card-hover {
+        box-shadow: 0 20px 50px rgba(34, 211, 238, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.5);
       }
 
-      .compare-table tr:hover {
-        background: rgba(34, 211, 238, 0.03);
-      }
-
-      .risk-bar {
-        height: 8px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
-        overflow: hidden;
-      }
-
-      .risk-indicator {
-        height: 100%;
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 999px;
-        transition: all 0.6s ease;
-      }
-
-      .navbar-top {
-        position: sticky;
-        top: 0;
-        z-index: 40;
-        backdrop-filter: blur(12px);
-        background: rgba(255, 255, 255, 0.6);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      }
-
-      .nav-item-plans {
+      .btn-primary {
+        border-radius: 0.75rem;
+        background: linear-gradient(to right, #06b6d4, #3b82f6);
+        padding: 0.625rem 1.5rem;
+        font-weight: 600;
+        color: white;
         transition: all 0.3s ease;
-        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
       }
 
-      .nav-item-plans:hover {
-        transform: scale(1.05);
-        color: #0ea5e9;
+      .btn-primary:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
       }
 
-      .badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
+      .btn-primary:active {
+        animation: buttonPress 0.2s cubic-bezier(0.22, 1, 0.36, 1);
       }
 
-      .badge-basic { background: rgba(16, 185, 129, 0.1); color: #059669; }
-      .badge-pro { background: rgba(245, 158, 11, 0.1); color: #b45309; }
-      .badge-elite { background: rgba(239, 68, 68, 0.1); color: #991b1b; }
+      .btn-primary::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      .btn-primary-micro {
+        border-radius: 0.75rem;
+        background: linear-gradient(to right, #06b6d4, #3b82f6);
+        padding: 0.625rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+      }
+
+      .btn-primary-micro:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(34, 211, 238, 0.4);
+      }
+
+      .btn-micro {
+        transition: all 0.3s ease;
+      }
+
+      .btn-micro:active {
+        animation: buttonPress 0.2s ease-out;
+      }
+
+      .active-pill {
+        background: linear-gradient(to right, #cffafe, #bfdbfe);
+        color: #0c4a6e;
+        box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+      }
+
+      .active-glow {
+        animation: glow 2s ease-in-out infinite;
+      }
+
+      .nav-item.active .active-glow {
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+      }
+
+      .letter-spacing {
+        letter-spacing: 0.02em;
+      }
+
+      /* Sidebar toggle for mobile */
+      #sidebar.active { transform: translateX(0); }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(34, 211, 238, 0.4);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(34, 211, 238, 0.6);
+      }
     </style>
-  </head>
-  <body class="bg-white text-slate-900">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-
-    <nav class="navbar-top">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        <a href="dashboard.html" class="flex items-center gap-2">
-          <div class="grid h-8 w-8 place-items-center rounded-full bg-cyan-100 text-cyan-700 font-bold">🛡</div>
-          <span class="text-lg font-black text-slate-900">ShieldRider</span>
-        </a>
-        <div class="flex items-center gap-4">
-          <button onclick="document.getElementById('comparisonSection').scrollIntoView({behavior: 'smooth'})" class="nav-item-plans text-sm font-semibold text-slate-700">Compare Plans</button>
-          <button id="dashboardNavPlans" class="nav-item-plans text-sm font-semibold text-slate-700">← Back to Dashboard</button>
-        </div>
-      </div>
-    </nav>
-
-    <main class="relative">
-      <!-- HERO CURRENT PLAN SECTION -->
-      <section class="min-h-screen flex items-center justify-center px-4 py-20 relative">
-        <div class="max-w-4xl w-full space-y-8 scroll-reveal">
-          <div class="text-center space-y-4 mb-12">
-            <h1 class="text-6xl sm:text-7xl font-black tracking-tight text-slate-900">
-              Your <span class="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">Insurance</span>
-            </h1>
-            <p class="text-xl text-slate-600 max-w-2xl mx-auto">Protection tailored to your delivery rhythm, triggered by real-world conditions</p>
-          </div>
-
-          <div class="glass-card hero-card glow-border p-8 sm:p-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div class="space-y-6">
-                <div>
-                  <p class="text-sm font-semibold uppercase tracking-wider text-slate-600 mb-2">Current Plan</p>
-                  <p id="currentPlanName" class="text-4xl font-black text-slate-900">PRO</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                  <div class="bg-white/50 rounded-xl p-4">
-                    <p class="text-xs text-slate-600 mb-1">Risk Zone</p>
-                    <p id="currentRiskZone" class="text-lg font-bold text-slate-900">Medium</p>
-                  </div>
-                  <div class="bg-white/50 rounded-xl p-4">
-                    <p class="text-xs text-slate-600 mb-1">Monthly Income</p>
-                    <p id="currentIncome" class="text-lg font-bold text-slate-900">₹20,000</p>
-                  </div>
-                </div>
-
-                <div class="space-y-2 pt-4 border-t border-slate-200">
-                  <div class="flex justify-between items-center">
-                    <span class="text-sm font-semibold text-slate-600">Monthly Premium</span>
-                    <span id="currentPremium" class="counter">₹840</span>
-                  </div>
-                  <p class="text-xs text-slate-500">Billed on the 1st of every month</p>
-                </div>
-              </div>
-
-              <div class="space-y-4">
-                <div class="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 border border-cyan-200">
-                  <p class="text-sm font-bold text-cyan-900 mb-4">Premium Calculation</p>
-                  <div class="space-y-2 text-sm text-cyan-800 font-mono">
-                    <p id="calcIncome">Income: ₹—</p>
-                    <p id="calcBaseRate">Base Rate: —</p>
-                    <p id="calcRiskFactor">Risk Factor: —</p>
-                    <p id="calcEnvFactor">Weather Factor: —</p>
-                    <p class="border-t border-cyan-300 pt-2 font-bold" id="calcTotal">= ₹—/month</p>
-                  </div>
-                </div>
-
-                <button id="upgradePlanBtn" class="w-full glass-card glass-card-hover px-6 py-4 font-bold text-slate-900 border-2 border-cyan-400 hover:bg-cyan-50 transition">
-                  Explore Other Plans
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PLAN QUICK SELECT -->
-      <section id="planSelector" class="px-4 py-20 bg-gradient-to-b from-white to-sky-50/40">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-16 space-y-4 scroll-reveal">
-            <h2 class="text-5xl font-black text-slate-900">Choose Your Protection Level</h2>
-            <p class="text-xl text-slate-600">Each plan is designed for different risk profiles</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- BASIC PLAN -->
-            <div class="plan-card glass-card glass-card-hover p-8 text-center space-y-6 scroll-reveal" style="transition-delay: 0.1s">
-              <div class="inline-block px-4 py-2 badge badge-basic">Low Risk</div>
-              <h3 class="text-3xl font-black text-slate-900">BASIC</h3>
-              <p class="text-slate-600">Essential protection for stable zones</p>
-              <div class="space-y-1">
-                <p class="text-4xl font-black text-slate-900">₹400</p>
-                <p class="text-sm text-slate-500">/month (est.)</p>
-              </div>
-              <button onclick="document.getElementById('basicSection').scrollIntoView({behavior: 'smooth'})" class="w-full glass-card glass-card-hover px-4 py-3 font-bold text-slate-900 border border-slate-300">
-                Learn More
-              </button>
-            </div>
-
-            <!-- PRO PLAN -->
-            <div class="plan-card glass-card glass-card-hover p-8 text-center space-y-6 scroll-reveal ring-2 ring-amber-400" style="transition-delay: 0.2s">
-              <div class="inline-block px-4 py-2 badge badge-pro">Recommended</div>
-              <h3 class="text-3xl font-black text-slate-900">PRO</h3>
-              <p class="text-slate-600">Perfect for urban delivery riders</p>
-              <div class="space-y-1">
-                <p class="text-4xl font-black bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">₹840</p>
-                <p class="text-sm text-slate-500">/month (est.)</p>
-              </div>
-              <button onclick="document.getElementById('proSection').scrollIntoView({behavior: 'smooth'})" class="w-full glass-card glass-card-hover px-4 py-3 font-bold text-slate-900 border-2 border-amber-400 bg-amber-50">
-                Learn More
-              </button>
-            </div>
-
-            <!-- ELITE PLAN -->
-            <div class="plan-card glass-card glass-card-hover p-8 text-center space-y-6 scroll-reveal" style="transition-delay: 0.3s">
-              <div class="inline-block px-4 py-2 badge badge-elite">Max Protection</div>
-              <h3 class="text-3xl font-black text-slate-900">ELITE</h3>
-              <p class="text-slate-600">Maximum coverage for high-risk zones</p>
-              <div class="space-y-1">
-                <p class="text-4xl font-black text-slate-900">₹1,500</p>
-                <p class="text-sm text-slate-500">/month (est.)</p>
-              </div>
-              <button onclick="document.getElementById('eliteSection').scrollIntoView({behavior: 'smooth'})" class="w-full glass-card glass-card-hover px-4 py-3 font-bold text-slate-900 border border-slate-300">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- BASIC PLAN DETAILED SECTION -->
-      <section id="basicSection" class="plan-section bg-gradient-to-b from-green-50/30 to-white">
-        <div class="max-w-4xl mx-auto px-4 relative z-10 space-y-12 scroll-reveal">
-          <div class="space-y-6">
-            <div class="inline-block px-4 py-2 badge badge-basic text-lg">Low Risk Zone</div>
-            <h2 class="text-6xl font-black text-slate-900">
-              Essential Protection for Stable Delivery Routes
-            </h2>
-            <p class="text-2xl text-slate-600 max-w-3xl">
-              Designed for delivery workers operating in rural or low-congestion zones with minimal weather disruptions.
-            </p>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-8">
-            <div class="glass-card p-8 space-y-4">
-              <h3 class="text-xl font-bold text-slate-900">Why BASIC?</h3>
-              <ul class="space-y-3 text-slate-700">
-                <li class="flex gap-3"><span class="text-green-500 font-bold">✓</span> <span>Lower premium for stable weather zones</span></li>
-                <li class="flex gap-3"><span class="text-green-500 font-bold">✓</span> <span>Minimal environmental risk exposure</span></li>
-                <li class="flex gap-3"><span class="text-green-500 font-bold">✓</span> <span>Budget-friendly protection</span></li>
-                <li class="flex gap-3"><span class="text-green-500 font-bold">✓</span> <span>Community-driven support</span></li>
-              </ul>
-            </div>
-
-            <div class="glass-card p-8 space-y-4 bg-gradient-to-br from-green-50 to-white">
-              <h3 class="text-xl font-bold text-slate-900">Coverage Includes</h3>
-              <ul class="space-y-3 text-slate-700 text-sm">
-                <li class="flex gap-2"><span class="text-lg">🌧️</span> <span>Light rain compensation</span></li>
-                <li class="flex gap-2"><span class="text-lg">⏰</span> <span>Minor delay protection</span></li>
-                <li class="flex gap-2"><span class="text-lg">🚴</span> <span>Basic accident coverage</span></li>
-                <li class="flex gap-2"><span class="text-lg">📱</span> <span>24/7 support</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="glass-card p-8 border-2 border-green-200 bg-gradient-to-br from-green-50 to-white space-y-4">
-            <p class="text-sm font-bold uppercase text-green-700">Example Calculation</p>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <p class="text-4xl font-black text-green-600">₹400</p>
-                <p class="text-slate-600 text-sm">Monthly Premium</p>
-              </div>
-              <div class="text-slate-700 text-sm space-y-1 font-mono">
-                <p>Monthly Income: ₹20,000</p>
-                <p>Base Rate: 2.5%</p>
-                <p>Risk Multiplier: 0.8x</p>
-                <p>Weather Factor: 1.0x</p>
-              </div>
-            </div>
-          </div>
-
-          <button onclick="buyPlan('BASIC')" class="w-full glass-card glass-card-hover px-8 py-4 font-bold text-lg text-slate-900 border-2 border-green-400 bg-green-50 hover:bg-green-100">
-            Select BASIC Plan
-          </button>
-        </div>
-      </section>
-
-      <!-- PRO PLAN DETAILED SECTION -->
-      <section id="proSection" class="plan-section bg-gradient-to-b from-amber-50/30 to-white">
-        <div class="max-w-4xl mx-auto px-4 relative z-10 space-y-12 scroll-reveal">
-          <div class="space-y-6">
-            <div class="inline-block px-4 py-2 badge badge-pro text-lg">Medium Risk Zone</div>
-            <h2 class="text-6xl font-black text-slate-900">
-              Balanced Protection for Urban Delivery Riders
-            </h2>
-            <p class="text-2xl text-slate-600 max-w-3xl">
-              Perfect for city-based delivery workers facing unpredictable weather and traffic conditions.
-            </p>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-8">
-            <div class="glass-card p-8 space-y-4">
-              <h3 class="text-xl font-bold text-slate-900">Why PRO?</h3>
-              <ul class="space-y-3 text-slate-700">
-                <li class="flex gap-3"><span class="text-amber-500 font-bold">✓</span> <span>Urban congestion protection</span></li>
-                <li class="flex gap-3"><span class="text-amber-500 font-bold">✓</span> <span>Moderate pollution exposure coverage</span></li>
-                <li class="flex gap-3"><span class="text-amber-500 font-bold">✓</span> <span>Frequent weather disruption handling</span></li>
-                <li class="flex gap-3"><span class="text-amber-500 font-bold">✓</span> <span>Best value for cities like Chennai, Mumbai</span></li>
-              </ul>
-            </div>
-
-            <div class="glass-card p-8 space-y-4 bg-gradient-to-br from-amber-50 to-white">
-              <h3 class="text-xl font-bold text-slate-900">Coverage Includes</h3>
-              <ul class="space-y-3 text-slate-700 text-sm">
-                <li class="flex gap-2"><span class="text-lg">🌧️</span> <span>Heavy rain + flooding delays</span></li>
-                <li class="flex gap-2"><span class="text-lg">🌡️</span> <span>Heatwave compensation</span></li>
-                <li class="flex gap-2"><span class="text-lg">💨</span> <span>Pollution spike alerts</span></li>
-                <li class="flex gap-2"><span class="text-lg">🚫</span> <span>Strike/city shutdown protection</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="glass-card p-8 border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-white space-y-4">
-            <p class="text-sm font-bold uppercase text-amber-700">Example Calculation</p>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <p class="text-4xl font-black text-amber-600">₹840</p>
-                <p class="text-slate-600 text-sm">Monthly Premium</p>
-              </div>
-              <div class="text-slate-700 text-sm space-y-1 font-mono">
-                <p>Monthly Income: ₹20,000</p>
-                <p>Base Rate: 3.5%</p>
-                <p>Risk Multiplier: 1.2x</p>
-                <p>Weather Factor: 1.0x</p>
-              </div>
-            </div>
-          </div>
-
-          <button onclick="buyPlan('PRO')" class="w-full glass-card glass-card-hover px-8 py-4 font-bold text-lg text-slate-900 border-2 border-amber-400 bg-amber-50 hover:bg-amber-100">
-            Select PRO Plan
-          </button>
-        </div>
-      </section>
-
-      <!-- ELITE PLAN DETAILED SECTION -->
-      <section id="eliteSection" class="plan-section bg-gradient-to-b from-red-50/30 to-white">
-        <div class="max-w-4xl mx-auto px-4 relative z-10 space-y-12 scroll-reveal">
-          <div class="space-y-6">
-            <div class="inline-block px-4 py-2 badge badge-elite text-lg">High Risk Zone</div>
-            <h2 class="text-6xl font-black text-slate-900">
-              Maximum Protection for High-Risk Zones
-            </h2>
-            <p class="text-2xl text-slate-600 max-w-3xl">
-              Engineered for extreme-risk environments where delivery workers face unpredictable and hazardous conditions.
-            </p>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-8">
-            <div class="glass-card p-8 space-y-4">
-              <h3 class="text-xl font-bold text-slate-900">Why ELITE?</h3>
-              <ul class="space-y-3 text-slate-700">
-                <li class="flex gap-3"><span class="text-red-500 font-bold">✓</span> <span>Industrial zone protection</span></li>
-                <li class="flex gap-3"><span class="text-red-500 font-bold">✓</span> <span>Metro high-congestion coverage</span></li>
-                <li class="flex gap-3"><span class="text-red-500 font-bold">✓</span> <span>Extreme weather resilience</span></li>
-                <li class="flex gap-3"><span class="text-red-500 font-bold">✓</span> <span>Emergency response priority</span></li>
-              </ul>
-            </div>
-
-            <div class="glass-card p-8 space-y-4 bg-gradient-to-br from-red-50 to-white">
-              <h3 class="text-xl font-bold text-slate-900">Coverage Includes</h3>
-              <ul class="space-y-3 text-slate-700 text-sm">
-                <li class="flex gap-2"><span class="text-lg">🌪️</span> <span>Cyclone & storm protection</span></li>
-                <li class="flex gap-2"><span class="text-lg">⚠️</span> <span>War & civil conflict compensation</span></li>
-                <li class="flex gap-2"><span class="text-lg">🦠</span> <span>Pandemic lockdown coverage</span></li>
-                <li class="flex gap-2"><span class="text-lg">🚨</span> <span>Emergency payout triggers</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="glass-card p-8 border-2 border-red-200 bg-gradient-to-br from-red-50 to-white space-y-4">
-            <p class="text-sm font-bold uppercase text-red-700">Example Calculation</p>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <p class="text-4xl font-black text-red-600">₹1,500</p>
-                <p class="text-slate-600 text-sm">Monthly Premium</p>
-              </div>
-              <div class="text-slate-700 text-sm space-y-1 font-mono">
-                <p>Monthly Income: ₹20,000</p>
-                <p>Base Rate: 5.0%</p>
-                <p>Risk Multiplier: 1.5x</p>
-                <p>Weather Factor: 1.0x</p>
-              </div>
-            </div>
-          </div>
-
-          <button onclick="buyPlan('ELITE')" class="w-full glass-card glass-card-hover px-8 py-4 font-bold text-lg text-slate-900 border-2 border-red-400 bg-red-50 hover:bg-red-100">
-            Select ELITE Plan
-          </button>
-        </div>
-      </section>
-
-      <!-- WEATHER API INTEGRATION SECTION -->
-      <section class="px-4 py-20 bg-gradient-to-r from-sky-50 to-blue-100/40">
-        <div class="max-w-4xl mx-auto space-y-12 scroll-reveal">
-          <div class="space-y-4 text-center">
-            <h2 class="text-5xl font-black text-slate-900">Real-Time Environmental Protection System</h2>
-            <p class="text-xl text-slate-600">Our core innovation: Insurance triggered by actual weather conditions</p>
-          </div>
-
-          <div class="glass-card p-12 space-y-8 border-2 border-cyan-300">
-            <div class="grid md:grid-cols-2 gap-8">
-              <div class="space-y-4">
-                <h3 class="text-2xl font-bold text-slate-900">How It Works</h3>
-                <p class="text-slate-700">ShieldRider dynamically adjusts insurance protection using real-time environmental signals. Instead of waiting for manual claims, automatic payouts trigger when conditions breach thresholds.</p>
-              </div>
-
-              <div class="space-y-3">
-                <div class="bg-white/50 p-4 rounded-xl border border-cyan-200">
-                  <p class="font-bold text-slate-900 mb-1">🌧️ Heavy Rain</p>
-                  <p class="text-sm text-slate-600">Rainfall > 50mm → Auto payout ₹500–₹1000</p>
-                </div>
-                <div class="bg-white/50 p-4 rounded-xl border border-orange-200">
-                  <p class="font-bold text-slate-900 mb-1">🌡️ Extreme Heat</p>
-                  <p class="text-sm text-slate-600">Temperature > 45°C → Heatwave compensation ₹300–₹600</p>
-                </div>
-                <div class="bg-white/50 p-4 rounded-xl border border-gray-200">
-                  <p class="font-bold text-slate-900 mb-1">💨 AQI Pollution</p>
-                  <p class="text-sm text-slate-600">AQI > 200 → Pollution protection ₹400–₹800</p>
-                </div>
-                <div class="bg-white/50 p-4 rounded-xl border border-red-200">
-                  <p class="font-bold text-slate-900 mb-1">⚠️ Storm Alert</p>
-                  <p class="text-sm text-slate-600">Wind > 60 km/h → Emergency payout ₹1000–₹2000</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-t-2 border-cyan-200 pt-8">
-              <p class="text-sm text-slate-600 mb-4"><strong>Future Integration:</strong></p>
-              <p class="text-slate-700">ShieldRider will integrate with OpenWeatherMap API and India Meteorological Department feeds to automate this process. No more manual claims — just real protection when you need it.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PLAN COMPARISON TABLE -->
-      <section id="comparisonSection" class="px-4 py-20">
-        <div class="max-w-6xl mx-auto space-y-12 scroll-reveal">
-          <div class="space-y-4 text-center mb-12">
-            <h2 class="text-5xl font-black text-slate-900">Compare Plans Side-by-Side</h2>
-            <p class="text-xl text-slate-600">Choose what fits your delivery profile best</p>
-          </div>
-
-          <div class="glass-card p-8 overflow-x-auto">
-            <table class="compare-table">
-              <thead>
-                <tr>
-                  <th>Feature</th>
-                  <th class="text-center">BASIC</th>
-                  <th class="text-center bg-amber-50">PRO</th>
-                  <th class="text-center">ELITE</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="font-bold">Monthly Premium (₹20k income)</td>
-                  <td class="text-center text-lg font-bold">₹400</td>
-                  <td class="text-center text-lg font-bold bg-amber-50">₹840</td>
-                  <td class="text-center text-lg font-bold">₹1,500</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Risk Zone</td>
-                  <td class="text-center">Low</td>
-                  <td class="text-center bg-amber-50">Medium</td>
-                  <td class="text-center">High</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Coverage Amount</td>
-                  <td class="text-center">₹50,000</td>
-                  <td class="text-center bg-amber-50">₹1,25,000</td>
-                  <td class="text-center">₹2,50,000</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Weather Trigger Sensitivity</td>
-                  <td class="text-center">Basic</td>
-                  <td class="text-center bg-amber-50">Advanced</td>
-                  <td class="text-center">Extreme</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Claim Multiplier</td>
-                  <td class="text-center">1.0x</td>
-                  <td class="text-center bg-amber-50">1.3x</td>
-                  <td class="text-center">2.0x</td>
-                </tr>
-                <tr>
-                  <td class="font-bold">Support Priority</td>
-                  <td class="text-center">Standard</td>
-                  <td class="text-center bg-amber-50">Priority</td>
-                  <td class="text-center">24/7 Premium</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- AI RECOMMENDATION -->
-      <section class="px-4 py-20 bg-gradient-to-r from-sky-100/50 to-blue-100/30">
-        <div class="max-w-4xl mx-auto scroll-reveal">
-          <div class="glass-card p-12 border-2 border-purple-300 space-y-6">
-            <div class="flex items-start gap-4">
-              <span class="text-4xl">🤖</span>
-              <div class="space-y-4 flex-1">
-                <h3 class="text-3xl font-black text-slate-900">AI Recommendation for You</h3>
-                <p id="aiRecommendation" class="text-xl text-slate-700 leading-relaxed">
-                  Based on your delivery profile, PRO plan gives you the best balance between affordability and protection. You earn ₹20,000/month in a medium-risk zone, making this the optimal choice.
-                </p>
-                <button onclick="buyPlan('PRO')" class="glass-card glass-card-hover px-8 py-3 font-bold text-slate-900 border-2 border-purple-400 bg-purple-50 hover:bg-purple-100">
-                  Start with PRO Plan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- RISK VISUALIZATION -->
-      <section class="px-4 py-20">
-        <div class="max-w-4xl mx-auto space-y-12 scroll-reveal">
-          <div class="space-y-4 text-center mb-12">
-            <h2 class="text-5xl font-black text-slate-900">Risk Level Visualization</h2>
-            <p class="text-xl text-slate-600">Where do you operate?</p>
-          </div>
-
-          <div class="glass-card p-8 space-y-8">
-            <div class="space-y-3">
-              <div class="flex justify-between items-center">
-                <span class="font-bold text-slate-900">Your Current Risk Level</span>
-                <span id="riskLevelDisplay" class="font-bold text-slate-600">Medium</span>
-              </div>
-              <div class="risk-bar">
-                <div id="riskIndicator" class="risk-indicator" style="width: 50%"></div>
-              </div>
-              <div class="flex justify-between text-xs text-slate-500">
-                <span>Low Risk</span>
-                <span>High Risk</span>
-              </div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-4">
-              <div class="p-4 rounded-xl bg-green-50 border border-green-200">
-                <p class="font-bold text-green-900 mb-2">Low Risk</p>
-                <p class="text-sm text-green-700">Rural / Tier 3 cities</p>
-              </div>
-              <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
-                <p class="font-bold text-amber-900 mb-2">Medium Risk</p>
-                <p class="text-sm text-amber-700">Urban cities (Chennai, Bangalore)</p>
-              </div>
-              <div class="p-4 rounded-xl bg-red-50 border border-red-200">
-                <p class="font-bold text-red-900 mb-2">High Risk</p>
-                <p class="text-sm text-red-700">Metro / Industrial zones</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- EDUCATION SECTION -->
-      <section class="px-4 py-20 bg-slate-900 text-white">
-        <div class="max-w-4xl mx-auto space-y-12 scroll-reveal">
-          <div class="space-y-6">
-            <h2 class="text-5xl font-black">Why ShieldRider Exists</h2>
-            <p class="text-xl text-slate-300 leading-relaxed">
-              Traditional insurance systems are <strong>static and reactive</strong>. They fail to account for real-time environmental risk exposure and require manual claims processing that takes weeks.
-            </p>
-          </div>
-
-          <div class="grid md:grid-cols-3 gap-6">
-            <div class="border border-slate-700 rounded-2xl p-6 space-y-3">
-              <span class="text-3xl">📊</span>
-              <h3 class="text-lg font-bold">Dynamic Pricing</h3>
-              <p class="text-slate-400 text-sm">Insurance premiums adjust based on real-time weather conditions and individual risk profiles, not static actuarial tables.</p>
-            </div>
-
-            <div class="border border-slate-700 rounded-2xl p-6 space-y-3">
-              <span class="text-3xl">🌍</span>
-              <h3 class="text-lg font-bold">Environmental Intelligence</h3>
-              <p class="text-slate-400 text-sm">We monitor weather, pollution, and environmental hazards 24/7 to provide personalized protection triggers.</p>
-            </div>
-
-            <div class="border border-slate-700 rounded-2xl p-6 space-y-3">
-              <span class="text-3xl">⚡</span>
-              <h3 class="text-lg font-bold">Automated Payouts</h3>
-              <p class="text-slate-400 text-sm">When conditions breach thresholds, payouts trigger automatically — no waiting, no paperwork, just real protection.</p>
-            </div>
-          </div>
-
-          <div class="border-t border-slate-700 pt-12">
-            <p class="text-lg text-slate-300 leading-relaxed">
-              ShieldRider redefines insurance for gig workers. We believe protection should be <strong>intelligent, automatic, and always-on</strong> — just like the work you do every day.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- CTA FOOTER -->
-      <section class="px-4 py-20 bg-gradient-to-r from-cyan-400 to-sky-500">
-        <div class="max-w-4xl mx-auto text-center space-y-8 scroll-reveal">
-          <h2 class="text-5xl font-black text-white">Ready to Protect Your Income?</h2>
-          <p class="text-xl text-cyan-100 max-w-2xl mx-auto">
-            Join thousands of delivery workers already protected by ShieldRider's intelligent insurance system.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onclick="buyPlan('PRO')" class="glass-card glass-card-hover px-8 py-4 font-bold text-lg text-cyan-600 border border-white">
-              Start with PRO
-            </button>
-            <button id="backToDashboardBtn" class="glass-card glass-card-hover px-8 py-4 font-bold text-lg text-slate-900 border border-white">
-              Back to Dashboard
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
 
     <script type="module">
-      import { runInsuranceCycle } from '../services/insuranceEngine.js';
-      import { calculatePremium } from '../utils/pricingEngine.js';
+      // Import Firebase
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
 
-      // Initialize on page load
-      window.addEventListener('DOMContentLoaded', () => {
-        initPlansPage();
-        setupScrollAnimations();
-        setupNavigationPlans();
-      });
+      const firebaseConfig = {
+        apiKey: "AIzaSyDyKZKmuteyNBKRFlcjRv1MBlRUDc5TWls",
+        authDomain: "devtrails-guidewire-hackathon.firebaseapp.com",
+        projectId: "devtrails-guidewire-hackathon",
+        storageBucket: "devtrails-guidewire-hackathon.firebasestorage.app",
+        messagingSenderId: "43647169445",
+        appId: "1:43647169445:web:96ff4b3a12eba9fcdfae4c"
+      };
 
-      function normalizePlanTitle(title) {
-        if (!title) return 'PRO';
-        const lower = title.toString().trim().toLowerCase();
-        if (lower.includes('basic')) return 'BASIC';
-        if (lower.includes('standard') || lower.includes('pro')) return 'PRO';
-        if (lower.includes('elite') || lower.includes('premium')) return 'ELITE';
-        return 'PRO';
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // DOM elements
+      const greetingText = document.getElementById('greetingText');
+      const avatarTop = document.getElementById('avatarTop');
+      const currentPlanContent = document.getElementById('currentPlanContent');
+      const environmentContent = document.getElementById('environmentContent');
+      const aiRecommendationContent = document.getElementById('aiRecommendationContent');
+      const plansOverview = document.getElementById('plansOverview');
+      const detailedPlans = document.getElementById('detailedPlans');
+      const eventSimulationContent = document.getElementById('eventSimulationContent');
+
+      // Utility functions
+      function getWeatherData() {
+        return {
+          rain: Math.random() * 100,
+          temp: 30 + Math.random() * 20,
+          wind: Math.random() * 80,
+          aqi: 100 + Math.random() * 200
+        };
       }
 
-      function mapRiskValue(value) {
-        if (!value) return 'Medium';
-        if (typeof value === 'string') value = parseFloat(value);
-        if (Number.isNaN(value)) return 'Medium';
-        if (value <= 0.03) return 'Low';
-        if (value <= 0.04) return 'Medium';
-        return 'High';
+      function getEnvironmentalFactor(weather) {
+        let factor = 1.0;
+        if (weather.aqi > 200) factor += 0.2;
+        if (weather.temp > 40) factor += 0.15;
+        if (weather.rain > 50) factor += 0.2;
+        if (weather.wind > 60) factor += 0.25;
+
+        let level = factor >= 1.6 ? "Hazardous" : factor > 1.1 ? "Normal" : "Safe";
+
+        return { factor, level };
       }
 
-      function initPlansPage() {
-        // Load user from localStorage or use defaults
-        let currentUser = JSON.parse(localStorage.getItem('shieldrider_current_user'));
-        if (!currentUser) {
-          currentUser = {
-            email: 'user@example.com',
-            income: 20000,
-            plan: 'PRO',
-            riskZone: 'Medium',
-            behavior: 'normal',
-            stability: 'normal',
-            city: 'Chennai',
-            transactions: [],
-          };
-          localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
-        }
-
-        // If we have transactions, use the latest relevant premium purchase as current plan
-        if (Array.isArray(currentUser.transactions) && currentUser.transactions.length > 0) {
-          const latest = currentUser.transactions[currentUser.transactions.length - 1];
-          if (latest.type === 'Premium') {
-            currentUser.plan = normalizePlanTitle(latest.plan || currentUser.plan);
-            currentUser.riskZone = latest.riskZone ? mapRiskValue(latest.riskZone) : mapRiskValue(currentUser.riskZone);
-            currentUser.income = currentUser.income || latest.income || currentUser.income;
-            localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
-          }
-        }
-
-        document.getElementById('currentPlanName').textContent = currentUser.plan || 'PRO';
-        document.getElementById('currentIncome').textContent = `₹${currentUser.income?.toLocaleString() || '20,000'}`;
-        document.getElementById('currentRiskZone').textContent = currentUser.riskZone || 'Medium';
-
-        // Engine-derived calculations
-        const uptime = runInsuranceCycle(currentUser);
-        const premiumEl = document.getElementById('currentPremium');
-        if (premiumEl) premiumEl.textContent = `₹${uptime.premium.toLocaleString()}`;
-
-        const riskLevelEl = document.getElementById('riskLevelDisplay');
-        if (riskLevelEl) riskLevelEl.textContent = uptime.environment?.level || currentUser.riskZone;
-
-        const baseRate = calculatePremium(currentUser, uptime.environment).components.baseRate;
-        const riskFactor = uptime.environment?.factor || 1.0;
-
-        document.getElementById('calcIncome').textContent = `Income: ₹${currentUser.income?.toLocaleString() || '0'}`;
-        document.getElementById('calcBaseRate').textContent = `Base Rate (${(currentUser.plan || 'PRO').toUpperCase()}): ${(baseRate * 100).toFixed(2)}%`;
-        document.getElementById('calcRiskFactor').textContent = `Risk Zone Multiplier: ${(calculatePremium(currentUser, uptime.environment).components.riskZoneMultiplier).toFixed(2)}x`;
-        document.getElementById('calcEnvFactor').textContent = `Environmental Factor: ${riskFactor.toFixed(2)}x`;
-        document.getElementById('calcTotal').textContent = `= ₹${uptime.premium.toLocaleString()}/month`;
-
-        generateAIRecommendation(currentUser);
-      }
-
-      function generateAIRecommendation(user) {
-        const rec = document.getElementById('aiRecommendation');
-        if (!rec) return;
-
-        const riskZone = user.riskZone || 'Medium';
-        if (riskZone === 'Low') {
-          rec.textContent = `Based on your delivery profile in ${user.city}, BASIC plan offers excellent protection at minimal cost. You operate in a low-risk zone, making this the most economical choice.`;
-        } else if (riskZone === 'High') {
-          rec.textContent = `Based on your delivery profile in ${user.city}, ELITE plan is recommended for maximum protection. You operate in a high-risk zone with significant weather and urban hazards.`;
-        } else {
-          rec.textContent = `Based on your delivery profile in ${user.city}, PRO plan gives you the best balance between affordability and protection. You earn ₹${user.income?.toLocaleString()} in a medium-risk zone.`;
-        }
-      }
-
-      function setupScrollAnimations() {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
-              entry.target.classList.add('visible');
-            }
-          });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
-      }
-
-      function setupNavigationPlans() {
-        document.getElementById('dashboardNavPlans').addEventListener('click', () => {
-          window.location.href = 'dashboard.html';
-        });
-
-        document.getElementById('backToDashboardBtn').addEventListener('click', () => {
-          window.location.href = 'dashboard.html';
-        });
-
-        document.getElementById('upgradePlanBtn').addEventListener('click', () => {
-          document.getElementById('planSelector').scrollIntoView({ behavior: 'smooth' });
-        });
-      }
-
-      function buyPlan(planName) {
-        const currentUser = JSON.parse(localStorage.getItem('shieldrider_current_user')) || {};
-        currentUser.plan = planName;
-        localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
-
-        // Create transaction (schema-compliant)
-        const transaction = {
-          date: Date.now(),
-          type: 'Premium',
-          amount: calculatePremium(currentUser).premium || 0,
-          plan: planName,
-          coverage: currentUser.activePlan || planName,
-          event: null,
-          status: 'Paid',
+      function calculatePremium(user, environment, plan) {
+        const planMap = {
+          BASIC: 0.025,
+          PRO: 0.035,
+          ELITE: 0.05
         };
 
-        currentUser.transactions = currentUser.transactions || [];
-        currentUser.transactions.push(transaction);
-        localStorage.setItem('shieldrider_current_user', JSON.stringify(currentUser));
+        const riskZoneMap = {
+          Low: 0.8,
+          Medium: 1.2,
+          High: 1.5
+        };
 
-        alert(`✅ Successfully upgraded to ${planName} plan!\nRedirecting to dashboard...`);
-        window.location.href = 'dashboard.html';
+        const behaviorMap = {
+          safe: 0.85,
+          normal: 1.0,
+          risky: 1.2
+        };
+
+        const stabilityMap = {
+          stable: 0.9,
+          normal: 1.0,
+          unstable: 1.1
+        };
+
+        return user.income *
+          planMap[plan] *
+          (riskZoneMap[user.riskZone] || 1) *
+          environment.factor *
+          (behaviorMap[user.behavior] || 1) *
+          (stabilityMap[user.stability] || 1);
+      }
+
+      // Initialize plans page
+      function initPlansPage() {
+        const user = JSON.parse(localStorage.getItem('shieldrider_current_user'));
+
+        if (!user) {
+          window.location.href = 'auth.html';
+          return;
+        }
+
+        // Update greeting and avatar
+        const email = user.email.split('@')[0];
+        const initial = email.charAt(0).toUpperCase();
+        greetingText.textContent = `Insurance Plans`;
+        avatarTop.textContent = initial;
+
+        // Get live environment data
+        const weather = getWeatherData();
+        const environment = getEnvironmentalFactor(weather);
+
+        // Render all sections
+        renderCurrentPlan(user);
+        renderEnvironment(weather, environment);
+        renderAIRecommendation(user, environment);
+        renderPlansOverview(user, environment);
+        renderDetailedPlans(user, environment);
+        renderEventSimulation(user, environment);
+
+        setupEventListeners();
+        setupAnimations();
+      }
+
+      // Render current plan section
+      function renderCurrentPlan(user) {
+        const planName = user.plan?.name || 'No Active Plan';
+        const monthlyPremium = user.plan?.premium || 0;
+        const riskZone = user.profile?.riskLevel || 'Not Set';
+        const behavior = user.profile?.workType || 'Not Set';
+        const stability = 'Normal'; // Default
+
+        currentPlanContent.innerHTML = `
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200/50">
+            <div class="text-sm font-semibold text-green-700 mb-1">Plan Name</div>
+            <div class="text-2xl font-black text-green-800">${planName}</div>
+          </div>
+          <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200/50">
+            <div class="text-sm font-semibold text-blue-700 mb-1">Monthly Premium</div>
+            <div class="text-2xl font-black text-blue-800">₹${monthlyPremium.toLocaleString()}</div>
+          </div>
+          <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200/50">
+            <div class="text-sm font-semibold text-purple-700 mb-1">Risk Zone</div>
+            <div class="text-2xl font-black text-purple-800">${riskZone}</div>
+          </div>
+          <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border border-orange-200/50">
+            <div class="text-sm font-semibold text-orange-700 mb-1">Behavior</div>
+            <div class="text-2xl font-black text-orange-800">${behavior}</div>
+          </div>
+        `;
+      }
+
+      // Render environment section
+      function renderEnvironment(weather, environment) {
+        environmentContent.innerHTML = `
+          <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200/50">
+            <div class="text-sm font-semibold text-blue-700 mb-1">Rain</div>
+            <div class="text-2xl font-black text-blue-800">${weather.rain.toFixed(1)}mm</div>
+          </div>
+          <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border border-orange-200/50">
+            <div class="text-sm font-semibold text-orange-700 mb-1">Temperature</div>
+            <div class="text-2xl font-black text-orange-800">${weather.temp.toFixed(1)}°C</div>
+          </div>
+          <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 border border-purple-200/50">
+            <div class="text-sm font-semibold text-purple-700 mb-1">AQI</div>
+            <div class="text-2xl font-black text-purple-800">${weather.aqi.toFixed(0)}</div>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200/50">
+            <div class="text-sm font-semibold text-green-700 mb-1">Risk Factor</div>
+            <div class="text-2xl font-black text-green-800">${environment.factor.toFixed(2)}</div>
+            <div class="text-sm text-green-600 mt-1">${environment.level}</div>
+          </div>
+        `;
+      }
+
+      // Render AI recommendation section
+      function renderAIRecommendation(user, environment) {
+        const income = user.profile?.weeklyIncome * 4 || 0;
+        const riskZone = user.profile?.riskLevel || 'Low';
+
+        // Simple AI-like scoring
+        let score = 0;
+        if (income > 60000) score += 3;
+        else if (income > 30000) score += 2;
+        else score += 1;
+
+        if (riskZone === 'High') score += 3;
+        else if (riskZone === 'Medium') score += 2;
+        else score += 1;
+
+        if (environment.factor > 1.4) score += 2;
+        else if (environment.factor > 1.1) score += 1;
+
+        let recommendation = '';
+        let reason = '';
+        if (score >= 7) {
+          recommendation = 'ELITE';
+          reason = 'High income, high risk, and environmental factors';
+        } else if (score >= 5) {
+          recommendation = 'PRO';
+          reason = 'Balanced coverage for your risk profile';
+        } else {
+          recommendation = 'BASIC';
+          reason = 'Essential coverage for your needs';
+        }
+
+        aiRecommendationContent.innerHTML = `
+          <div class="text-center">
+            <div class="text-4xl mb-4">🎯</div>
+            <h4 class="text-2xl font-bold text-slate-900 mb-2">${recommendation} Plan Recommended</h4>
+            <p class="text-slate-600 mb-2">${reason}</p>
+            <p class="text-sm text-slate-500">Confidence Score: ${Math.min(95, score * 12)}%</p>
+          </div>
+        `;
+      }
+
+      // Render plans overview
+      function renderPlansOverview(user, environment) {
+        const plans = ['BASIC', 'PRO', 'ELITE'];
+        const descriptions = {
+          BASIC: 'Essential coverage for everyday protection',
+          PRO: 'Enhanced coverage with AI optimization',
+          ELITE: 'Premium coverage with maximum payouts'
+        };
+
+        plansOverview.innerHTML = plans.map(plan => {
+          const premium = calculatePremium({
+            income: user.profile?.weeklyIncome * 4 || 0,
+            riskZone: user.profile?.riskLevel || 'Low',
+            behavior: 'normal',
+            stability: 'normal'
+          }, environment, plan);
+
+          return `
+            <div class="card-glass-premium rounded-3xl p-8 text-center">
+              <h4 class="text-2xl font-bold text-slate-900 mb-2">${plan}</h4>
+              <p class="text-slate-600 mb-6">${descriptions[plan]}</p>
+              <div class="text-3xl font-black text-cyan-600 mb-6">₹${premium.toFixed(0).toLocaleString()}</div>
+              <button onclick="scrollToPlan('${plan}')" class="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                View Details
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render detailed plans
+      function renderDetailedPlans(user, environment) {
+        const plans = ['BASIC', 'PRO', 'ELITE'];
+        const descriptions = {
+          BASIC: 'Essential coverage for everyday protection with basic risk mitigation.',
+          PRO: 'Enhanced coverage with AI-powered risk assessment and optimized payouts.',
+          ELITE: 'Premium coverage with maximum protection and priority claim processing.'
+        };
+
+        detailedPlans.innerHTML = plans.map(plan => {
+          const premium = calculatePremium({
+            income: user.profile?.weeklyIncome * 4 || 0,
+            riskZone: user.profile?.riskLevel || 'Low',
+            behavior: 'normal',
+            stability: 'normal'
+          }, environment, plan);
+
+          const baseRate = plan === 'BASIC' ? 0.025 : plan === 'PRO' ? 0.035 : 0.05;
+          const riskMultiplier = user.profile?.riskLevel === 'High' ? 1.5 : user.profile?.riskLevel === 'Medium' ? 1.2 : 0.8;
+
+          return `
+            <div id="plan-${plan}" class="reveal-scroll card-glass-premium rounded-3xl p-8 md:p-12">
+              <div class="text-center mb-8">
+                <h3 class="text-3xl font-bold text-slate-900 mb-2">${plan} Plan</h3>
+                <p class="text-slate-600">${descriptions[plan]}</p>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h4 class="text-xl font-bold text-slate-900 mb-4">Premium Breakdown</h4>
+                  <div class="space-y-3">
+                    <div class="flex justify-between">
+                      <span class="text-slate-600">Income Base:</span>
+                      <span class="font-semibold">₹${(user.profile?.weeklyIncome * 4 || 0).toLocaleString()}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-600">Base Rate:</span>
+                      <span class="font-semibold">${(baseRate * 100).toFixed(1)}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-600">Risk Multiplier:</span>
+                      <span class="font-semibold">${riskMultiplier}x</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-600">Environment Factor:</span>
+                      <span class="font-semibold">${environment.factor.toFixed(2)}x</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-600">Behavior Factor:</span>
+                      <span class="font-semibold">1.0x</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-600">Stability Factor:</span>
+                      <span class="font-semibold">1.0x</span>
+                    </div>
+                    <hr class="my-3">
+                    <div class="flex justify-between text-lg font-bold">
+                      <span class="text-slate-900">Monthly Premium:</span>
+                      <span class="text-cyan-600">₹${premium.toFixed(0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="text-xl font-bold text-slate-900 mb-4">Plan Features</h4>
+                  <ul class="space-y-2">
+                    <li class="flex items-center gap-2">
+                      <span class="text-green-500">✓</span>
+                      <span class="text-slate-700">${plan === 'BASIC' ? 'Basic' : plan === 'PRO' ? 'Enhanced' : 'Premium'} Risk Coverage</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="text-green-500">✓</span>
+                      <span class="text-slate-700">Payout Multiplier: ${plan === 'BASIC' ? '1x' : plan === 'PRO' ? '1.3x' : '2x'}</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="${plan === 'BASIC' ? 'text-red-500' : 'text-green-500'}">${plan === 'BASIC' ? '✗' : '✓'}</span>
+                      <span class="text-slate-700">AI Risk Optimization</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="${plan === 'BASIC' ? 'text-red-500' : 'text-green-500'}">${plan === 'BASIC' ? '✗' : '✓'}</span>
+                      <span class="text-slate-700">24/7 Support</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <span class="${plan === 'ELITE' ? 'text-green-500' : 'text-red-500'}">${plan === 'ELITE' ? '✓' : '✗'}</span>
+                      <span class="text-slate-700">Priority Claims Processing</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button onclick="selectPlan('${plan}')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  Select ${plan} Plan
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render event simulation
+      function renderEventSimulation(user, environment) {
+        const eventTypes = ["rain", "heatwave", "pollution"];
+        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+        const severity = 0.5 + Math.random() * 0.5; // 0.5 to 1.0
+
+        const basePayout = user.profile?.weeklyIncome * 4 * 0.1 || 1000;
+        const planMultiplier = user.plan?.name === 'ELITE' ? 2 : user.plan?.name === 'PRO' ? 1.3 : 1;
+        const estimatedPayout = basePayout * severity * planMultiplier;
+
+        eventSimulationContent.innerHTML = `
+          <div class="text-center">
+            <div class="text-4xl mb-4">⚡</div>
+            <h4 class="text-xl font-bold text-slate-900 mb-2">Simulated ${eventType.charAt(0).toUpperCase() + eventType.slice(1)} Event</h4>
+            <p class="text-slate-600 mb-4">Severity: ${(severity * 100).toFixed(0)}%</p>
+            <div class="text-3xl font-black text-cyan-600 mb-2">₹${estimatedPayout.toFixed(0).toLocaleString()}</div>
+            <p class="text-sm text-slate-500">Estimated payout with ${user.plan?.name || 'BASIC'} plan</p>
+          </div>
+        `;
+      }
+
+      // Global functions for buttons
+      window.scrollToPlan = function(plan) {
+        const element = document.getElementById(`plan-${plan}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      window.selectPlan = function(plan) {
+        const user = JSON.parse(localStorage.getItem('shieldrider_current_user'));
+        const weather = getWeatherData();
+        const environment = getEnvironmentalFactor(weather);
+
+        const premium = calculatePremium({
+          income: user.profile?.weeklyIncome * 4 || 0,
+          riskZone: user.profile?.riskLevel || 'Low',
+          behavior: 'normal',
+          stability: 'normal'
+        }, environment, plan);
+
+        user.plan = {
+          name: plan,
+          premium: Math.round(premium),
+          selectedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem('shieldrider_current_user', JSON.stringify(user));
+        window.location.href = "payments.html";
+      };
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Logout functionality
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', async () => {
+            localStorage.removeItem('shieldrider_current_user');
+            await auth.signOut();
+            window.location.href = 'auth.html';
+          });
+        }
+
+        // Mobile sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+          sidebarToggle.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
+          });
+        }
+
+        // Close sidebar on nav click
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && (href.includes('dashboard.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('registration.html'))) {
+              e.preventDefault();
+              window.location.href = href;
+            }
+            document.getElementById('sidebar').classList.remove('active');
+          });
+        });
+      }
+
+      // Setup animations
+      function setupAnimations() {
+        // IntersectionObserver for scroll-triggered animations
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationDelay = `${index * 80}ms`;
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-scroll').forEach(el => {
+          observer.observe(el);
+        });
+
+        // Parallax effect for background blobs
+        window.addEventListener('scroll', () => {
+          const blobs = document.querySelectorAll('.blob-float');
+          blobs.forEach((blob, index) => {
+            const speed = parseFloat(blob.dataset.speed) || 0.5;
+            blob.style.transform = `translateY(${window.scrollY * speed}px)`;
+          });
+        });
+      }
+
+      // Initialize when DOM is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPlansPage);
+      } else {
+        initPlansPage();
       }
     </script>
-  </body>
-</html>
   </body>
 </html>
