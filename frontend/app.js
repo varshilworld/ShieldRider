@@ -613,7 +613,7 @@ async function logoutDashboard() {
 
 // Transaction persistence helper (localStorage + Firestore)
 async function persistTransaction(uid, transaction) {
-  if (!uid || !transaction || !transaction.type) return;
+  if (!transaction || !transaction.type) return;
 
   const now = Date.now();
   const canonicalTx = {
@@ -625,12 +625,13 @@ async function persistTransaction(uid, transaction) {
     coverage: transaction.coverage ?? null,
     event: transaction.event || null,
     status: transaction.status || (transaction.type === 'Payout' ? 'Credited' : 'Billed'),
-    uid,
+    uid: uid || 'anonymous',
   };
 
+  const firestoreUid = uid && uid !== 'anonymous' ? uid : null;
   // Persist to Firestore when user is authenticated
   try {
-    if (uid) {
+    if (firestoreUid) {
       await addDoc(collection(db, 'transactions'), canonicalTx);
     }
   } catch (error) {
@@ -642,6 +643,44 @@ async function persistTransaction(uid, transaction) {
   localUser.transactions = Array.isArray(localUser.transactions) ? localUser.transactions : [];
   localUser.transactions.push(canonicalTx);
   localStorage.setItem('shieldrider_current_user', JSON.stringify(localUser));
+  localStorage.setItem('shieldrider_transactions_updated_at', new Date().toISOString());
+}
+
+async function persistClaim(uid, claim) {
+  if (!claim || !claim.id) return;
+
+  const canonicalClaim = {
+    id: claim.id,
+    userId: claim.userId || uid || 'anonymous',
+    date: claim.createdAt || new Date().toLocaleDateString(),
+    dateMs: claim.createdAtMs || Date.now(),
+    reason: claim.event || claim.reason || 'unknown',
+    severity: claim.severity || 'unknown',
+    status: claim.status || 'Pending',
+    payout: Number(claim.payoutAmount || claim.payout || 0),
+    description: claim.description || '',
+    fraudScore: claim.fraudScore ?? 0,
+    isFraud: claim.isFraud ?? false,
+    riskFactor: claim.riskFactor || 'Medium',
+    behavior: claim.behavior || 'normal',
+    income: Number(claim.income || 0),
+    uid: uid || 'anonymous',
+  };
+
+  const firestoreUid = uid && uid !== 'anonymous' ? uid : null;
+  try {
+    if (firestoreUid) {
+      await addDoc(collection(db, 'claims'), { ...canonicalClaim, uid: firestoreUid });
+    }
+  } catch (error) {
+    console.error('[ShieldRider] Firestore claim log failed', error);
+  }
+
+  const localUser = JSON.parse(localStorage.getItem('shieldrider_current_user') || '{}');
+  localUser.claims = Array.isArray(localUser.claims) ? localUser.claims : [];
+  localUser.claims.push(canonicalClaim);
+  localStorage.setItem('shieldrider_current_user', JSON.stringify(localUser));
+  localStorage.setItem('shieldrider_claims_updated_at', new Date().toISOString());
 }
 
 const simulationState = {
@@ -1101,124 +1140,27 @@ async function runAutoInsuranceLoop() {
     }
   }
 
+  if (result.claim) {
+    await persistClaim(state.currentUser?.uid || user.uid || null, result.claim);
+    logAutomatedTrigger(`Claim ${result.claim.id} ${result.claim.status} for ₹${result.claim.payoutAmount}`);
+    if (result.claim.status === 'Rejected') {
+      setClaimLifecycle('Claim Rejected - Manual Review Needed');
+    } else {
+      setClaimLifecycle('Claim Processed');
+    }
+  }
+
   updateAllWidgets(result, pricingResult, user);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  const isDashboardPage = !!document.getElementById('overview'); // Dashboard has 'overview' section
+
   init();
-  setupSimulationControls();
-  runAutoInsuranceLoop();
-  startSimulation();
-});
-  const premiumChangePct = lastPremiumVal > 0 ? ((result.premium - lastPremiumVal) / lastPremiumVal) * 100 : 0;
-  const premiumChangeLabel = lastPremiumVal === 0 ? 'N/A' : `${premiumChangePct >= 0 ? '+' : ''}${premiumChangePct.toFixed(1)}%`;
-  if (premiumChangeEl) premiumChangeEl.textContent = `Premium change: ${premiumChangeLabel}`;
 
-  if (riskBadgeEl) {
-    const level = result.environment?.level || 'Safe';
-    riskBadgeEl.textContent = level;
-    riskBadgeEl.className = 'rounded-full px-3 py-1 text-xs font-semibold';
-    if (level === 'Safe') riskBadgeEl.classList.add('bg-green-100', 'text-green-800');
-    else if (level === 'Normal') riskBadgeEl.classList.add('bg-yellow-100', 'text-yellow-800');
-    else if (level === 'Hazardous') riskBadgeEl.classList.add('bg-red-100', 'text-red-800');
-    else riskBadgeEl.classList.add('bg-slate-100', 'text-slate-700');
+  if (isDashboardPage) {
+    setupSimulationControls();
+    runAutoInsuranceLoop();
+    startSimulation();
   }
-
-  if (whyPremiumListEl) {
-    const components = pricingResult.components || {};
-    const map = {
-      income: Number(components.income || 0).toLocaleString(),
-      baseRate: (Number(components.baseRate || 0) * 100).toFixed(2) + '%',
-      riskZoneMultiplier: Number(components.riskZoneMultiplier || 0).toFixed(2),
-      environmentalFactor: Number(components.environmentalFactor || 0).toFixed(2),
-      behaviorScore: Number(components.behaviorScore || 0).toFixed(2),
-      stabilityFactor: Number(components.stabilityFactor || 0).toFixed(2),
-    };
-    whyPremiumListEl.innerHTML = `
-      <li>Environment Risk: ${map.environmentalFactor}</li>
-      <li>Zone Risk: ${map.riskZoneMultiplier}</li>
-      <li>Driving Behavior: ${map.behaviorScore}</li>
-      <li>Stability Factor: ${map.stabilityFactor}</li>
-      <li>Base Rate: ${map.baseRate}</li>
-      <li>Income: ₹${map.income}</li>
-    `;
-  }
-
-  if (result.event) {
-    const eventLabel = `${result.event.type} (${result.event.severity})`;
-    if (eventAlertEl) {
-      eventAlertEl.classList.remove('hidden');
-      eventAlertEl.textContent = `⚠️ ${result.event.severity.charAt(0).toUpperCase() + result.event.severity.slice(1)} ${result.event.type} Detected → Payout Triggered: ₹${Number(result.payout || 0).toLocaleString()}`;
-    }
-    if (liveEventInfoEl) liveEventInfoEl.textContent = `Last event: ${eventLabel}`;
-  } else {
-    if (eventAlertEl) {
-      eventAlertEl.classList.add('hidden');
-      eventAlertEl.textContent = '';
-    }
-    if (liveEventInfoEl) liveEventInfoEl.textContent = 'No event currently.';
-  }
-
-
-  // Controlled premium logging:
-  // - log when meaningful change (>= 10%)
-  // - or when 6 hours elapsed
-  const now2 = Date.now();
-  const lastPremiumValue2 = Number(user.lastPremiumMeta?.value || 0) || 0;
-  const lastPremiumTime2 = Number(user.lastPremiumMeta?.timestamp || 0) || 0;
-  const premiumChange = lastPremiumValue2 > 0 ? Math.abs(result.premium - lastPremiumValue2) / lastPremiumValue2 : 1;
-  const timeElapsed = now2 - lastPremiumTime2;
-  const THRESHOLD_CHANGE = 0.1; // 10%
-  const THRESHOLD_TIME = 6 * 60 * 60 * 1000; // 6 hours
-
-  if (lastPremiumTime2 === 0 || premiumChange >= THRESHOLD_CHANGE || timeElapsed >= THRESHOLD_TIME) {
-    await persistTransaction(state.currentUser?.uid || user.uid || null, {
-      type: 'Premium',
-      amount: result.premium,
-      plan: user.plan,
-      coverage: user.activePlan || null,
-      event: null,
-      status: 'Billed',
-    });
-
-    user.lastPremiumMeta = {
-      value: result.premium,
-      timestamp: now,
-    };
-
-    localStorage.setItem('shieldrider_current_user', JSON.stringify(user));
-  }
-
-  // Payout dedupe: same event key only once per hour by default
-  if (result.payout > 0 && result.event) {
-    const eventKey = `${result.event.type}|${result.event.severity}|${result.event.duration}`;
-    const lastPayoutKey = user.lastPayoutKey || '';
-    const lastPayoutTS = Number(user.lastPayoutTimestamp) || 0;
-    const PAYOUT_LOCK_TIME = 60 * 60 * 1000; // 1 hour
-
-    if (eventKey !== lastPayoutKey || now - lastPayoutTS >= PAYOUT_LOCK_TIME) {
-      const payoutTx = {
-        type: 'Payout',
-        amount: result.payout,
-        plan: user.plan,
-        coverage: user.activePlan || null,
-        event: result.event.type,
-        status: 'Credited',
-      };
-
-      await persistTransaction(state.currentUser?.uid || user.uid || null, payoutTx);
-
-      user.lastPayoutKey = eventKey;
-      user.lastPayoutTimestamp = now;
-      localStorage.setItem('shieldrider_current_user', JSON.stringify(user));
-
-      alert(`🔔 Auto payout triggered: ₹${payoutTx.amount} for ${payoutTx.event} event.`);
-    }
-  }
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  init();
-  runAutoInsuranceLoop();
-  setInterval(runAutoInsuranceLoop, 30000);
 });
