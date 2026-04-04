@@ -18,19 +18,8 @@ A smart parametric insurance platform designed to protect gig workers such as fo
 
 ## 🎬 Demo
 
-**Demo Video:** [https://drive.google.com/file/d/1VhG5So33ppznQhQuhWPvAFH4ZdGT8yKV/view?usp=sharing](https://drive.google.com/file/d/1VhG5So33ppznQhQuhWPvAFH4ZdGT8yKV/view?usp=sharing)
+**Demo Video:** [https://drive.google.com/file/d/1LUzmx-69m_0nq9V4UkoKRun6mOGLuyF1/view?usp=sharing](https://drive.google.com/file/d/1LUzmx-69m_0nq9V4UkoKRun6mOGLuyF1/view?usp=sharing)
 
-**Prototype Screenshots:**
-### Prototype Screenshots
-
-<img src="docs/screenshots/Home.png" width="600">
-
-<img src="docs/screenshots/Protection_plans.png" width="600">
-
-<img src="docs/screenshots/Dashboard.png" width="600">
-
-
----
 
 
 ## 📑 Table of Contents
