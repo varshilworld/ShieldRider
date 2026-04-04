@@ -5,50 +5,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShieldRider - Premium Simulation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
   <style>
     :root{
-      --bg:#08140f;
-      --panel:#10281d;
-      --panel2:#143424;
-      --text:#eefbf4;
-      --muted:#a8cdb9;
-      --accent:#39d98a;
-      --accent2:#e6d44a;
-      --gold:#d8c65f;
-      --ok:#35d39c;
-      --warn:#ffcc66;
-      --bad:#ff5d7a;
-      --line:rgba(180,230,198,.18);
-      --shadow: 0 18px 45px rgba(0, 0, 0, .38);
-      --shadow-strong: 0 22px 60px rgba(0, 0, 0, .46);
+      --bg:#ffffff;
+      --panel:rgba(255,255,255,0.8);
+      --panel2:rgba(255,255,255,0.9);
+      --text:#1e293b;
+      --muted:#64748b;
+      --accent:#06b6d4;
+      --accent2:#fbbf24;
+      --gold:#f59e0b;
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --line:rgba(255,255,255,0.5);
+      --shadow: 0 18px 45px rgba(0, 0, 0, .1);
+      --shadow-strong: 0 22px 60px rgba(0, 0, 0, .15);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
+      padding:0;
       font-family: "Segoe UI", Arial, sans-serif;
-      color:var(--text);
-      background: linear-gradient(135deg, #07140f 0%, #112116 52%, #262d0f 100%);
-      position: relative;
-      min-height: 100vh;
-      transition: background .45s ease;
-    }
-    body.step-plan{
-      background: linear-gradient(135deg, #07140f 0%, #112116 52%, #262d0f 100%);
-    }
-    body.step-amount{
-      background: linear-gradient(135deg, #091710 0%, #1a2a15 54%, #2f3210 100%);
-    }
-    body.step-payment{
-      background: linear-gradient(135deg, #081710 0%, #17301f 50%, #3a3710 100%);
+      height:100%;
     }
     body::before,
     body::after{
       content:"";
       position: fixed;
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
       filter: blur(10px);
-      transition: background .45s ease, opacity .45s ease;
     }
     body::before{
       width: 360px;
@@ -56,7 +45,7 @@
       right: -90px;
       top: 50px;
       border-radius: 999px;
-      background: radial-gradient(circle, rgba(120,255,176,.28), rgba(120,255,176,0) 72%);
+      background: radial-gradient(circle, rgba(6,182,212,.2), rgba(6,182,212,0) 72%);
       opacity: .9;
     }
     body::after{
@@ -65,30 +54,23 @@
       left: -140px;
       bottom: -80px;
       border-radius: 999px;
-      background: radial-gradient(circle, rgba(255,234,113,.22), rgba(255,234,113,0) 74%);
+      background: radial-gradient(circle, rgba(59,130,246,.15), rgba(59,130,246,0) 74%);
       opacity: .82;
     }
-    body.step-amount::before{
-      background: radial-gradient(circle, rgba(123,255,183,.26), rgba(123,255,183,0) 72%);
-    }
-    body.step-amount::after{
-      background: radial-gradient(circle, rgba(255,230,117,.24), rgba(255,230,117,0) 74%);
-    }
-    body.step-payment::before{
-      background: radial-gradient(circle, rgba(126,255,191,.28), rgba(126,255,191,0) 72%);
-    }
-    body.step-payment::after{
-      background: radial-gradient(circle, rgba(255,224,102,.25), rgba(255,224,102,0) 74%);
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:26px; position: relative; z-index: 1;}
+
+    .wrap{max-width:1100px;margin:0 auto;padding:26px; position: relative; z-index: 1; width:100%; display:flex; flex-direction:column;}
+    
+    body.scroll-smooth { font-family: "Segoe UI", Arial, sans-serif; }
+    
+    html, body { height: 100%; margin: 0; padding: 0; }
     .top{
       border:1px solid var(--line);
       border-radius:18px;
       padding:20px 22px;
-      background:linear-gradient(135deg, rgba(14,35,26,.82), rgba(20,45,33,.78));
+      background:var(--panel);
       display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
       box-shadow: var(--shadow-strong);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(24px);
       position: relative;
       overflow: hidden;
     }
@@ -97,13 +79,13 @@
       position:absolute;
       inset:-1px -1px auto -1px;
       height:2px;
-      background: linear-gradient(90deg, rgba(57,217,138,.18), rgba(230,212,74,.58), rgba(216,198,95,.25));
+      background: linear-gradient(90deg, rgba(6,182,212,.18), rgba(251,191,36,.58), rgba(245,158,11,.25));
     }
     .brand{
       font-size:22px;
       font-weight:900;
       letter-spacing:.2px;
-      background: linear-gradient(100deg, #48e299, #e6d44a 58%, #9edd67);
+      background: linear-gradient(100deg, #06b6d4, #fbbf24 58%, #10b981);
       -webkit-background-clip:text;
       background-clip:text;
       color: transparent;
@@ -113,34 +95,34 @@
     .step{
       border:1px solid var(--line);
       padding:8px 12px;border-radius:999px;color:var(--muted);font-size:12px;
-      background: rgba(26,53,39,.55);
+      background: rgba(255,255,255,.55);
       font-weight:600;
     }
-    .step.active{color:var(--text);border-color:rgba(57,217,138,.5);background:rgba(57,217,138,.14)}
+    .step.active{color:var(--text);border-color:rgba(6,182,212,.5);background:rgba(6,182,212,.14)}
     .progress{
       width: 100%;
       height: 10px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(95,132,107,.26);
+      background: rgba(100,116,139,.26);
       overflow: hidden;
       margin-top: 10px;
     }
     .progress > div{
       height: 100%;
       width: 34%;
-      background: linear-gradient(90deg, rgba(57,217,138,.94), rgba(230,212,74,.9));
-      box-shadow: 0 0 26px rgba(116,225,133,.34);
+      background: linear-gradient(90deg, rgba(6,182,212,.94), rgba(251,191,36,.9));
+      box-shadow: 0 0 26px rgba(6,182,212,.34);
       transition: width .25s ease;
     }
     .card{
       border:1px solid var(--line);
       border-radius:18px;
-      background:linear-gradient(180deg, rgba(14,35,26,.9), rgba(18,47,34,.86));
+      background:var(--panel);
       padding:20px;
       margin-top:16px;
       box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(24px);
       position: relative;
       overflow: hidden;
     }
@@ -151,7 +133,7 @@
       left:0;
       right:0;
       height:1px;
-      background: linear-gradient(90deg, rgba(57,217,138,.08), rgba(230,212,74,.4), rgba(216,198,95,.16));
+      background: linear-gradient(90deg, rgba(6,182,212,.08), rgba(251,191,36,.4), rgba(245,158,11,.16));
     }
     h1{margin:0 0 10px;font-size:31px;line-height:1.14;letter-spacing:.2px}
     h2{margin:0 0 8px;font-size:21px;line-height:1.22}
@@ -159,26 +141,23 @@
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
     .plan{
       border:1px solid var(--line);
-      border-radius:16px;padding:14px;background:linear-gradient(180deg, rgba(17,45,32,.96), rgba(14,36,27,.95));cursor:pointer;
+      border-radius:16px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.95));cursor:pointer;
       transition:.18s transform,.18s border-color,.18s background-color;
-      box-shadow: 0 8px 20px rgba(0,0,0,.24);
+      box-shadow: 0 8px 20px rgba(0,0,0,.1);
     }
-    .plan:hover{transform:translateY(-3px);border-color:rgba(57,217,138,.45); background: linear-gradient(180deg, rgba(20,56,38,.98), rgba(17,48,33,.98))}
+    .plan:hover{transform:translateY(-3px);border-color:rgba(6,182,212,.45); background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.98))}
     .plan.selected{
-      border-color:rgba(57,217,138,.6);
-      background:linear-gradient(135deg, rgba(57,217,138,.18), rgba(230,212,74,.12));
-      box-shadow: 0 14px 30px rgba(0,0,0,.3);
+      border-color:rgba(6,182,212,.6);
+      background:linear-gradient(135deg, rgba(6,182,212,.18), rgba(251,191,36,.12));
+      box-shadow: 0 14px 30px rgba(0,0,0,.15);
     }
     .pill{
       font-size:11px;
       padding:5px 9px;
       border-radius:999px;
-      border:1px solid rgba(230,212,74,.24);
-      display:inline-block;
-      font-weight:700;
-      letter-spacing:.3px;
-      color:#e6d44a;
-      background: rgba(230,212,74,.12);
+      border:1px solid rgba(251,191,36,.24);
+      color:#fbbf24;
+      background: rgba(251,191,36,.12);
     }
     .plan h3{margin:8px 0 6px}
     .meta{font-size:13px;color:var(--muted);line-height:1.45}
@@ -187,19 +166,19 @@
     label{display:block; font-size:13px; font-weight:600; margin-bottom:6px}
     input,select,button{
       width:100%;padding:11px 12px;border-radius:11px;border:1px solid var(--line);
-      background:#10281d;color:var(--text)
+      background:#ffffff;color:var(--text)
     }
     input:focus, select:focus{
       outline: none;
-      border-color: rgba(57,217,138,.58);
-      box-shadow: 0 0 0 4px rgba(57,217,138,.18);
+      border-color: rgba(6,182,212,.58);
+      box-shadow: 0 0 0 4px rgba(6,182,212,.18);
     }
     button{cursor:pointer;font-weight:700}
     .primary{
-      background:linear-gradient(135deg, rgba(57,217,138,.95), rgba(230,212,74,.92));
-      border-color:rgba(57,217,138,.45);
-      color: #102118;
-      box-shadow: 0 12px 24px rgba(0,0,0,.28);
+      background:linear-gradient(135deg, rgba(6,182,212,.95), rgba(251,191,36,.92));
+      border-color:rgba(6,182,212,.45);
+      color: #ffffff;
+      box-shadow: 0 12px 24px rgba(0,0,0,.15);
     }
     .primary:hover{filter: brightness(1.02)}
     button:active{transform: translateY(1px)}
@@ -210,19 +189,19 @@
     .amt{font-size:28px;font-weight:800}
     .methods{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
     .method{
-      border:1px solid var(--line);border-radius:12px;padding:11px;background:linear-gradient(180deg,#132f22,#10281d);cursor:pointer;text-align:center;
+      border:1px solid var(--line);border-radius:12px;padding:11px;background:linear-gradient(180deg,#ffffff,#f8fafc);cursor:pointer;text-align:center;
       transition: all .16s ease;
     }
     .method:hover{transform: translateY(-2px)}
     .method.active{
-      border-color:rgba(57,217,138,.55);
-      background:linear-gradient(135deg, rgba(57,217,138,.2), rgba(230,212,74,.13));
-      box-shadow: 0 10px 22px rgba(0,0,0,.28);
+      border-color:rgba(6,182,212,.55);
+      background:linear-gradient(135deg, rgba(6,182,212,.2), rgba(251,191,36,.13));
+      box-shadow: 0 10px 22px rgba(0,0,0,.15);
     }
     .ok{color:var(--ok);font-weight:700}
     .owner{
-      margin-top:14px;padding:12px;border:1px dashed rgba(180,230,198,.22);border-radius:12px;
-      background: rgba(15,39,28,.66);
+      margin-top:14px;padding:12px;border:1px dashed rgba(255,255,255,.22);border-radius:12px;
+      background: rgba(255,255,255,.66);
     }
     .ownerGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
     .small{font-size:12px}
@@ -232,8 +211,8 @@
       border:1px solid var(--line);
       border-radius:14px;
       padding:12px;
-      background: linear-gradient(180deg, #143424, #102a1d);
-      box-shadow: 0 8px 20px rgba(0,0,0,.24);
+      background: linear-gradient(180deg, #ffffff, #f8fafc);
+      box-shadow: 0 8px 20px rgba(0,0,0,.1);
     }
     .kpi .label{color:var(--muted); font-size:12px}
     .kpi .value{font-size:18px; font-weight:800; margin-top:6px}
@@ -249,7 +228,7 @@
       width: min(380px, calc(100vw - 36px));
       border: 1px solid var(--line);
       border-radius: 14px;
-      background: linear-gradient(180deg, rgba(16,42,30,.96), rgba(12,34,24,.96));
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.96));
       box-shadow: var(--shadow);
       padding: 12px 12px;
       backdrop-filter: blur(12px);
@@ -257,9 +236,9 @@
     }
     .toast .t{font-weight:800}
     .toast .d{color:var(--muted); font-size:13px; margin-top:4px; line-height:1.35}
-    .toast.ok{border-color: rgba(53,211,156,.35)}
-    .toast.warn{border-color: rgba(255,204,102,.35)}
-    .toast.bad{border-color: rgba(255,93,122,.35)}
+    .toast.ok{border-color: rgba(16,185,129,.35)}
+    .toast.warn{border-color: rgba(245,158,11,.35)}
+    .toast.bad{border-color: rgba(239,68,68,.35)}
     @keyframes toastIn { from { transform: translateY(6px); opacity: .0 } to { transform: translateY(0); opacity: 1 } }
     .fadeScreen{animation: fadeIn .22s ease}
     @keyframes fadeIn { from { opacity: .0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }
@@ -282,10 +261,148 @@
     @media (max-width:900px){
       .grid,.methods,.ownerGrid,.two{grid-template-columns:1fr}
     }
+
+    @keyframes blob {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    @keyframes revealScroll {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(4); opacity: 0; }
+    }
+
+    @keyframes buttonPress {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.96); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0); }
+      50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
+    }
+
+    .animate-blob { animation: blob 7s infinite; }
+    .animation-delay-2000 { animation-delay: 2s; }
+    .animation-delay-4000 { animation-delay: 4s; }
+
+    .reveal-scroll {
+      animation: revealScroll 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      opacity: 0;
+    }
+
+    .active-pill {
+      background: linear-gradient(to right, #cffafe, #bfdbfe);
+      color: #0c4a6e;
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+    }
+
+    .active-glow {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    .nav-item.active .active-glow {
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+    }
+
+    /* Sidebar toggle for mobile */
+    #sidebar.active { transform: translateX(0); }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(34, 211, 238, 0.4);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(34, 211, 238, 0.6);
+    }
   </style>
 </head>
-<body>
-  <div class="wrap">
+<body class="scroll-smooth h-screen overflow-hidden bg-gradient-to-br from-white via-sky-50 to-blue-50 text-slate-800">
+  <!-- Floating background blobs with parallax (soft ambient effect) -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" id="blobContainer">
+    <div class="blob-float absolute top-0 left-1/4 w-screen h-screen bg-cyan-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-10 animate-blob" data-speed="0.5"></div>
+    <div class="blob-float absolute top-1/3 right-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-8 animate-blob animation-delay-2000" data-speed="0.3"></div>
+    <div class="blob-float absolute bottom-0 left-1/2 w-screen h-screen bg-sky-100 rounded-full mix-blend-multiply filter blur-[110px] opacity-12 animate-blob animation-delay-4000" data-speed="0.7"></div>
+  </div>
+
+  <!-- Container -->
+  <div class="flex h-screen">
+    <!-- LEFT SIDEBAR (Floating) -->
+    <aside id="sidebar" class="fixed left-4 top-4 h-[calc(100vh-2rem)] w-64 bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl flex flex-col transition-all duration-300 md:relative md:left-0 md:top-0 md:h-screen md:rounded-none md:border-none md:border-r md:shadow-none md:bg-white/70 z-40 -translate-x-full md:translate-x-0 md:mr-8">
+      <!-- Logo -->
+      <div class="px-6 py-8 border-b border-white/30">
+        <div class="flex items-center gap-3">
+          <div class="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white font-bold text-lg">🛡</div>
+          <div>
+            <h1 class="text-base font-black text-slate-900">ShieldRider</h1>
+            <p class="text-xs text-slate-500">Protection Platform</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
+        <a href="registration.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+          <span class="text-lg">👤</span>
+          <span>Register Profile</span>
+        </a>
+        <a href="dashboard.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+          <span class="text-lg">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="plans.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+          <span class="text-lg">📋</span>
+          <span>Plans</span>
+        </a>
+        <a href="claims.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+          <span class="text-lg">🧾</span>
+          <span>Claims</span>
+        </a>
+        <a href="transactions.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+          <span class="text-lg">💳</span>
+          <span>Transactions</span>
+        </a>
+        <a href="payments.html" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
+          <span class="text-lg">💰</span>
+          <span>Payments</span>
+          <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
+        </a>
+      </nav>
+
+      <!-- Logout -->
+      <div class="px-4 py-4 border-t border-white/30">
+        <button id="logoutBtn" class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition duration-300 hover:border-red-300 hover:bg-red-50 hover:text-red-700">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button id="sidebarToggle" class="fixed bottom-6 right-6 z-30 md:hidden h-12 w-12 rounded-full bg-cyan-500 text-white font-bold shadow-lg hover:shadow-xl transition">☰</button>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto">
+      <div class="wrap">
     <div class="top">
       <div>
         <div class="brand">ShieldRider</div>
@@ -414,6 +531,67 @@
   <div class="toastWrap" id="toastWrap" aria-live="polite" aria-relevant="additions"></div>
 
   <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyKZKmuteyNBKRFlcjRv1MBlRUDc5TWls",
+      authDomain: "devtrails-guidewire-hackathon.firebaseapp.com",
+      projectId: "devtrails-guidewire-hackathon",
+      storageBucket: "devtrails-guidewire-hackathon.firebasestorage.app",
+      messagingSenderId: "43647169445",
+      appId: "1:43647169445:web:96ff4b3a12eba9fcdfae4c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Logout functionality
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+          localStorage.removeItem('shieldrider_current_user');
+          await auth.signOut();
+          window.location.href = 'auth.html';
+        });
+      }
+
+      // Mobile sidebar toggle
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', () => {
+          document.getElementById('sidebar').classList.toggle('active');
+        });
+      }
+
+      // Close sidebar on nav click
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href && (href.includes('registration.html') || href.includes('dashboard.html') || href.includes('plans.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('payments.html'))) {
+            e.preventDefault();
+            window.location.href = href;
+          }
+          document.getElementById('sidebar').classList.remove('active');
+        });
+      });
+    }
+
+    // Setup animations
+    function setupAnimations() {
+      // Parallax effect for background blobs
+      window.addEventListener('scroll', () => {
+        const blobs = document.querySelectorAll('.blob-float');
+        blobs.forEach((blob, index) => {
+          const speed = parseFloat(blob.dataset.speed) || 0.5;
+          blob.style.transform = `translateY(${window.scrollY * speed}px)`;
+        });
+      });
+    }
+
     import { calculatePremium } from "../utils/pricingEngine.js";
 
     const defaultPlans = [
@@ -727,6 +905,10 @@
     bind();
     setStep(1);
     updateLivePreview();
+    setupEventListeners();
+    setupAnimations();
   </script>
+</main>
+</div>
 </body>
 </html>

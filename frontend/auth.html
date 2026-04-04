@@ -119,10 +119,10 @@
       </div>
     </div>
 
-    <!-- ✅ Firebase Integration (ONLY ADDITION) -->
+    <!-- ✅ Firebase Authentication Module -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyDyKZKmuteyNBKRFlcjRv1MBlRUDc5TWls",
@@ -136,9 +136,162 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
 
+      // ===== EMAIL VALIDATION HELPER =====
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      // ===== TAB SWITCHING =====
+      const tabLogin = document.getElementById("tabLogin");
+      const tabSignup = document.getElementById("tabSignup");
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+      const smallToggleSignup = document.getElementById("smallToggleSignup");
+      const smallToggleLogin = document.getElementById("smallToggleLogin");
+
+      function showLoginForm() {
+        loginForm.classList.remove("hidden");
+        signupForm.classList.add("hidden");
+        tabLogin.classList.add("active");
+        tabSignup.classList.remove("active");
+      }
+
+      function showSignupForm() {
+        signupForm.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+        tabSignup.classList.add("active");
+        tabLogin.classList.remove("active");
+      }
+
+      tabLogin.addEventListener("click", showLoginForm);
+      tabSignup.addEventListener("click", showSignupForm);
+      smallToggleSignup.addEventListener("click", showSignupForm);
+      smallToggleLogin.addEventListener("click", showLoginForm);
+
+      // ===== LOGIN FORM VALIDATION & SUBMISSION =====
+      const loginEmail = document.getElementById("loginEmail");
+      const loginPassword = document.getElementById("loginPassword");
+      const loginSubmit = document.getElementById("loginSubmit");
+      const loginStatus = document.getElementById("loginStatus");
+
+      function updateLoginButton() {
+        const emailValid = validateEmail(loginEmail.value);
+        const passwordValid = loginPassword.value.length >= 6;
+        loginSubmit.disabled = !(emailValid && passwordValid);
+      }
+
+      loginEmail.addEventListener("input", updateLoginButton);
+      loginPassword.addEventListener("input", updateLoginButton);
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        loginStatus.textContent = "";
+        loginSubmit.disabled = true;
+
+        try {
+          const email = loginEmail.value.trim();
+          const password = loginPassword.value;
+          
+          // Sign in with Firebase
+          await signInWithEmailAndPassword(auth, email, password);
+          
+          // Save user to localStorage
+          localStorage.setItem("shieldrider_current_user", JSON.stringify({ email }));
+          
+          // Redirect to registration page
+          window.location.href = "registration.html";
+        } catch (error) {
+          const errorMessage = error.message || "Login failed. Please try again.";
+          loginStatus.textContent = `Error: ${errorMessage}`;
+          loginStatus.style.color = "#ef4444";
+          loginSubmit.disabled = false;
+          updateLoginButton();
+        }
+      });
+
+      // ===== SIGNUP FORM VALIDATION & SUBMISSION =====
+      const signupEmail = document.getElementById("signupEmail");
+      const signupPassword = document.getElementById("signupPassword");
+      const city = document.getElementById("city");
+      const workType = document.getElementById("workType");
+      const weeklyHours = document.getElementById("weeklyHours");
+      const signupSubmit = document.getElementById("signupSubmit");
+      const signupStatus = document.getElementById("signupStatus");
+      const weeklyValue = document.getElementById("weeklyValue");
+
+      // Update weekly hours display
+      if (weeklyHours) {
+        weeklyHours.addEventListener("input", () => {
+          weeklyValue.textContent = weeklyHours.value;
+        });
+      }
+
+      function updateSignupButton() {
+        const emailValid = validateEmail(signupEmail.value);
+        const passwordValid = signupPassword.value.length >= 6;
+        const cityValid = city.value !== "";
+        const workTypeValid = workType.value !== "";
+        
+        signupSubmit.disabled = !(emailValid && passwordValid && cityValid && workTypeValid);
+      }
+
+      signupEmail.addEventListener("input", updateSignupButton);
+      signupPassword.addEventListener("input", updateSignupButton);
+      city.addEventListener("change", updateSignupButton);
+      workType.addEventListener("change", updateSignupButton);
+
+      signupForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        signupStatus.textContent = "";
+        signupSubmit.disabled = true;
+
+        try {
+          const email = signupEmail.value.trim();
+          const password = signupPassword.value;
+          
+          // Create user with Firebase
+          await createUserWithEmailAndPassword(auth, email, password);
+          
+          // Save user to localStorage with additional info
+          localStorage.setItem("shieldrider_current_user", JSON.stringify({ 
+            email,
+            city: city.value,
+            workType: workType.value,
+            weeklyHours: weeklyHours.value
+          }));
+          
+          // Redirect to registration page
+          window.location.href = "registration.html";
+        } catch (error) {
+          const errorMessage = error.message || "Signup failed. Please try again.";
+          signupStatus.textContent = `Error: ${errorMessage}`;
+          signupStatus.style.color = "#ef4444";
+          signupSubmit.disabled = false;
+          updateSignupButton();
+        }
+      });
+
+      // ===== SHOW/HIDE PASSWORD TOGGLE =====
+      const showHideButtons = document.querySelectorAll(".show-hide-btn");
+
+      showHideButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+          e.preventDefault();
+          const targetId = button.getAttribute("data-target");
+          const input = document.getElementById(targetId);
+          
+          if (input.type === "password") {
+            input.type = "text";
+            button.textContent = "Hide";
+          } else {
+            input.type = "password";
+            button.textContent = "Show";
+          }
+        });
+      });
+
       window.auth = auth;
     </script>
-
-    <script type="module" src="app.js"></script>
   </body>
 </html>
