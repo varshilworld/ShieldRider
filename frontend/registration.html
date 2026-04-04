@@ -33,6 +33,11 @@
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
+          <a href="registration.html" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
+            <span class="text-lg">👤</span>
+            <span>Register Profile</span>
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
+          </a>
           <a href="dashboard.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
             <span class="text-lg">📊</span>
             <span>Dashboard</span>
@@ -49,10 +54,9 @@
             <span class="text-lg">💳</span>
             <span>Transactions</span>
           </a>
-          <a href="registration.html" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 active-pill group">
-            <span class="text-lg">👤</span>
-            <span>Profile</span>
-            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 rounded-full bg-cyan-500 transition-all duration-300 active-glow group-hover:h-10"></div>
+          <a href="payments.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">💰</span>
+            <span>Payments</span>
           </a>
         </nav>
 
@@ -686,7 +690,7 @@
         document.querySelectorAll('.nav-item').forEach(item => {
           item.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
-            if (href && (href.includes('dashboard.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('plans.html'))) {
+            if (href && (href.includes('registration.html') || href.includes('dashboard.html') || href.includes('plans.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('payments.html'))) {
               e.preventDefault();
               window.location.href = href;
             }

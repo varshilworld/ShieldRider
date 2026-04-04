@@ -33,6 +33,10 @@
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-2">
+          <a href="registration.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">👤</span>
+            <span>Register Profile</span>
+          </a>
           <a href="dashboard.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
             <span class="text-lg">📊</span>
             <span>Dashboard</span>
@@ -50,9 +54,9 @@
             <span class="text-lg">💳</span>
             <span>Transactions</span>
           </a>
-          <a href="registration.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
-            <span class="text-lg">👤</span>
-            <span>Register Profile</span>
+          <a href="payments.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 transition-all duration-300 relative hover:scale-105 group">
+            <span class="text-lg">💰</span>
+            <span>Payments</span>
           </a>
         </nav>
 
@@ -434,13 +438,51 @@
       const eventSimulationContent = document.getElementById('eventSimulationContent');
 
       // Utility functions
-      function getWeatherData() {
-        return {
-          rain: Math.random() * 100,
-          temp: 30 + Math.random() * 20,
-          wind: Math.random() * 80,
-          aqi: 100 + Math.random() * 200
-        };
+      async function getWeatherData(location) {
+        try {
+          const apiKey = '3a8847835b137291511aac7dbe1bc628';
+          const city = location || 'Delhi'; // Default to Delhi if no location
+          
+          // Fetch current weather data
+          const weatherResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+          );
+          
+          if (!weatherResponse.ok) {
+            throw new Error('Weather API failed');
+          }
+          
+          const weatherData = await weatherResponse.json();
+          
+          // Fetch air pollution data using coordinates
+          const pollutionResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/air_pollution?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&appid=${apiKey}`
+          );
+          
+          const pollutionData = await pollutionResponse.json();
+          
+          // Extract required fields
+          const rain = (weatherData.rain?.['1h'] || 0) * 10; // Convert to mm
+          const temp = weatherData.main?.temp || 25;
+          const wind = weatherData.wind?.speed || 0;
+          const aqi = pollutionData.list?.[0]?.main?.aqi || 3; // AQI is 1-5, convert to 0-100
+          
+          return {
+            rain: Math.max(0, Math.min(100, rain)),
+            temp: Math.max(0, Math.min(60, temp)),
+            wind: Math.max(0, Math.min(100, wind)),
+            aqi: aqi * 50 // Convert 1-5 scale to 50-250
+          };
+        } catch (error) {
+          console.error('Weather API error:', error);
+          // Fallback to simulated data
+          return {
+            rain: Math.random() * 100,
+            temp: 30 + Math.random() * 20,
+            wind: Math.random() * 80,
+            aqi: 100 + Math.random() * 200
+          };
+        }
       }
 
       function getEnvironmentalFactor(weather) {
@@ -489,7 +531,7 @@
       }
 
       // Initialize plans page
-      function initPlansPage() {
+      async function initPlansPage() {
         const user = JSON.parse(localStorage.getItem('shieldrider_current_user'));
 
         if (!user) {
@@ -503,8 +545,9 @@
         greetingText.textContent = `Insurance Plans`;
         avatarTop.textContent = initial;
 
-        // Get live environment data
-        const weather = getWeatherData();
+        // Get live environment data from real API
+        const userLocation = user.profile?.location || 'Delhi';
+        const weather = await getWeatherData(userLocation);
         const environment = getEnvironmentalFactor(weather);
 
         // Render all sections
@@ -601,12 +644,14 @@
           reason = 'Essential coverage for your needs';
         }
 
+        const confidenceScore = Math.max(83, Math.min(100, Math.round(83 + (score - 2) * 17 / 6)));
+
         aiRecommendationContent.innerHTML = `
           <div class="text-center">
             <div class="text-4xl mb-4">🎯</div>
             <h4 class="text-2xl font-bold text-slate-900 mb-2">${recommendation} Plan Recommended</h4>
             <p class="text-slate-600 mb-2">${reason}</p>
-            <p class="text-sm text-slate-500">Confidence Score: ${Math.min(95, score * 12)}%</p>
+            <p class="text-sm text-slate-500">Confidence Score: ${confidenceScore}%</p>
           </div>
         `;
       }
@@ -770,9 +815,10 @@
         }
       };
 
-      window.selectPlan = function(plan) {
+      window.selectPlan = async function(plan) {
         const user = JSON.parse(localStorage.getItem('shieldrider_current_user'));
-        const weather = getWeatherData();
+        const userLocation = user.profile?.location || 'Delhi';
+        const weather = await getWeatherData(userLocation);
         const environment = getEnvironmentalFactor(weather);
 
         const premium = calculatePremium({
@@ -816,7 +862,7 @@
         document.querySelectorAll('.nav-item').forEach(item => {
           item.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
-            if (href && (href.includes('dashboard.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('registration.html'))) {
+            if (href && (href.includes('registration.html') || href.includes('dashboard.html') || href.includes('plans.html') || href.includes('claims.html') || href.includes('transactions.html') || href.includes('payments.html'))) {
               e.preventDefault();
               window.location.href = href;
             }
