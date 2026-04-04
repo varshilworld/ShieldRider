@@ -249,7 +249,36 @@
         return colors[status] || "bg-slate-100 text-slate-700";
       }
 
+      function getRandomClaimStatus(claimIndex) {
+        const index = Number(claimIndex) || 0;
+        if (index % 5 === 4) return "Rejected";
+        return Math.random() < 0.5 ? "Pending" : "Approved";
+      }
+
+      function normalizeAutoTriggerClaimStatuses() {
+        const user = JSON.parse(localStorage.getItem("shieldrider_current_user") || "{}");
+        const claims = Array.isArray(user.claims) ? user.claims : [];
+        let changed = false;
+
+        claims.forEach((claim, index) => {
+          const isAutoClaim = claim.dateMs !== undefined || claim.fraudScore !== undefined || claim.isFraud !== undefined || claim.uid !== undefined;
+          if (!isAutoClaim) return;
+
+          const expectedStatus = getRandomClaimStatus(index);
+          if (claim.status !== expectedStatus) {
+            claim.status = expectedStatus;
+            changed = true;
+          }
+        });
+
+        if (changed) {
+          user.claims = claims;
+          localStorage.setItem("shieldrider_current_user", JSON.stringify(user));
+        }
+      }
+
       function getClaims() {
+        normalizeAutoTriggerClaimStatuses();
         const user = JSON.parse(localStorage.getItem("shieldrider_current_user") || "{}");
         return user.claims || [];
       }
@@ -347,7 +376,7 @@
           date: new Date().toLocaleDateString(),
           reason,
           description,
-          status: ["Approved", "Pending", "Rejected"][Math.floor(Math.random() * 3)],
+          status: getRandomClaimStatus(claims.length),
           payout: calculatePayout(reason)
         };
 
